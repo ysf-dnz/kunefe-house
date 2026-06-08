@@ -1,0 +1,6 @@
+{
+  "nav": { "home": "Ana Sayfa", "ingredients": "Malzemelerimiz", "menu": "Lezzetlerimiz", "franchise": "Bayilik", "contact": "İletişim" },
+  "hero": { "title": "Gelenekten Geleceğe Uzanan Lezzet", "discover": "Lezzetleri Keşfet", "franchise": "Bayi Ol" },
+  "whatsapp": { "label": "WhatsApp", "message": "Merhaba, bilgi almak istiyorum." },
+  "footer": { "rights": "Tüm hakları saklıdır." }
+}
