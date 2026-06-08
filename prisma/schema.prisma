@@ -6,4 +6,129 @@ datasource db {
   provider = "postgresql"
 }
 
-// Modeller Faz 2'de eklenecek (Product, SiteSettings, FranchiseApplication, ...)
+// Çok dilli metinler Json alanlarda { "tr": "...", "en": "...", "ar": "..." } olarak saklanır.
+
+model SiteSettings {
+  id              Int      @id @default(1)
+  logoHeaderUrl   String?
+  logoFooterUrl   String?
+  faviconUrl      String?
+  whatsappNumber  String?
+  whatsappMessage Json?
+  heroTitle       Json?
+  heroSubtitle    Json?
+  brandColors     Json?
+  enabledLocales  String[] @default(["tr", "en", "ar"])
+  updatedAt       DateTime @updatedAt
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String
+  url      String
+  order    Int    @default(0)
+}
+
+model ProductCategory {
+  id       String    @id @default(cuid())
+  name     Json
+  slug     String    @unique
+  order    Int       @default(0)
+  products Product[]
+}
+
+model Product {
+  id                String           @id @default(cuid())
+  title             Json
+  slug              String           @unique
+  shortDescription  Json?
+  ingredients       Json?
+  nutritionInfo     Json?
+  primaryImageUrl   String?
+  secondaryImageUrl String?
+  categoryId        String?
+  category          ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  featured          Boolean          @default(false)
+  order             Int              @default(0)
+  createdAt         DateTime         @default(now())
+}
+
+model MapPin {
+  id            String  @id @default(cuid())
+  cityName      String
+  x             Float
+  y             Float
+  ingredient    Json
+  popupTitle    Json?
+  popupBody     Json?
+  popupMediaUrl String?
+  order         Int     @default(0)
+}
+
+model Reel {
+  id           String @id @default(cuid())
+  title        Json?
+  coverUrl     String
+  instagramUrl String
+  order        Int    @default(0)
+}
+
+model Branch {
+  id           String  @id @default(cuid())
+  name         String
+  address      Json?
+  phone        String?
+  mapsEmbedUrl String?
+  workingHours Json?
+  order        Int     @default(0)
+}
+
+model News {
+  id        String   @id @default(cuid())
+  title     Json
+  body      Json?
+  imageUrl  String?
+  published Boolean  @default(false)
+  asPopup   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model FranchiseFaq {
+  id       String @id @default(cuid())
+  question Json
+  answer   Json
+  order    Int    @default(0)
+}
+
+model FranchiseApplication {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String
+  city         String
+  budget       String?
+  locationNote String?
+  status       String   @default("new")
+  createdAt    DateTime @default(now())
+}
+
+model PageContent {
+  id      String @id @default(cuid())
+  key     String @unique
+  content Json
+}
+
+model FreePage {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  title     Json
+  blocks    Json
+  published Boolean @default(false)
+}
+
+model SeoMeta {
+  id          String  @id @default(cuid())
+  path        String  @unique
+  title       Json?
+  description Json?
+  ogImageUrl  String?
+}
