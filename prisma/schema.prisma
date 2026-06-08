@@ -1,0 +1,9 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Modeller Faz 2'de eklenecek (Product, SiteSettings, FranchiseApplication, ...)
