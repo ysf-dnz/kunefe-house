@@ -16,6 +16,8 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         heroTitle: settings.heroTitle as Record<string, string> | null,
         heroSubtitle: settings.heroSubtitle as Record<string, string> | null,
         whatsappMessage: settings.whatsappMessage as Record<string, string> | null,
+        logoHeaderUrl: settings.logoHeaderUrl,
+        logoFooterUrl: settings.logoFooterUrl,
       } : null} />
     </div>
   );

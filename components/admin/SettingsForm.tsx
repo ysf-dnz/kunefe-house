@@ -1,4 +1,5 @@
 import { LocalizedInput } from "./LocalizedInput";
+import { ImageUpload } from "./ImageUpload";
 import { updateSettings } from "@/app/[locale]/admin/ayarlar/actions";
 
 type Settings = {
@@ -6,11 +7,15 @@ type Settings = {
   heroTitle: Record<string, string> | null;
   heroSubtitle: Record<string, string> | null;
   whatsappMessage: Record<string, string> | null;
+  logoHeaderUrl: string | null;
+  logoFooterUrl: string | null;
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
   return (
     <form action={updateSettings} className="flex max-w-xl flex-col gap-6">
+      <ImageUpload name="logoHeaderUrl" label="Logo (Header)" folder="logos" defaultUrl={settings?.logoHeaderUrl} />
+      <ImageUpload name="logoFooterUrl" label="Logo (Footer)" folder="logos" defaultUrl={settings?.logoFooterUrl} />
       <div className="flex flex-col gap-2">
         <label className="text-sm text-cream/80">WhatsApp Numarası</label>
         <input name="whatsappNumber" defaultValue={settings?.whatsappNumber ?? ""} placeholder="905555555555"
