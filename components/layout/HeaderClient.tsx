@@ -18,11 +18,11 @@ export function HeaderClient({ logoUrl }: { logoUrl: string | null }) {
 
   return (
     <header
-      className={`sticky top-0 z-40 flex items-center justify-between px-6 transition-all bg-forest/95 backdrop-blur ${
+      className={`glass-forest sticky top-0 z-40 flex items-center justify-between px-6 transition-all ${
         scrolled ? "py-2" : "py-4"
       }`}
     >
-      <Link href="/" className="font-serif text-xl text-cream">
+      <Link href="/" className="font-serif text-xl tracking-wide text-cream">
         {logoUrl ? (
           <Image
             src={logoUrl}
@@ -34,16 +34,27 @@ export function HeaderClient({ logoUrl }: { logoUrl: string | null }) {
           />
         ) : (
           <>
-            KUNEFE <span className="text-gold">HOUSE</span>
+            KUNEFE <span className="text-gold-gradient">HOUSE</span>
           </>
         )}
       </Link>
-      <nav className="hidden gap-6 text-sm text-cream md:flex">
-        <Link href="/">{t("home")}</Link>
-        <Link href="/malzemelerimiz">{t("ingredients")}</Link>
-        <Link href="/lezzetlerimiz">{t("menu")}</Link>
-        <Link href="/bayilik">{t("franchise")}</Link>
-        <Link href="/iletisim">{t("contact")}</Link>
+      <nav className="hidden gap-7 text-sm text-cream/90 md:flex">
+        {[
+          { href: "/", label: t("home") },
+          { href: "/malzemelerimiz", label: t("ingredients") },
+          { href: "/lezzetlerimiz", label: t("menu") },
+          { href: "/bayilik", label: t("franchise") },
+          { href: "/iletisim", label: t("contact") },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="group relative transition-colors hover:text-gold"
+          >
+            {item.label}
+            <span className="absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-gold to-copper transition-all duration-300 group-hover:w-full" />
+          </Link>
+        ))}
       </nav>
       <LanguageSwitcher />
     </header>

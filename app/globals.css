@@ -3,7 +3,9 @@
 @theme {
   --color-forest: #1B3B2F;
   --color-forest-light: #2D5A43;
+  --color-forest-deep: #102219;
   --color-gold: #C9A227;
+  --color-gold-light: #E6C75A;
   --color-copper: #B87333;
   --color-cream: #F5F0E6;
   --color-pistachio: #7BA05B;
@@ -13,9 +15,87 @@
 }
 
 body {
-  background-color: var(--color-forest);
+  /* Derin orman gradyanı — premium zemin */
+  background-color: var(--color-forest-deep);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201, 162, 39, 0.10), transparent 60%),
+    linear-gradient(180deg, #102219 0%, #1B3B2F 45%, #16332A 100%);
+  background-attachment: fixed;
   color: var(--color-cream);
 }
+
+/* Özel premium sınıflar — Tailwind v4'te @layer dışında (unlayered = en yüksek öncelik) */
+/* Altın gradyan metin (başlık vurguları) */
+  .text-gold-gradient {
+    background-image: linear-gradient(120deg, #E6C75A 0%, #C9A227 45%, #B87333 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Premium altın buton — gradyan + parıltı */
+  .btn-gold {
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(120deg, #E6C75A 0%, #C9A227 50%, #B8851F 100%);
+    color: var(--color-forest-deep);
+    box-shadow: 0 4px 20px -6px rgba(201, 162, 39, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .btn-gold::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+    transform: translateX(-130%);
+    transition: transform 0.7s ease;
+  }
+  .btn-gold:hover::after { transform: translateX(130%); }
+
+  /* İnce altın çerçeveli ikincil buton */
+  .btn-outline-gold {
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    background: linear-gradient(180deg, rgba(201, 162, 39, 0.08), transparent);
+    color: var(--color-cream);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+  .btn-outline-gold:hover {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.3), 0 6px 24px -10px rgba(201, 162, 39, 0.5);
+    background: linear-gradient(180deg, rgba(201, 162, 39, 0.16), transparent);
+  }
+
+  /* Premium kart — altın kenar + derinlik */
+  .card-premium {
+    background-image: linear-gradient(160deg, rgba(45, 90, 67, 0.55), rgba(16, 34, 25, 0.85));
+    border: 1px solid rgba(201, 162, 39, 0.18);
+    box-shadow: 0 10px 40px -16px rgba(0, 0, 0, 0.6);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  }
+  .card-premium:hover {
+    border-color: rgba(201, 162, 39, 0.55);
+    box-shadow: 0 18px 50px -18px rgba(201, 162, 39, 0.35);
+    transform: translateY(-4px);
+  }
+
+  /* Altın ayraç çizgisi */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.7), transparent);
+  }
+
+  /* Filtre / pill aktif altın gradyan */
+  .pill-gold {
+    background-image: linear-gradient(120deg, #E6C75A, #C9A227);
+    color: var(--color-forest-deep);
+    box-shadow: 0 4px 16px -6px rgba(201, 162, 39, 0.5);
+  }
+
+  /* Cam efektli koyu yüzey (header vb.) */
+  .glass-forest {
+    background: linear-gradient(180deg, rgba(16, 34, 25, 0.92), rgba(27, 59, 47, 0.78));
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

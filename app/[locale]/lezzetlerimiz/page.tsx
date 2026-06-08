@@ -18,16 +18,20 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
   const filtered = kategori ? products.filter((p) => p.categoryId === kategori) : products;
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
-      <h1 className="mb-8 text-center font-serif text-4xl text-gold">{t("menu")}</h1>
-      <div className="mb-10 flex flex-wrap justify-center gap-3">
+    <section className="mx-auto max-w-6xl px-6 py-20">
+      <div className="mb-3 flex justify-center">
+        <span className="text-xs uppercase tracking-[0.3em] text-copper">Menümüz</span>
+      </div>
+      <h1 className="text-center font-serif text-4xl text-gold-gradient md:text-5xl">{t("menu")}</h1>
+      <div className="mx-auto mt-5 mb-12 h-px w-24 bg-gradient-to-r from-transparent via-gold to-transparent" />
+      <div className="mb-12 flex flex-wrap justify-center gap-3">
         <Link href="/lezzetlerimiz"
-          className={`rounded-full px-4 py-1 text-sm ${!kategori ? "bg-gold text-forest" : "border border-copper/40 text-cream"}`}>
+          className={`rounded-full px-5 py-1.5 text-sm transition-all ${!kategori ? "pill-gold" : "btn-outline-gold"}`}>
           Tümü
         </Link>
         {categories.map((c) => (
           <Link key={c.id} href={`/lezzetlerimiz?kategori=${c.id}`}
-            className={`rounded-full px-4 py-1 text-sm ${kategori === c.id ? "bg-gold text-forest" : "border border-copper/40 text-cream"}`}>
+            className={`rounded-full px-5 py-1.5 text-sm transition-all ${kategori === c.id ? "pill-gold" : "btn-outline-gold"}`}>
             {localize(c.name as Record<string, string>, locale as Locale)}
           </Link>
         ))}
