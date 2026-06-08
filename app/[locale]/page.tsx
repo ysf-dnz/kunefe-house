@@ -1,7 +1,18 @@
 import { useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  return <HomeContent />;
+}
+
+function HomeContent() {
   const t = useTranslations("hero");
   return (
     <section className="flex min-h-[70vh] flex-col items-center justify-center gap-6 text-center px-4">

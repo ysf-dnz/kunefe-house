@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, getDir } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
@@ -20,6 +21,8 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+
+  setRequestLocale(locale);
 
   return (
     <html lang={locale} dir={getDir(locale)}>
