@@ -20,10 +20,11 @@ export async function updateSettings(formData: FormData) {
   const whatsappMessage = readLocalized(formData, "whatsappMessage");
   const logoHeaderUrl = (formData.get("logoHeaderUrl") as string) || null;
   const logoFooterUrl = (formData.get("logoFooterUrl") as string) || null;
+  const contactEmail = (formData.get("contactEmail") as string) || null;
   await prisma.siteSettings.upsert({
     where: { id: 1 },
-    update: { whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl },
-    create: { id: 1, whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl },
+    update: { whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail },
+    create: { id: 1, whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail },
   });
   // Public sayfalar dynamic render edildiği için ek invalidasyon gerekmez;
   // sonraki istekte taze okunur.

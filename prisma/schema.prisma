@@ -21,6 +21,8 @@ model SiteSettings {
   mapImageUrl     String?
   mapTitle        Json?
   mapDescription  Json?
+  contactEmail    String?
+  contactAddress  Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
   updatedAt       DateTime @updatedAt
 }

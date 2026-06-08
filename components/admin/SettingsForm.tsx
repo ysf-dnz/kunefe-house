@@ -9,6 +9,7 @@ type Settings = {
   whatsappMessage: Record<string, string> | null;
   logoHeaderUrl: string | null;
   logoFooterUrl: string | null;
+  contactEmail: string | null;
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
@@ -19,6 +20,11 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <div className="flex flex-col gap-2">
         <label className="text-sm text-cream/80">WhatsApp Numarası</label>
         <input name="whatsappNumber" defaultValue={settings?.whatsappNumber ?? ""} placeholder="905555555555"
+          className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-cream/80">İletişim E-postası</label>
+        <input name="contactEmail" type="email" defaultValue={settings?.contactEmail ?? ""} placeholder="info@kunefehouse.com"
           className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
       </div>
       <LocalizedInput name="whatsappMessage" label="WhatsApp Hazır Mesaj" defaultValue={settings?.whatsappMessage} multiline />
