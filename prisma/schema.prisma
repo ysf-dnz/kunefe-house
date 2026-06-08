@@ -18,6 +18,9 @@ model SiteSettings {
   heroTitle       Json?
   heroSubtitle    Json?
   brandColors     Json?
+  mapImageUrl     String?
+  mapTitle        Json?
+  mapDescription  Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
   updatedAt       DateTime @updatedAt
 }
