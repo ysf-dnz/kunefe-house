@@ -1,8 +1,10 @@
 import { setRequestLocale } from "next-intl/server";
 import { getSiteSettings } from "@/lib/settings";
 import { SettingsForm } from "@/components/admin/SettingsForm";
+import { requireAdmin } from "@/lib/require-admin";
 
 export default async function AyarlarPage({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const settings = await getSiteSettings();

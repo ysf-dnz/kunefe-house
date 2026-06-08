@@ -6,4 +6,11 @@ if (!password) {
   process.exit(1);
 }
 const hash = await bcrypt.hash(password, 12);
-console.log(hash);
+
+// ÖNEMLİ: bcrypt hash'i `$` içerir; Next.js env yükleyicisi `$2b` gibi parçaları
+// değişken referansı sanıp bozar. Bu yüzden .env'e yazarken `$` -> `\$` escape edilmeli.
+const envReady = hash.replace(/\$/g, "\\$");
+
+console.log("Ham hash:", hash);
+console.log("\n.env için (kopyala):");
+console.log(`ADMIN_PASSWORD_HASH="${envReady}"`);

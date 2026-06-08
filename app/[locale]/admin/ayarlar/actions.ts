@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -24,5 +23,6 @@ export async function updateSettings(formData: FormData) {
     update: { whatsappNumber, heroTitle, heroSubtitle, whatsappMessage },
     create: { id: 1, whatsappNumber, heroTitle, heroSubtitle, whatsappMessage },
   });
-  revalidatePath("/", "layout");
+  // Public sayfalar dynamic render edildiği için ek invalidasyon gerekmez;
+  // sonraki istekte taze okunur.
 }

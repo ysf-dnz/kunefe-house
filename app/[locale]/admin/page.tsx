@@ -1,6 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
+import { requireAdmin } from "@/lib/require-admin";
 
 export default async function AdminDashboard({ params }: { params: Promise<{ locale: string }> }) {
+  await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   return (
