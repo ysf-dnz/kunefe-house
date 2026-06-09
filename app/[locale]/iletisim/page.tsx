@@ -3,8 +3,20 @@ import { getSiteSettings, getSocialLinks } from "@/lib/settings";
 import { getBranches } from "@/lib/branches";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { buildWhatsAppHref } from "@/lib/whatsapp";
+import { buildMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata({
+    locale,
+    path: "/iletisim",
+    title: "İletişim",
+    description: "Kunefe House ile iletişime geçin — WhatsApp, e-posta ve şubelerimiz.",
+  });
+}
 
 export default async function IletisimPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -5,8 +5,20 @@ import { type Locale } from "@/lib/i18n-field";
 import { StatCounter } from "@/components/public/StatCounter";
 import { FaqAccordion } from "@/components/public/FaqAccordion";
 import { FranchiseForm } from "@/components/public/FranchiseForm";
+import { buildMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata({
+    locale,
+    path: "/bayilik",
+    title: "Bayilik & Franchise",
+    description: "Türkiye'nin tescilli künefe markası Kunefe House ailesine katılın. Franchise fırsatları ve bayilik başvurusu.",
+  });
+}
 
 const STEPS = [
   { n: "01", title: "Başvuru", desc: "Formu doldurun, ekibimiz sizi arasın." },

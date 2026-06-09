@@ -3,8 +3,20 @@ import { getSiteSettings } from "@/lib/settings";
 import { getMapPins } from "@/lib/mappins";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { InteractiveMap } from "@/components/public/InteractiveMap";
+import { buildMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata({
+    locale,
+    path: "/malzemelerimiz",
+    title: "Malzemelerimiz",
+    description: "Antep fıstığından Hatay peynirine — malzemelerimizin köklerini interaktif harita üzerinde keşfedin.",
+  });
+}
 
 export default async function MalzemelerimizPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

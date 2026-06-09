@@ -3,8 +3,20 @@ import Link from "next/link";
 import { getProducts, getCategories } from "@/lib/products";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { ProductCard } from "@/components/public/ProductCard";
+import { buildMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata({
+    locale,
+    path: "/lezzetlerimiz",
+    title: "Lezzetlerimiz",
+    description: "Fıstıklı, çikolatalı ve spesiyal künefe çeşitlerimizi keşfedin.",
+  });
+}
 
 export default async function LezzetlerimizPage({ params, searchParams }: {
   params: Promise<{ locale: string }>;
