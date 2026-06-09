@@ -79,7 +79,8 @@ model Reel {
   id           String @id @default(cuid())
   title        Json?
   coverUrl     String
-  instagramUrl String
+  videoUrl     String?
+  instagramUrl String?
   order        Int    @default(0)
 }
 

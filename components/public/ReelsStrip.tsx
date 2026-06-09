@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { localize, type Locale } from "@/lib/i18n-field";
@@ -10,23 +10,56 @@ type Reel = {
   id: string;
   title: Record<string, string> | null;
   coverUrl: string;
-  instagramUrl: string;
+  videoUrl: string | null;
+  instagramUrl: string | null;
 };
+
+/** Görünür olunca sessiz otomatik oynayan dikey video */
+function AutoVideo({ src, poster }: { src: string; poster: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    // iOS güvenilirliği için muted'ı JS ile uygula
+    v.muted = true;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      autoPlay
+      preload="metadata"
+      className="h-full w-full object-cover"
+    />
+  );
+}
 
 export function ReelsStrip({ reels, locale, heading }: { reels: Reel[]; locale: Locale; heading: string }) {
   const [active, setActive] = useState<Reel | null>(null);
   if (reels.length === 0) return null;
 
-  const activeEmbed = active ? instagramEmbedUrl(active.instagramUrl) : null;
+  const activeEmbed = active?.instagramUrl ? instagramEmbedUrl(active.instagramUrl) : null;
 
-  function openReel(r: Reel) {
-    const embed = instagramEmbedUrl(r.instagramUrl);
-    if (embed) {
-      setActive(r); // site içinde oynat
-    } else {
-      // belirli bir reel değilse (profil linki) dışa aç
-      window.open(r.instagramUrl, "_blank", "noopener,noreferrer");
-    }
+  function onCardClick(r: Reel) {
+    // Instagram reel linki varsa site içi embed lightbox; yoksa bir şey yapma (video zaten oynuyor)
+    const embed = r.instagramUrl ? instagramEmbedUrl(r.instagramUrl) : null;
+    if (embed) setActive(r);
+    else if (r.instagramUrl) window.open(r.instagramUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -41,7 +74,7 @@ export function ReelsStrip({ reels, locale, heading }: { reels: Reel[]; locale: 
         {reels.map((r, i) => (
           <motion.button
             key={r.id}
-            onClick={() => openReel(r)}
+            onClick={() => onCardClick(r)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -50,16 +83,23 @@ export function ReelsStrip({ reels, locale, heading }: { reels: Reel[]; locale: 
           >
             <div className="rounded-2xl bg-gradient-to-br from-gold via-copper to-gold p-[2px] transition-transform duration-500 group-hover:scale-[1.03]">
               <div className="relative aspect-[9/16] overflow-hidden rounded-2xl bg-forest-deep">
-                <Image src={r.coverUrl} alt={localize(r.title, locale)} fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                {r.videoUrl ? (
+                  <AutoVideo src={r.videoUrl} poster={r.coverUrl} />
+                ) : (
+                  <Image src={r.coverUrl} alt={localize(r.title, locale)} fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                )}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-deep/85 via-transparent to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-cream/15 backdrop-blur-sm transition-all group-hover:bg-gold/80">
-                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-cream group-hover:fill-forest-deep" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </span>
-                </div>
+                {/* Video yoksa oynat ikonu göster */}
+                {!r.videoUrl && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-cream/15 backdrop-blur-sm transition-all group-hover:bg-gold/80">
+                      <svg viewBox="0 0 24 24" className="h-5 w-5 fill-cream group-hover:fill-forest-deep" aria-hidden="true">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
+                  </div>
+                )}
                 {localize(r.title, locale) && (
                   <p className="absolute inset-x-0 bottom-0 p-3 text-sm font-medium text-cream">
                     {localize(r.title, locale)}
@@ -71,7 +111,7 @@ export function ReelsStrip({ reels, locale, heading }: { reels: Reel[]; locale: 
         ))}
       </div>
 
-      {/* Site-içi reel oynatıcı (lightbox) */}
+      {/* Instagram reel linki için site-içi embed lightbox */}
       <AnimatePresence>
         {active && activeEmbed && (
           <motion.div

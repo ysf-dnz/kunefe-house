@@ -41,7 +41,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       />
 
       <ReelsStrip
-        reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, instagramUrl: r.instagramUrl }))}
+        reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
         locale={loc}
         heading="Mutfaktan Kareler"
       />

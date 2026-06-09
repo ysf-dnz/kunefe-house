@@ -37,15 +37,16 @@ export default async function ReelsPage({ params }: { params: Promise<{ locale: 
 
       <form action={createReel} className="flex max-w-md flex-col gap-4 rounded-xl bg-forest-light p-5">
         <h2 className="font-serif text-gold">Yeni Reel</h2>
-        <ImageUpload name="coverUrl" label="Kapak Görseli (dikey 9:16 ideal)" folder="reels" />
+        <ImageUpload name="videoUrl" label="Video (dikey 9:16, sitede kendiliğinden oynar)" folder="reels" accept="video/*" />
+        <ImageUpload name="coverUrl" label="Kapak Görseli (video yüklenince poster olur, opsiyonel)" folder="reels" />
+        <p className="text-xs text-cream/40">
+          📹 <strong>Video yükle</strong> → kart sitede <strong>kendiliğinden sessiz oynar</strong> (önerilen).
+          Sadece kapak + link verirsen tıklayınca açılır.
+        </p>
         <div className="flex flex-col gap-2">
-          <label className="text-sm text-cream/80">Instagram Reel Linki</label>
+          <label className="text-sm text-cream/80">Instagram Linki (opsiyonel)</label>
           <input name="instagramUrl" placeholder="https://www.instagram.com/reel/ABC123/"
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
-          <span className="text-xs text-cream/40">
-            Belirli bir <strong>reel/gönderi</strong> linki ver (örn. .../reel/ABC123/) — site içinde oynatılır.
-            Profil linki (.../kunefehouse) verirsen sadece Instagram&apos;a yönlendirir.
-          </span>
         </div>
         <LocalizedInput name="title" label="Başlık (opsiyonel)" />
         <SubmitButton>Ekle</SubmitButton>

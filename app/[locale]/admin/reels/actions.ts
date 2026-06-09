@@ -21,14 +21,15 @@ function readLocalized(form: FormData, name: string) {
 export async function createReel(formData: FormData) {
   await guard();
   const coverUrl = (formData.get("coverUrl") as string) || "";
-  const instagramUrl = (formData.get("instagramUrl") as string) || "";
-  if (!coverUrl) throw new Error("Kapak görseli zorunlu");
-  if (!instagramUrl) throw new Error("Instagram linki zorunlu");
+  const videoUrl = (formData.get("videoUrl") as string) || null;
+  const instagramUrl = (formData.get("instagramUrl") as string) || null;
+  if (!coverUrl && !videoUrl) throw new Error("En az kapak görseli veya video gerekli");
   const count = await prisma.reel.count();
   await prisma.reel.create({
     data: {
       title: readLocalized(formData, "title"),
-      coverUrl,
+      coverUrl: coverUrl || videoUrl!, // video varsa kapak zorunlu değil
+      videoUrl,
       instagramUrl,
       order: count,
     },
@@ -41,6 +42,7 @@ export async function deleteReel(formData: FormData) {
   const id = formData.get("id") as string;
   const reel = await prisma.reel.findUnique({ where: { id } });
   if (reel?.coverUrl) await deleteImageByUrl(reel.coverUrl);
+  if (reel?.videoUrl) await deleteImageByUrl(reel.videoUrl);
   await prisma.reel.delete({ where: { id } });
   revalidatePath("/admin/reels");
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 export function Hero({
@@ -17,19 +18,30 @@ export function Hero({
   discoverLabel: string;
   franchiseLabel: string;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    // iOS/mobil otomatik oynatma için muted'ı JS ile garanti et
+    v.muted = true;
+    v.play().catch(() => {});
+  }, [videoUrl]);
+
   return (
     <section className="relative flex min-h-[82vh] flex-col items-center justify-center gap-8 overflow-hidden px-4 text-center">
       {/* Video arka plan */}
       {videoUrl && (
         <video
+          ref={videoRef}
+          src={videoUrl}
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
           className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={videoUrl} />
-        </video>
+        />
       )}
       {/* Karartma + altın hâle */}
       {videoUrl ? (
