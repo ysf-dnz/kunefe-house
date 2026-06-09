@@ -39,9 +39,13 @@ export default async function ReelsPage({ params }: { params: Promise<{ locale: 
         <h2 className="font-serif text-gold">Yeni Reel</h2>
         <ImageUpload name="coverUrl" label="Kapak Görseli (dikey 9:16 ideal)" folder="reels" />
         <div className="flex flex-col gap-2">
-          <label className="text-sm text-cream/80">Instagram Linki</label>
-          <input name="instagramUrl" placeholder="https://instagram.com/reel/..."
+          <label className="text-sm text-cream/80">Instagram Reel Linki</label>
+          <input name="instagramUrl" placeholder="https://www.instagram.com/reel/ABC123/"
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+          <span className="text-xs text-cream/40">
+            Belirli bir <strong>reel/gönderi</strong> linki ver (örn. .../reel/ABC123/) — site içinde oynatılır.
+            Profil linki (.../kunefehouse) verirsen sadece Instagram&apos;a yönlendirir.
+          </span>
         </div>
         <LocalizedInput name="title" label="Başlık (opsiyonel)" />
         <SubmitButton>Ekle</SubmitButton>
