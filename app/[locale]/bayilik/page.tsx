@@ -62,7 +62,7 @@ export default async function BayilikPage({ params }: { params: Promise<{ locale
             </svg>
           </span>
           <p className="text-cream/90">
-            <strong className="text-gold">Tescilli Marka</strong> — Türk Patent No: 2024/018930 · Sınıf 30
+            <strong className="text-gold">Tescilli Marka</strong>
           </p>
         </div>
 
