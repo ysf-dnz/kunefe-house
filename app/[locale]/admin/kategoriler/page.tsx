@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createCategory, deleteCategory } from "./actions";
 
 export default async function KategorilerPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -27,7 +28,7 @@ export default async function KategorilerPage({ params }: { params: Promise<{ lo
       <form action={createCategory} className="flex max-w-md flex-col gap-4 rounded bg-forest-light p-4">
         <h2 className="font-serif text-gold">Yeni Kategori</h2>
         <LocalizedInput name="name" label="Ad" />
-        <button className="self-start rounded bg-gold px-4 py-2 text-forest">Ekle</button>
+        <SubmitButton>Ekle</SubmitButton>
       </form>
     </div>
   );

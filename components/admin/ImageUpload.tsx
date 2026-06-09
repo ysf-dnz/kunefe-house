@@ -31,9 +31,17 @@ export function ImageUpload({ name, label, folder, defaultUrl, accept = "image/*
   return (
     <div className="flex flex-col gap-2">
       <label className="text-sm text-cream/80">{label}</label>
-      {url && (isVideo
-        ? <video src={url} className="h-28 w-28 rounded object-cover" muted />
-        : <Image src={url} alt="" width={120} height={120} className="h-28 w-28 rounded object-cover" />)}
+      {url && (
+        <div className="flex items-center gap-3">
+          {isVideo
+            ? <video src={url} className="h-28 w-28 rounded object-cover" muted />
+            : <Image src={url} alt="" width={120} height={120} className="h-28 w-28 rounded object-cover" />}
+          <button type="button" onClick={() => setUrl("")}
+            className="rounded border border-red-400/50 px-3 py-1 text-xs text-red-400 hover:bg-red-400/10">
+            Kaldır
+          </button>
+        </div>
+      )}
       <input type="hidden" name={name} value={url} />
       <input type="file" accept={accept} onChange={onChange}
         className="text-sm text-cream/70 file:mr-3 file:rounded file:border-0 file:bg-gold file:px-3 file:py-1 file:text-forest" />

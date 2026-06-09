@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getReels } from "@/lib/reels";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { createReel, deleteReel } from "./actions";
 
@@ -43,7 +44,7 @@ export default async function ReelsPage({ params }: { params: Promise<{ locale: 
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
         </div>
         <LocalizedInput name="title" label="Başlık (opsiyonel)" />
-        <button className="btn-gold self-start rounded-full px-6 py-2 text-sm font-semibold">Ekle</button>
+        <SubmitButton>Ekle</SubmitButton>
       </form>
     </div>
   );

@@ -1,7 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+
+export type SaveState = { ok?: boolean; error?: string };
 
 function readLocalized(form: FormData, name: string) {
   return {
@@ -11,9 +14,9 @@ function readLocalized(form: FormData, name: string) {
   };
 }
 
-export async function updateSettings(formData: FormData) {
+export async function updateSettings(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
+  if (!session) return { error: "Yetkisiz" };
   const whatsappNumber = (formData.get("whatsappNumber") as string) ?? "";
   const heroTitle = readLocalized(formData, "heroTitle");
   const heroSubtitle = readLocalized(formData, "heroSubtitle");
@@ -30,11 +33,16 @@ export async function updateSettings(formData: FormData) {
     whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail,
     heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText,
   };
-  await prisma.siteSettings.upsert({
-    where: { id: 1 },
-    update: data,
-    create: { id: 1, ...data },
-  });
-  // Public sayfalar dynamic render edildiği için ek invalidasyon gerekmez;
-  // sonraki istekte taze okunur.
+  try {
+    await prisma.siteSettings.upsert({
+      where: { id: 1 },
+      update: data,
+      create: { id: 1, ...data },
+    });
+  } catch {
+    return { error: "Kaydedilemedi, tekrar deneyin." };
+  }
+  // Public sayfaları (logo/hero header'da) anında tazele
+  revalidatePath("/", "layout");
+  return { ok: true };
 }

@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getAllNews } from "@/lib/news";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { createNews, deleteNews } from "./actions";
 
@@ -47,7 +48,7 @@ export default async function HaberlerPage({ params }: { params: Promise<{ local
         <label className="flex items-center gap-2 text-sm text-cream/80">
           <input type="checkbox" name="asPopup" /> Sitede popup olarak göster (tek aktif popup)
         </label>
-        <button className="btn-gold self-start rounded-full px-6 py-2 text-sm font-semibold">Ekle</button>
+        <SubmitButton>Ekle</SubmitButton>
       </form>
     </div>
   );

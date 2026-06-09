@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { LocalizedInput } from "./LocalizedInput";
+import { SubmitButton } from "./SubmitButton";
 import { ImageUpload } from "./ImageUpload";
 import { createPin } from "@/app/[locale]/admin/harita/actions";
 
@@ -69,7 +70,7 @@ export function MapEditor({ mapImageUrl, pins }: { mapImageUrl: string | null; p
         <LocalizedInput name="popupTitle" label="Popup Başlık" />
         <LocalizedInput name="popupBody" label="Popup Açıklama" multiline />
         <ImageUpload name="popupMediaUrl" label="Popup Görseli" folder="map" />
-        <button className="btn-gold self-start rounded-full px-6 py-2 text-sm font-semibold">Pin Ekle</button>
+        <SubmitButton>Pin Ekle</SubmitButton>
       </form>
     </div>
   );

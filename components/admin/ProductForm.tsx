@@ -1,5 +1,6 @@
 import { LocalizedInput } from "./LocalizedInput";
 import { ImageUpload } from "./ImageUpload";
+import { SubmitButton } from "./SubmitButton";
 
 type Category = { id: string; name: Record<string, string> | unknown };
 type ProductData = {
@@ -41,7 +42,8 @@ export function ProductForm({ action, categories, product }: { action: (formData
         <input type="checkbox" name="featured" defaultChecked={product?.featured} />
         Ana sayfada öne çıkar
       </label>
-      <button type="submit" className="self-start rounded bg-gold px-6 py-2 font-medium text-forest">Kaydet</button>
+      <SubmitButton />
+      <p className="text-xs text-cream/50">Kaydedince ürün listesine yönlendirilirsiniz.</p>
     </form>
   );
 }

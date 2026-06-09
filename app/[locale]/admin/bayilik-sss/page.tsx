@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getFranchiseFaqs } from "@/lib/franchise";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createFaq, deleteFaq } from "./actions";
 
 export default async function BayilikSssPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -31,7 +32,7 @@ export default async function BayilikSssPage({ params }: { params: Promise<{ loc
         <h2 className="font-serif text-gold">Yeni Soru</h2>
         <LocalizedInput name="question" label="Soru" />
         <LocalizedInput name="answer" label="Cevap" multiline />
-        <button className="btn-gold self-start rounded-full px-6 py-2 text-sm font-semibold">Ekle</button>
+        <SubmitButton>Ekle</SubmitButton>
       </form>
     </div>
   );

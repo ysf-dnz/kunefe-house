@@ -1,6 +1,10 @@
+"use client";
+
+import { useActionState } from "react";
 import { LocalizedInput } from "./LocalizedInput";
 import { ImageUpload } from "./ImageUpload";
-import { updateSettings } from "@/app/[locale]/admin/ayarlar/actions";
+import { SubmitButton } from "./SubmitButton";
+import { updateSettings, type SaveState } from "@/app/[locale]/admin/ayarlar/actions";
 
 type Settings = {
   whatsappNumber: string | null;
@@ -18,8 +22,9 @@ type Settings = {
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
+  const [state, formAction] = useActionState<SaveState, FormData>(updateSettings, {});
   return (
-    <form action={updateSettings} className="flex max-w-xl flex-col gap-6">
+    <form action={formAction} className="flex max-w-xl flex-col gap-6">
       <ImageUpload name="logoHeaderUrl" label="Logo (Header)" folder="logos" defaultUrl={settings?.logoHeaderUrl} />
       <ImageUpload name="logoFooterUrl" label="Logo (Footer)" folder="logos" defaultUrl={settings?.logoFooterUrl} />
       <div className="flex flex-col gap-2">
@@ -51,7 +56,11 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <LocalizedInput name="storyTitle" label="Hikâye Başlık" defaultValue={settings?.storyTitle} />
       <LocalizedInput name="storyText" label="Hikâye Metni" defaultValue={settings?.storyText} multiline />
 
-      <button type="submit" className="btn-gold mt-2 self-start rounded-full px-7 py-2.5 text-sm font-semibold">Kaydet</button>
+      <div className="mt-2 flex items-center gap-3">
+        <SubmitButton />
+        {state.ok && <span className="text-sm text-green-400">✓ Kaydedildi</span>}
+        {state.error && <span className="text-sm text-red-400">{state.error}</span>}
+      </div>
     </form>
   );
 }

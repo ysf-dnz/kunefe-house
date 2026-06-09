@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getBranches } from "@/lib/branches";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createBranch, deleteBranch } from "./actions";
 
 export default async function SubelerPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -50,7 +51,7 @@ export default async function SubelerPage({ params }: { params: Promise<{ locale
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
           <span className="text-xs text-cream/40">Google Maps → Paylaş → Harita yerleştir → src bağlantısı</span>
         </div>
-        <button className="btn-gold self-start rounded-full px-6 py-2 text-sm font-semibold">Ekle</button>
+        <SubmitButton>Ekle</SubmitButton>
       </form>
     </div>
   );
