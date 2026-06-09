@@ -14,18 +14,31 @@ export function ImageUpload({ name, label, folder, defaultUrl, accept = "image/*
     if (!file) return;
     setLoading(true);
     setError("");
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("folder", folder);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    setLoading(false);
-    if (!res.ok) {
-      const j = await res.json().catch(() => ({}));
-      setError(j.error || "Yükleme başarısız");
-      return;
+    try {
+      // 1) İmzalı yükleme URL'i al (küçük istek — Vercel limitine takılmaz)
+      const signRes = await fetch("/api/admin/sign-upload", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ folder, filename: file.name, contentType: file.type }),
+      });
+      if (!signRes.ok) {
+        const j = await signRes.json().catch(() => ({}));
+        throw new Error(j.error || "İmza alınamadı");
+      }
+      const { signedUrl, publicUrl } = await signRes.json();
+      // 2) Dosyayı DOĞRUDAN Supabase'e yükle (tarayıcı → Supabase, Vercel'i atlar)
+      const up = await fetch(signedUrl, {
+        method: "PUT",
+        headers: { "content-type": file.type || "application/octet-stream" },
+        body: file,
+      });
+      if (!up.ok) throw new Error(`Yükleme başarısız (${up.status})`);
+      setUrl(publicUrl);
+    } catch (err) {
+      setError((err as Error).message || "Yükleme başarısız");
+    } finally {
+      setLoading(false);
     }
-    const { url } = await res.json();
-    setUrl(url);
   }
 
   return (
