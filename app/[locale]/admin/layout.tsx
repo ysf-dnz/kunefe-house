@@ -19,6 +19,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <Link href="/admin/bayilik-sss">Bayilik SSS</Link>
         <Link href="/admin/basvurular">Başvurular</Link>
         <Link href="/admin/subeler">Şubeler</Link>
+        <Link href="/admin/haberler">Haberler</Link>
+        <Link href="/admin/medya">Medya</Link>
       </aside>
       <main className="p-6">{children}</main>
     </div>

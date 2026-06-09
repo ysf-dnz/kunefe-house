@@ -8,6 +8,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { NewsPopup } from "@/components/public/NewsPopup";
+import { getPopupNews } from "@/lib/news";
 import { getSiteSettings, getSocialLinks } from "@/lib/settings";
 import { organizationSchema, restaurantSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
@@ -58,7 +60,12 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const [settings, socials] = await Promise.all([getSiteSettings(), getSocialLinks()]);
+  const [settings, socials, popupNews] = await Promise.all([
+    getSiteSettings(),
+    getSocialLinks(),
+    getPopupNews(),
+  ]);
+  const loc = locale as Locale;
 
   return (
     <html lang={locale} dir={getDir(locale)}>
@@ -76,6 +83,14 @@ export default async function LocaleLayout({
           <main>{children}</main>
           <Footer />
           <WhatsAppButton />
+          {popupNews && (
+            <NewsPopup
+              id={popupNews.id}
+              title={localize(popupNews.title as Record<string, string>, loc)}
+              body={localize(popupNews.body as Record<string, string> | null, loc)}
+              imageUrl={popupNews.imageUrl}
+            />
+          )}
         </NextIntlClientProvider>
       </body>
     </html>
