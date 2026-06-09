@@ -21,10 +21,19 @@ export async function updateSettings(formData: FormData) {
   const logoHeaderUrl = (formData.get("logoHeaderUrl") as string) || null;
   const logoFooterUrl = (formData.get("logoFooterUrl") as string) || null;
   const contactEmail = (formData.get("contactEmail") as string) || null;
+  const heroVideoUrl = (formData.get("heroVideoUrl") as string) || null;
+  const heroOverlay = parseFloat((formData.get("heroOverlay") as string) || "0.5");
+  const storyImageUrl = (formData.get("storyImageUrl") as string) || null;
+  const storyTitle = readLocalized(formData, "storyTitle");
+  const storyText = readLocalized(formData, "storyText");
+  const data = {
+    whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail,
+    heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText,
+  };
   await prisma.siteSettings.upsert({
     where: { id: 1 },
-    update: { whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail },
-    create: { id: 1, whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail },
+    update: data,
+    create: { id: 1, ...data },
   });
   // Public sayfalar dynamic render edildiği için ek invalidasyon gerekmez;
   // sonraki istekte taze okunur.

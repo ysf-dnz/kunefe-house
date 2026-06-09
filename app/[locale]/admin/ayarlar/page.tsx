@@ -19,6 +19,11 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         logoHeaderUrl: settings.logoHeaderUrl,
         logoFooterUrl: settings.logoFooterUrl,
         contactEmail: settings.contactEmail,
+        heroVideoUrl: settings.heroVideoUrl,
+        heroOverlay: settings.heroOverlay,
+        storyImageUrl: settings.storyImageUrl,
+        storyTitle: settings.storyTitle as Record<string, string> | null,
+        storyText: settings.storyText as Record<string, string> | null,
       } : null} />
     </div>
   );

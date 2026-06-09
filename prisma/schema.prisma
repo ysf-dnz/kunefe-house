@@ -23,6 +23,11 @@ model SiteSettings {
   mapDescription  Json?
   contactEmail    String?
   contactAddress  Json?
+  heroVideoUrl    String?
+  heroOverlay     Float?   @default(0.5)
+  storyTitle      Json?
+  storyText       Json?
+  storyImageUrl   String?
   enabledLocales  String[] @default(["tr", "en", "ar"])
   updatedAt       DateTime @updatedAt
 }

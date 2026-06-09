@@ -9,7 +9,8 @@ export async function POST(req: Request) {
   const file = formData.get("file");
   const folder = (formData.get("folder") as string) || "misc";
   if (!(file instanceof File)) return NextResponse.json({ error: "Dosya yok" }, { status: 400 });
-  if (!file.type.startsWith("image/")) return NextResponse.json({ error: "Sadece görsel yüklenebilir" }, { status: 400 });
+  const okType = file.type.startsWith("image/") || file.type.startsWith("video/");
+  if (!okType) return NextResponse.json({ error: "Sadece görsel veya video yüklenebilir" }, { status: 400 });
   try {
     const url = await uploadImage(folder, file);
     return NextResponse.json({ url });

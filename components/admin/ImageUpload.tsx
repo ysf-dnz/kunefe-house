@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 
-export function ImageUpload({ name, label, folder, defaultUrl }: { name: string; label: string; folder: string; defaultUrl?: string | null; }) {
+export function ImageUpload({ name, label, folder, defaultUrl, accept = "image/*" }: { name: string; label: string; folder: string; defaultUrl?: string | null; accept?: string; }) {
   const [url, setUrl] = useState(defaultUrl ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const isVideo = /\.(mp4|webm|mov)(\?|$)/i.test(url);
 
   async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -30,9 +31,11 @@ export function ImageUpload({ name, label, folder, defaultUrl }: { name: string;
   return (
     <div className="flex flex-col gap-2">
       <label className="text-sm text-cream/80">{label}</label>
-      {url && <Image src={url} alt="" width={120} height={120} className="h-28 w-28 rounded object-cover" />}
+      {url && (isVideo
+        ? <video src={url} className="h-28 w-28 rounded object-cover" muted />
+        : <Image src={url} alt="" width={120} height={120} className="h-28 w-28 rounded object-cover" />)}
       <input type="hidden" name={name} value={url} />
-      <input type="file" accept="image/*" onChange={onChange}
+      <input type="file" accept={accept} onChange={onChange}
         className="text-sm text-cream/70 file:mr-3 file:rounded file:border-0 file:bg-gold file:px-3 file:py-1 file:text-forest" />
       {loading && <p className="text-xs text-cream/60">Yükleniyor…</p>}
       {error && <p className="text-xs text-red-400">{error}</p>}
