@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { auth } from "@/auth";
 
+// Admin oturum-bağımlı; her zaman dinamik render edilir (prerender edilmez).
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await auth();
   if (!session) {

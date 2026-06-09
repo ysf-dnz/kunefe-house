@@ -46,7 +46,7 @@ export async function generateMetadata({
 // SiteSettings (WhatsApp no/mesaj, hero) DB'den okunur ve admin'den anlık
 // değişebilir; bu yüzden subtree dynamic render edilir. SSG/CWV optimizasyonu
 // (ör. "use cache" + cacheTag) Faz 5'te ele alınacak.
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function LocaleLayout({
   children,
