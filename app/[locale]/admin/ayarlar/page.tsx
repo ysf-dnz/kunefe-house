@@ -17,7 +17,7 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         heroSubtitle: settings.heroSubtitle as Record<string, string> | null,
         whatsappMessage: settings.whatsappMessage as Record<string, string> | null,
         logoHeaderUrl: settings.logoHeaderUrl,
-        logoFooterUrl: settings.logoFooterUrl,
+        logoHeight: settings.logoHeight,
         contactEmail: settings.contactEmail,
         heroVideoUrl: settings.heroVideoUrl,
         heroOverlay: settings.heroOverlay,

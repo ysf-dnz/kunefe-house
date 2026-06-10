@@ -12,6 +12,7 @@ model SiteSettings {
   id              Int      @id @default(1)
   logoHeaderUrl   String?
   logoFooterUrl   String?
+  logoHeight      Int?     @default(60)
   faviconUrl      String?
   whatsappNumber  String?
   whatsappMessage Json?

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-export function HeaderClient({ logoUrl }: { logoUrl: string | null }) {
+export function HeaderClient({ logoUrl, logoHeight = 60 }: { logoUrl: string | null; logoHeight?: number }) {
   const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,8 +33,9 @@ export function HeaderClient({ logoUrl }: { logoUrl: string | null }) {
       <div className="flex items-center justify-between px-6">
         <Link href="/" className="font-serif text-xl tracking-wide text-cream">
           {logoUrl ? (
-            <Image src={logoUrl} alt="Kunefe House" width={140} height={48}
-              className={`w-auto transition-all ${scrolled ? "h-8" : "h-11"}`} priority />
+            <Image src={logoUrl} alt="Kunefe House" width={280} height={logoHeight}
+              style={{ height: scrolled ? Math.round(logoHeight * 0.7) : logoHeight }}
+              className="w-auto transition-all" priority />
           ) : (
             <>
               KUNEFE <span className="text-gold-gradient">HOUSE</span>

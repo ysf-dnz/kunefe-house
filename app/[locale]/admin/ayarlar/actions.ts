@@ -22,7 +22,7 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
   const heroSubtitle = readLocalized(formData, "heroSubtitle");
   const whatsappMessage = readLocalized(formData, "whatsappMessage");
   const logoHeaderUrl = (formData.get("logoHeaderUrl") as string) || null;
-  const logoFooterUrl = (formData.get("logoFooterUrl") as string) || null;
+  const logoHeight = Math.min(120, Math.max(32, parseInt((formData.get("logoHeight") as string) || "60", 10) || 60));
   const contactEmail = (formData.get("contactEmail") as string) || null;
   const heroVideoUrl = (formData.get("heroVideoUrl") as string) || null;
   const heroOverlay = parseFloat((formData.get("heroOverlay") as string) || "0.5");
@@ -32,7 +32,7 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
   const privacyPolicy = readLocalized(formData, "privacyPolicy");
   const cookiePolicy = readLocalized(formData, "cookiePolicy");
   const data = {
-    whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail,
+    whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoHeight, contactEmail,
     heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText, privacyPolicy, cookiePolicy,
   };
   try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { LocalizedInput } from "./LocalizedInput";
 import { ImageUpload } from "./ImageUpload";
 import { SubmitButton } from "./SubmitButton";
@@ -12,7 +12,7 @@ type Settings = {
   heroSubtitle: Record<string, string> | null;
   whatsappMessage: Record<string, string> | null;
   logoHeaderUrl: string | null;
-  logoFooterUrl: string | null;
+  logoHeight: number | null;
   contactEmail: string | null;
   heroVideoUrl: string | null;
   heroOverlay: number | null;
@@ -25,10 +25,31 @@ type Settings = {
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
   const [state, formAction] = useActionState<SaveState, FormData>(updateSettings, {});
+  const [logoHeight, setLogoHeight] = useState(settings?.logoHeight ?? 60);
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-6">
-      <ImageUpload name="logoHeaderUrl" label="Logo (Header)" folder="logos" defaultUrl={settings?.logoHeaderUrl} />
-      <ImageUpload name="logoFooterUrl" label="Logo (Footer)" folder="logos" defaultUrl={settings?.logoFooterUrl} />
+      <ImageUpload name="logoHeaderUrl" label="Logo" folder="logos" defaultUrl={settings?.logoHeaderUrl} />
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-cream/80">
+          Logo Boyutu: <span className="text-gold">{logoHeight}px</span>
+        </label>
+        <input
+          type="range"
+          name="logoHeight"
+          min={32}
+          max={120}
+          step={2}
+          value={logoHeight}
+          onChange={(e) => setLogoHeight(parseInt(e.target.value, 10))}
+          className="w-full accent-[#C9A227]"
+        />
+        {settings?.logoHeaderUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={settings.logoHeaderUrl} alt="Logo önizleme" style={{ height: logoHeight }}
+            className="w-auto self-start rounded bg-forest p-1" />
+        )}
+        <span className="text-xs text-cream/40">Sitedeki üst menüde logonun yüksekliği (canlı önizleme yukarıda).</span>
+      </div>
       <div className="flex flex-col gap-2">
         <label className="text-sm text-cream/80">WhatsApp Numarası</label>
         <input name="whatsappNumber" defaultValue={settings?.whatsappNumber ?? ""} placeholder="905555555555"
