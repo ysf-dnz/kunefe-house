@@ -7,8 +7,10 @@ import { routing, getDir } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { NewsPopup } from "@/components/public/NewsPopup";
+import { CookieBanner } from "@/components/public/CookieBanner";
 import { getPopupNews } from "@/lib/news";
 import { getSiteSettings, getSocialLinks } from "@/lib/settings";
 import { organizationSchema, restaurantSchema } from "@/lib/schema";
@@ -83,6 +85,7 @@ export default async function LocaleLayout({
           <main>{children}</main>
           <Footer />
           <WhatsAppButton />
+          <CookieBanner />
           {popupNews && (
             <NewsPopup
               id={popupNews.id}
@@ -92,6 +95,7 @@ export default async function LocaleLayout({
             />
           )}
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );

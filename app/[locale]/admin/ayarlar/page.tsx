@@ -24,6 +24,8 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         storyImageUrl: settings.storyImageUrl,
         storyTitle: settings.storyTitle as Record<string, string> | null,
         storyText: settings.storyText as Record<string, string> | null,
+        privacyPolicy: settings.privacyPolicy as Record<string, string> | null,
+        cookiePolicy: settings.cookiePolicy as Record<string, string> | null,
       } : null} />
     </div>
   );

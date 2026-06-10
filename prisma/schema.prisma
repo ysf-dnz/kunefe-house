@@ -28,6 +28,8 @@ model SiteSettings {
   storyTitle      Json?
   storyText       Json?
   storyImageUrl   String?
+  privacyPolicy   Json?
+  cookiePolicy    Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
   updatedAt       DateTime @updatedAt
 }

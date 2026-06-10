@@ -29,9 +29,11 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
   const storyImageUrl = (formData.get("storyImageUrl") as string) || null;
   const storyTitle = readLocalized(formData, "storyTitle");
   const storyText = readLocalized(formData, "storyText");
+  const privacyPolicy = readLocalized(formData, "privacyPolicy");
+  const cookiePolicy = readLocalized(formData, "cookiePolicy");
   const data = {
     whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoFooterUrl, contactEmail,
-    heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText,
+    heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText, privacyPolicy, cookiePolicy,
   };
   try {
     await prisma.siteSettings.upsert({

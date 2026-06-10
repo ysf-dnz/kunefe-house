@@ -54,6 +54,14 @@ export function FranchiseForm({ whatsappNumber }: { whatsappNumber: string | nul
       <textarea name="locationNote" rows={3} placeholder="Lokasyon / not (opsiyonel)"
         className="rounded-lg border border-copper/30 bg-forest/60 px-4 py-3 text-cream placeholder:text-cream/40" />
 
+      <label className="flex items-start gap-2 text-xs text-cream/70">
+        <input type="checkbox" name="kvkk" required className="mt-0.5" />
+        <span>
+          <a href="/gizlilik" target="_blank" className="text-gold underline">Gizlilik Politikası ve KVKK</a> metnini
+          okudum; kişisel verilerimin başvurum kapsamında işlenmesini onaylıyorum.
+        </span>
+      </label>
+
       {state.error && <p className="text-sm text-red-400">{state.error}</p>}
 
       <button type="submit" disabled={pending}

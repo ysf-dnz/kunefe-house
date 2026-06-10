@@ -19,6 +19,8 @@ type Settings = {
   storyImageUrl: string | null;
   storyTitle: Record<string, string> | null;
   storyText: Record<string, string> | null;
+  privacyPolicy: Record<string, string> | null;
+  cookiePolicy: Record<string, string> | null;
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
@@ -55,6 +57,11 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <ImageUpload name="storyImageUrl" label="Hikâye Görseli (parallax)" folder="story" defaultUrl={settings?.storyImageUrl} />
       <LocalizedInput name="storyTitle" label="Hikâye Başlık" defaultValue={settings?.storyTitle} />
       <LocalizedInput name="storyText" label="Hikâye Metni" defaultValue={settings?.storyText} multiline />
+
+      <div className="gold-divider my-2" />
+      <h2 className="font-serif text-gold">Yasal Metinler (KVKK)</h2>
+      <LocalizedInput name="privacyPolicy" label="Gizlilik Politikası ve KVKK" defaultValue={settings?.privacyPolicy} multiline />
+      <LocalizedInput name="cookiePolicy" label="Çerez Politikası" defaultValue={settings?.cookiePolicy} multiline />
 
       <div className="mt-2 flex items-center gap-3">
         <SubmitButton />

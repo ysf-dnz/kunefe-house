@@ -21,6 +21,9 @@ export async function submitApplication(
   if (!name || !phone || !city) {
     return { error: "İsim, telefon ve şehir zorunludur." };
   }
+  if (formData.get("kvkk") !== "on") {
+    return { error: "Devam etmek için KVKK onayı gereklidir." };
+  }
 
   await prisma.franchiseApplication.create({
     data: { name, phone, city, budget, locationNote, status: "new" },
