@@ -33,10 +33,14 @@ export async function createProduct(formData: FormData) {
   await guard();
   const title = readLocalized(formData, "title");
   if (!title.tr.trim()) throw new Error("Türkçe başlık zorunlu");
+  // Boş slug (örn. yalnız özel karakter) ve aynı isimli ürün çakışmasına karşı koruma
+  const base = slugify(title.tr) || "urun";
+  const existing = await prisma.product.findUnique({ where: { slug: base }, select: { id: true } });
+  const slug = existing ? `${base}-${Date.now().toString(36)}` : base;
   await prisma.product.create({
     data: {
       title,
-      slug: slugify(title.tr),
+      slug,
       shortDescription: readLocalized(formData, "shortDescription"),
       ingredients: parseIngredients((formData.get("ingredients") as string) ?? ""),
       primaryImageUrl: (formData.get("primaryImageUrl") as string) || null,

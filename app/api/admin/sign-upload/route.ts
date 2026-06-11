@@ -20,7 +20,9 @@ export async function POST(req: Request) {
   if (!url || !key) return NextResponse.json({ error: "Storage yapılandırması eksik" }, { status: 500 });
 
   const sb = createClient(url, key, { auth: { persistSession: false } });
-  const path = buildStoragePath(folder || "misc", filename);
+  // Klasör adı yalnız harf/rakam/tire: keyfi depolama yolu engellenir
+  const safeFolder = /^[a-z0-9-]{1,40}$/.test(folder || "") ? (folder as string) : "misc";
+  const path = buildStoragePath(safeFolder, filename);
   const { data, error } = await sb.storage.from(MEDIA_BUCKET).createSignedUploadUrl(path);
   if (error || !data) {
     return NextResponse.json({ error: error?.message || "İmza üretilemedi" }, { status: 500 });

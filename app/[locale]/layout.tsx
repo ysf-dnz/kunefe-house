@@ -28,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const settings = await getSiteSettings();
+  const settings = await getSiteSettings().catch(() => null);
   const loc = locale as Locale;
   const title =
     localize(settings?.heroTitle as Record<string, string> | null, loc) ||
@@ -62,10 +62,11 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
+  // DB anlık erişilemezse site çökmesin: boş varsayılanlarla render edilir.
   const [settings, socials, popupNews] = await Promise.all([
-    getSiteSettings(),
-    getSocialLinks(),
-    getPopupNews(),
+    getSiteSettings().catch(() => null),
+    getSocialLinks().catch(() => []),
+    getPopupNews().catch(() => null),
   ]);
   const loc = locale as Locale;
 
