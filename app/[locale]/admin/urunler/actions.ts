@@ -21,6 +21,13 @@ function readLocalized(form: FormData, name: string) {
 function parseIngredients(raw: string) {
   return raw.split("\n").map((s) => s.trim()).filter(Boolean);
 }
+function parsePrice(form: FormData, name: string): number | null {
+  const raw = ((form.get(name) as string) ?? "").trim().replace(",", ".");
+  if (!raw) return null;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return Math.round(n * 100) / 100;
+}
 
 export async function createProduct(formData: FormData) {
   await guard();
@@ -36,6 +43,9 @@ export async function createProduct(formData: FormData) {
       secondaryImageUrl: (formData.get("secondaryImageUrl") as string) || null,
       categoryId: (formData.get("categoryId") as string) || null,
       featured: formData.get("featured") === "on",
+      price: parsePrice(formData, "price"),
+      oldPrice: parsePrice(formData, "oldPrice"),
+      showPrice: formData.get("showPrice") === "on",
     },
   });
   revalidatePath("/admin/urunler");
@@ -56,6 +66,9 @@ export async function updateProduct(formData: FormData) {
       secondaryImageUrl: (formData.get("secondaryImageUrl") as string) || null,
       categoryId: (formData.get("categoryId") as string) || null,
       featured: formData.get("featured") === "on",
+      price: parsePrice(formData, "price"),
+      oldPrice: parsePrice(formData, "oldPrice"),
+      showPrice: formData.get("showPrice") === "on",
     },
   });
   revalidatePath("/admin/urunler");

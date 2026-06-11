@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/ProductForm";
+import { toNumber } from "@/lib/price";
 import { updateProduct } from "../actions";
 
 export default async function UrunDuzenlePage({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -28,6 +29,9 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
           secondaryImageUrl: product.secondaryImageUrl,
           categoryId: product.categoryId,
           featured: product.featured,
+          price: toNumber(product.price),
+          oldPrice: toNumber(product.oldPrice),
+          showPrice: product.showPrice,
         }} />
     </div>
   );

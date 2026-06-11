@@ -12,14 +12,21 @@ export async function submitApplication(
   const honey = (formData.get("website") as string) || "";
   if (honey.trim()) return { ok: true };
 
-  const name = ((formData.get("name") as string) || "").trim();
-  const phone = ((formData.get("phone") as string) || "").trim();
-  const city = ((formData.get("city") as string) || "").trim();
-  const budget = ((formData.get("budget") as string) || "").trim() || null;
-  const locationNote = ((formData.get("locationNote") as string) || "").trim() || null;
+  const clamp = (v: FormDataEntryValue | null, max: number) =>
+    (typeof v === "string" ? v : "").trim().slice(0, max);
+
+  const name = clamp(formData.get("name"), 120);
+  const phone = clamp(formData.get("phone"), 32);
+  const city = clamp(formData.get("city"), 80);
+  const budget = clamp(formData.get("budget"), 60) || null;
+  const locationNote = clamp(formData.get("locationNote"), 1000) || null;
 
   if (!name || !phone || !city) {
     return { error: "İsim, telefon ve şehir zorunludur." };
+  }
+  // Telefon: en az 10 rakam içermeli (basit format doğrulaması)
+  if ((phone.match(/\d/g)?.length ?? 0) < 10) {
+    return { error: "Geçerli bir telefon numarası girin." };
   }
   if (formData.get("kvkk") !== "on") {
     return { error: "Devam etmek için KVKK onayı gereklidir." };

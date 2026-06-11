@@ -62,6 +62,9 @@ model Product {
   categoryId        String?
   category          ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   featured          Boolean          @default(false)
+  price             Decimal?         @db.Decimal(10, 2)
+  oldPrice          Decimal?         @db.Decimal(10, 2)
+  showPrice         Boolean          @default(false)
   order             Int              @default(0)
   createdAt         DateTime         @default(now())
 }
