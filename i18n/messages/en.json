@@ -2,5 +2,20 @@
   "nav": { "home": "Home", "ingredients": "Our Ingredients", "menu": "Our Flavors", "franchise": "Franchise", "contact": "Contact" },
   "hero": { "title": "A Taste Bridging Tradition and Future", "discover": "Discover Flavors", "franchise": "Become a Franchisee" },
   "whatsapp": { "label": "WhatsApp", "message": "Hello, I would like to get information." },
-  "footer": { "rights": "All rights reserved." }
+  "footer": { "rights": "All rights reserved." },
+  "order": {
+    "selectPortion": "For how many?",
+    "orderButton": "Order Now",
+    "shareLocation": "Share My Location",
+    "locationReceived": "Location received ✓",
+    "locationFailed": "Couldn't get location, please type your address",
+    "addressNote": "Address (building / floor / flat / directions)",
+    "name": "Full Name",
+    "phone": "Phone",
+    "extraNote": "Anything to add (optional)",
+    "send": "Send via WhatsApp",
+    "fromPrice": "from {price} ₺",
+    "cancel": "Cancel",
+    "requiredHint": "Name, phone and address are required."
+  }
 }
