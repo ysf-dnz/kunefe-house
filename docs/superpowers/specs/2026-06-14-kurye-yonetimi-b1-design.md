@@ -28,6 +28,7 @@ model Courier {
   id          String   @id @default(cuid())
   name        String
   phone       String
+  vehicle     String?                    // taşıt türü / plaka (ör. "Motor 34 ABC 123")
   isAvailable Boolean  @default(true)   // müsait / meşgul
   isActive    Boolean  @default(true)   // aktif / pasif (işten ayrılan pasif yapılır, silinmez)
   note        String?
@@ -57,7 +58,7 @@ Tek migration: `Courier` tablosu + `Order.courierId`/`assignedAt`. Yalnız addit
 ## 3. Admin "Kuryeler" Sayfası (`/admin/kuryeler`)
 
 - **Liste:** aktif kuryeler üstte; her satır: ad, telefon, müsaitlik rozeti (🟢 Müsait / 🔴 Meşgul), aktif/pasif.
-- **Ekle formu:** ad (zorunlu), telefon (zorunlu), not (opsiyonel). `SubmitButton` deseni.
+- **Ekle formu:** ad (zorunlu), telefon (zorunlu), taşıt/plaka (opsiyonel), not (opsiyonel). `SubmitButton` deseni.
 - **Müsaitlik toggle:** tek tık müsait ↔ meşgul (server action).
 - **Aktif/pasif toggle:** pasif kurye atama listesinde görünmez ama sipariş geçmişi korunur.
 - **Sil:** kalıcı silme (atanmış siparişlerde `courierId` null'lanır — FK SetNull).
@@ -68,6 +69,7 @@ Tek migration: `Courier` tablosu + `Order.courierId`/`assignedAt`. Yalnız addit
 
 Mevcut sipariş kartına eklenir:
 - **Kurye dropdown'u:** seçenekler = *aktif + müsait* kuryeler; sipariş zaten atanmışsa o kurye (pasif/meşgul olsa da) seçili gösterilir. "Ata" → `order.courierId` + `assignedAt = now()` yazılır.
+- **Otomatik durum yükseltme:** atama sırasında sipariş durumu `new` veya `confirmed` ise otomatik `preparing` (Hazırlanıyor) yapılır. Zaten `preparing`/`on_the_way`/`delivered` ise dokunulmaz (geri alma yok). Atamayı kaldırma durumu değiştirmez.
 - **Atanan kurye etiketi:** kart üstünde "🛵 {kurye adı}".
 - **"Kuryeye Gönder" butonu:** atanmış kurye varsa görünür → kuryenin telefonuna `wa.me` linki, mesaj `buildCourierMessage` ile (bkz. §4.1). Yeni sekmede açılır.
 - **Atamayı kaldır:** dropdown'da "— Kurye yok —" seçeneği → `courierId` null.
@@ -90,10 +92,11 @@ Lütfen siparişi teslim alıp yola çıktığında bilgi ver.
 
 - Boş alanlar (konum yoksa 📍 satırı, telefon yoksa 📞 satırı) atlanır.
 - `buildWhatsAppHref` (mevcut) ile kuryenin numarasına link üretilir.
+- **Dil:** B1'de yalnız Türkçe (kurye yerel personel). `buildCourierMessage` etiketleri tek bir TR sözlükte; ileride yabancı kurye olursa `order-message.ts`'deki gibi locale haritasına çevirmek 5 dakikalık iştir (şimdi YAGNI).
 
 ## 5. Sipariş Durum Makinesi
 
-Değer kümesi (TR etiketleri admin'de): `new` (Yeni) → `confirmed` (Onaylandı) → `preparing` (Hazırlanıyor) → `on_the_way` (Yolda) → `delivered` (Teslim edildi) · `cancelled` (İptal). Faz A'daki durum dropdown'u bu kümeyle hizalanır (eksik `preparing` eklenir). Durum geçişleri serbest (admin elle seçer); katı state-machine zorlaması YOK (YAGNI). Atama durumu değiştirmez (status ayrı, admin kontrolünde).
+Değer kümesi (TR etiketleri admin'de): `new` (Yeni) → `confirmed` (Onaylandı) → `preparing` (Hazırlanıyor) → `on_the_way` (Yolda) → `delivered` (Teslim edildi) · `cancelled` (İptal). Faz A'daki durum dropdown'u bu kümeyle hizalanır (eksik `preparing` eklenir). Durum geçişleri serbest (admin elle seçer); katı state-machine zorlaması YOK (YAGNI). Tek otomatik geçiş: kurye atama `new`/`confirmed` → `preparing` (§4).
 
 ---
 
