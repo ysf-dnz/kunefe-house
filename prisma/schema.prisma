@@ -166,6 +166,22 @@ model Order {
   locationUrl   String?
   lat           Float?
   lng           Float?
+  courierId     String?
+  courier       Courier? @relation(fields: [courierId], references: [id], onDelete: SetNull)
+  assignedAt    DateTime?
   status        String   @default("new")
   createdAt     DateTime @default(now())
+}
+
+model Courier {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  vehicle     String?
+  isAvailable Boolean  @default(true)
+  isActive    Boolean  @default(true)
+  note        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  orders      Order[]
 }
