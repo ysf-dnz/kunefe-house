@@ -48,6 +48,7 @@ model Order {
   customerName  String?
   customerPhone String?
   addressNote   String?                       // bina/kat/daire/tarif
+  note          String?                       // müşterinin ekstra isteği/notu
   locationUrl   String?                       // google maps linki
   lat           Float?
   lng           Float?
@@ -79,10 +80,11 @@ Buton (gold) tıklanınca alttan açılan kart:
 1. **📍 "Konumumu Paylaş"** — tarayıcı Geolocation API izni ister.
    - Başarılı: `lat`/`lng` alınır, Google Maps linki üretilir (`https://maps.google.com/?q=lat,lng`), "Konum alındı ✓" gösterilir.
    - Reddedilir/başarısız: kullanıcıya bilgi verilir; akış metin adresle devam eder (konum opsiyonel).
-2. **🏠 Adres detayı** — textarea (bina/kat/daire/tarif).
-3. **👤 Ad** + **📞 Telefon** — input.
-4. **Honeypot** gizli alan (spam koruması).
-5. **"WhatsApp'tan Gönder"** butonu.
+2. **🏠 Adres detayı** — textarea (bina/kat/daire/tarif). **Zorunlu.**
+3. **👤 Ad** + **📞 Telefon** — input. **Her ikisi de zorunlu.**
+4. **📝 Eklemek istedikleriniz** — textarea (opsiyonel). Müşterinin ekstra isteği/notu (örn. "az şerbetli", "kapıda zili çalmayın"). WP mesajına eklenir.
+5. **Honeypot** gizli alan (spam koruması).
+6. **"WhatsApp'tan Gönder"** butonu — zorunlu alanlar dolmadan pasif/uyarılı.
 
 ### 3.3 Gönderim
 - Önce best-effort server action (`createOrder`) çağrılır; `await` edilir ama hata yakalanır ve yutulur (akış durmaz).
@@ -105,12 +107,14 @@ Porsiyon: 4 kişilik · 320 ₺
 📞 05XX XXX XX XX
 📍 Konum: https://maps.google.com/?q=41.0123,28.9765
 🏠 Adres: X mah. Y sok. A apt. kat 3 D5
+📝 Not: Az şerbetli olsun
 
 Siparişi onaylıyorum.
 ```
 
-- Fiyat gizliyse ("Porsiyon: 4 kişilik" satırında tutar kısmı atlanır).
+- **Fiyat gizliyse:** "Porsiyon: 4 kişilik" yazılır, tutar yerine ayrı satır: "Fiyat: WhatsApp'tan teyit edilecek".
 - Konum yoksa "📍 Konum" satırı atlanır.
+- Not boşsa "📝 Not" satırı atlanır.
 - `buildWhatsAppHref` (mevcut, rakam temizleyen) kullanılır; numara `SiteSettings.whatsappNumber`.
 
 ---
@@ -175,4 +179,25 @@ Siparişi onaylıyorum.
 - DB kapalıyken: WhatsApp yine açılır (best-effort doğrulaması).
 - Admin: porsiyon ekle/sil/kaydet; siparişler listesi yeni kaydı gösterir; konum linki Maps açar.
 - Güvenlik: aşırı uzun/zararlı girişler kırpılır; geçersiz lat/lng null'lanır; honeypot çalışır.
+- Zorunlu alanlar (ad, telefon, adres) dolmadan gönder pasif.
 - `tsc --noEmit` + `next build` temiz.
+
+---
+
+## 9. Gelecek Fazlar (KAPSAM DIŞI — not amaçlı)
+
+Bunlar Faz A'ya dahil **değildir**; ileride ayrı spec'lerle ele alınacaktır. Kullanıcı talebi üzerine kayıt altına alınmıştır.
+
+### Faz B — Kurye yönetimi + canlı konum
+- Admin'de kurye CRUD, müsait kurye atama.
+- Sipariş durum makinesi (`new → confirmed → preparing → on_the_way → delivered`).
+- Canlı konum: kuryenin telefonunda açtığı ayrı kurye web uygulaması (Geolocation paylaşır) → admin haritada izler. (WhatsApp canlı konumu panele aktaramaz.)
+
+### Faz C — CRM / otomasyon (WhatsApp Business Cloud API gerektirir)
+Aşağıdakilerin tamamı **otomatik giden mesaj** gerektirir; `wa.me` deep-link ile mümkün değildir. Ön koşul: doğrulanmış WhatsApp Business hesabı + onaylı şablon mesajlar + webhook + (muhtemelen) ödeme sağlayıcı entegrasyonu.
+- **Ödeme linki:** WhatsApp üzerinden ödeme linki üretip tahsilat (iyzico/PayTR/Stripe link vb.).
+- **Teslimat teyidi:** "Siparişiniz ulaştı mı?" otomatik mesajı.
+- **Teslimat süresi takibi:** sipariş→teslim arası dakika ölçümü, sistemde raporlanır.
+- **Memnuniyet anketi:** teslimden birkaç saat sonra otomatik memnuniyet sorusu.
+
+> Not: Faz C'ye geçilirse mevcut `wa.me` akışı korunur; otomasyon katmanı onun üzerine eklenir. Faz A'daki `Order` kaydı bu fazların veri temelini oluşturur.
