@@ -2,5 +2,20 @@
   "nav": { "home": "الرئيسية", "ingredients": "مكوناتنا", "menu": "نكهاتنا", "franchise": "حقوق الامتياز", "contact": "اتصل بنا" },
   "hero": { "title": "نكهة تمتد من التقاليد إلى المستقبل", "discover": "اكتشف النكهات", "franchise": "كن صاحب امتياز" },
   "whatsapp": { "label": "واتساب", "message": "مرحباً، أود الحصول على معلومات." },
-  "footer": { "rights": "جميع الحقوق محفوظة." }
+  "footer": { "rights": "جميع الحقوق محفوظة." },
+  "order": {
+    "selectPortion": "لكم شخص؟",
+    "orderButton": "اطلب الآن",
+    "shareLocation": "شارك موقعي",
+    "locationReceived": "تم تحديد الموقع ✓",
+    "locationFailed": "تعذّر تحديد الموقع، يرجى كتابة العنوان",
+    "addressNote": "العنوان (المبنى / الطابق / الشقة / وصف)",
+    "name": "الاسم الكامل",
+    "phone": "الهاتف",
+    "extraNote": "أي إضافة (اختياري)",
+    "send": "أرسل عبر واتساب",
+    "fromPrice": "ابتداءً من {price}",
+    "cancel": "إلغاء",
+    "requiredHint": "الاسم والهاتف والعنوان مطلوبة."
+  }
 }

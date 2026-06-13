@@ -1,6 +1,8 @@
 import { LocalizedInput } from "./LocalizedInput";
 import { ImageUpload } from "./ImageUpload";
 import { SubmitButton } from "./SubmitButton";
+import { PortionEditor } from "./PortionEditor";
+import type { Portion } from "@/lib/portions";
 
 type Category = { id: string; name: Record<string, string> | unknown };
 type ProductData = {
@@ -15,6 +17,7 @@ type ProductData = {
   price?: number | null;
   oldPrice?: number | null;
   showPrice?: boolean;
+  portions?: Portion[] | null;
 };
 
 export function ProductForm({ action, categories, product }: { action: (formData: FormData) => void; categories: Category[]; product?: ProductData; }) {
@@ -67,6 +70,10 @@ export function ProductForm({ action, categories, product }: { action: (formData
         </div>
       </div>
       <p className="text-xs text-cream/50">Eski fiyat doluysa üstü çizili gösterilir ve indirim rozeti çıkar. Fiyatı gizlemek için “Fiyatı sitede göster” işaretini kaldırın.</p>
+
+        <div className="gold-divider my-1" />
+        <h2 className="font-serif text-gold">Porsiyonlar (kişi sayısına göre fiyat)</h2>
+        <PortionEditor name="portions" defaultValue={product?.portions} />
 
       <SubmitButton />
       <p className="text-xs text-cream/50">Kaydedince ürün listesine yönlendirilirsiniz.</p>

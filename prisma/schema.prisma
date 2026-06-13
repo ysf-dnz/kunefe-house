@@ -61,10 +61,12 @@ model Product {
   secondaryImageUrl String?
   categoryId        String?
   category          ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orders            Order[]
   featured          Boolean          @default(false)
   price             Decimal?         @db.Decimal(10, 2)
   oldPrice          Decimal?         @db.Decimal(10, 2)
   showPrice         Boolean          @default(false)
+  portions          Json?            // [{ persons: number, price: number, oldPrice?: number }]
   order             Int              @default(0)
   createdAt         DateTime         @default(now())
 }
@@ -148,4 +150,22 @@ model SeoMeta {
   title       Json?
   description Json?
   ogImageUrl  String?
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  productId     String?
+  product       Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productTitle  String
+  persons       Int?
+  price         Decimal? @db.Decimal(10, 2)
+  customerName  String?
+  customerPhone String?
+  addressNote   String?
+  note          String?
+  locationUrl   String?
+  lat           Float?
+  lng           Float?
+  status        String   @default("new")
+  createdAt     DateTime @default(now())
 }

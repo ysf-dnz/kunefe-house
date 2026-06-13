@@ -3,10 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { formatPrice, discountPercent } from "@/lib/price";
+import type { Portion } from "@/lib/portions";
+import { minPortionPrice } from "@/lib/portions";
 
-export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice }: {
+export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice, portions }: {
   slug: string;
   title: Record<string, string> | null;
   shortDescription: Record<string, string> | null;
@@ -16,9 +19,17 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
   price?: number | null;
   oldPrice?: number | null;
   showPrice?: boolean;
+  portions?: Portion[] | null;
 }) {
-  const priceVisible = showPrice && price != null;
-  const discount = priceVisible ? discountPercent(price ?? null, oldPrice ?? null) : null;
+  const t = useTranslations("order");
+  const portionList = portions ?? [];
+  const fromPrice = portionList.length > 0 ? minPortionPrice(portionList) : null;
+  // En düşük fiyatlı porsiyonu (kartta gösterilen) baz al; yoksa tekil fiyata düş.
+  const fromPortion = fromPrice != null ? portionList.find((p) => p.price === fromPrice) ?? null : null;
+  const cardPrice = fromPrice != null ? fromPrice : price ?? null;
+  const cardOldPrice = fromPortion ? fromPortion.oldPrice ?? null : oldPrice ?? null;
+  const priceVisible = showPrice && cardPrice != null;
+  const discount = priceVisible ? discountPercent(cardPrice, cardOldPrice) : null;
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -49,9 +60,15 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           <p className="mt-1.5 text-sm leading-relaxed text-cream/70">{localize(shortDescription, locale)}</p>
           {priceVisible && (
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-serif text-lg text-gold">{formatPrice(price ?? null, locale)}</span>
-              {oldPrice != null && oldPrice > (price ?? 0) && (
-                <span className="text-sm text-cream/40 line-through">{formatPrice(oldPrice, locale)}</span>
+              {fromPrice != null ? (
+                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, locale) ?? "" })}</span>
+              ) : (
+                <>
+                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, locale)}</span>
+                  {cardOldPrice != null && cardOldPrice > (cardPrice ?? 0) && (
+                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, locale)}</span>
+                  )}
+                </>
               )}
             </div>
           )}

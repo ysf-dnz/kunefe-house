@@ -4,6 +4,7 @@ import { getProducts, getCategories } from "@/lib/products";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { toNumber } from "@/lib/price";
 import { ProductCard } from "@/components/public/ProductCard";
+import type { Portion } from "@/lib/portions";
 import { buildMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -58,7 +59,8 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
               title={p.title as Record<string, string> | null}
               shortDescription={p.shortDescription as Record<string, string> | null}
               primaryImageUrl={p.primaryImageUrl} secondaryImageUrl={p.secondaryImageUrl}
-              price={toNumber(p.price)} oldPrice={toNumber(p.oldPrice)} showPrice={p.showPrice} />
+              price={toNumber(p.price)} oldPrice={toNumber(p.oldPrice)} showPrice={p.showPrice}
+              portions={(p.portions as Portion[] | null) ?? null} />
           ))}
         </div>
       )}

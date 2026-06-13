@@ -2,5 +2,20 @@
   "nav": { "home": "Ana Sayfa", "ingredients": "Malzemelerimiz", "menu": "Lezzetlerimiz", "franchise": "Bayilik", "contact": "İletişim" },
   "hero": { "title": "Gelenekten Geleceğe Uzanan Lezzet", "discover": "Lezzetleri Keşfet", "franchise": "Bayi Ol" },
   "whatsapp": { "label": "WhatsApp", "message": "Merhaba Kunefe House ve ürünleriniz hakkında bilgi alabilirmiyim?" },
-  "footer": { "rights": "Tüm hakları saklıdır." }
+  "footer": { "rights": "Tüm hakları saklıdır." },
+  "order": {
+    "selectPortion": "Kaç kişilik?",
+    "orderButton": "Sipariş Ver",
+    "shareLocation": "Konumumu Paylaş",
+    "locationReceived": "Konum alındı ✓",
+    "locationFailed": "Konum alınamadı, lütfen adresi yazın",
+    "addressNote": "Adres (bina / kat / daire / tarif)",
+    "name": "Ad Soyad",
+    "phone": "Telefon",
+    "extraNote": "Eklemek istedikleriniz (opsiyonel)",
+    "send": "WhatsApp'tan Gönder",
+    "fromPrice": "{price}'den başlayan",
+    "cancel": "Vazgeç",
+    "requiredHint": "Ad, telefon ve adres zorunludur."
+  }
 }
