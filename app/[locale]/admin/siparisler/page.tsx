@@ -3,10 +3,13 @@ import { requireAdmin } from "@/lib/require-admin";
 import { getOrders } from "@/lib/orders";
 import { toNumber, formatPrice } from "@/lib/price";
 import { updateOrderStatus, deleteOrder } from "./actions";
+import { getAvailableCouriers } from "@/lib/couriers";
+import { CourierAssign } from "@/components/admin/CourierAssign";
 
 const STATUS: Record<string, { label: string; cls: string }> = {
   new: { label: "Yeni", cls: "text-gold" },
   confirmed: { label: "Onaylandı", cls: "text-pistachio" },
+  preparing: { label: "Hazırlanıyor", cls: "text-amber-400" },
   on_the_way: { label: "Yolda", cls: "text-blue-400" },
   delivered: { label: "Teslim edildi", cls: "text-green-400" },
   cancelled: { label: "İptal", cls: "text-red-400" },
@@ -17,6 +20,8 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
   const { locale } = await params;
   setRequestLocale(locale);
   const orders = await getOrders();
+  const availableCouriers = await getAvailableCouriers();
+  const courierLite = availableCouriers.map((c) => ({ id: c.id, name: c.name, phone: c.phone }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,6 +40,7 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                 <p className="text-sm text-cream/70">
                   {o.customerName ?? "—"}{o.customerPhone ? ` · ${o.customerPhone}` : ""}
                 </p>
+                {o.courier && <p className="mt-1 text-sm text-gold/90">🛵 {o.courier.name}{o.courier.phone ? ` · ${o.courier.phone}` : ""}</p>}
                 {o.addressNote && <p className="mt-1 text-sm text-cream/50">{o.addressNote}</p>}
                 {o.note && <p className="mt-1 text-sm text-cream/50">📝 {o.note}</p>}
                 <p className="mt-1 text-xs text-cream/40">{new Date(o.createdAt).toLocaleString("tr-TR")}</p>
@@ -54,6 +60,7 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                     className="rounded border border-copper/40 bg-forest px-2 py-1 text-sm text-cream">
                     <option value="new">Yeni</option>
                     <option value="confirmed">Onaylandı</option>
+                    <option value="preparing">Hazırlanıyor</option>
                     <option value="on_the_way">Yolda</option>
                     <option value="delivered">Teslim edildi</option>
                     <option value="cancelled">İptal</option>
@@ -64,6 +71,21 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                   <input type="hidden" name="id" value={o.id} />
                   <button className="text-sm text-red-400">Sil</button>
                 </form>
+                <CourierAssign
+                  order={{
+                    id: o.id,
+                    productTitle: o.productTitle,
+                    persons: o.persons,
+                    customerName: o.customerName,
+                    customerPhone: o.customerPhone,
+                    addressNote: o.addressNote,
+                    locationUrl: o.locationUrl,
+                  }}
+                  couriers={courierLite}
+                  assignedId={o.courierId}
+                  assignedName={o.courier?.name ?? null}
+                  assignedPhone={o.courier?.phone ?? null}
+                />
               </div>
             </li>
           );
