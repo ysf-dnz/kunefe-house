@@ -9,6 +9,6 @@ export const getCouriers = cache(async () => {
 export const getAvailableCouriers = cache(async () => {
   return prisma.courier.findMany({
     where: { isActive: true, isAvailable: true },
-    orderBy: { order: "asc" },
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
   });
 });
