@@ -5,6 +5,7 @@ import { getCategories } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { toNumber } from "@/lib/price";
+import type { Portion } from "@/lib/portions";
 import { updateProduct } from "../actions";
 
 export default async function UrunDuzenlePage({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -32,6 +33,7 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
           price: toNumber(product.price),
           oldPrice: toNumber(product.oldPrice),
           showPrice: product.showPrice,
+          portions: (product.portions as Portion[] | null) ?? null,
         }} />
     </div>
   );

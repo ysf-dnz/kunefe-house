@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { deleteImageByUrl } from "@/lib/storage";
+import { parsePortions } from "@/lib/portions";
 
 async function guard() {
   const session = await auth();
@@ -50,6 +51,7 @@ export async function createProduct(formData: FormData) {
       price: parsePrice(formData, "price"),
       oldPrice: parsePrice(formData, "oldPrice"),
       showPrice: formData.get("showPrice") === "on",
+      portions: parsePortions(formData.get("portions") as string),
     },
   });
   revalidatePath("/admin/urunler");
@@ -73,6 +75,7 @@ export async function updateProduct(formData: FormData) {
       price: parsePrice(formData, "price"),
       oldPrice: parsePrice(formData, "oldPrice"),
       showPrice: formData.get("showPrice") === "on",
+      portions: parsePortions(formData.get("portions") as string),
     },
   });
   revalidatePath("/admin/urunler");
