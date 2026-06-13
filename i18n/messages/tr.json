@@ -14,7 +14,7 @@
     "phone": "Telefon",
     "extraNote": "Eklemek istedikleriniz (opsiyonel)",
     "send": "WhatsApp'tan Gönder",
-    "fromPrice": "{price} ₺'den başlayan",
+    "fromPrice": "{price}'den başlayan",
     "cancel": "Vazgeç",
     "requiredHint": "Ad, telefon ve adres zorunludur."
   }

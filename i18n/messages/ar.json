@@ -14,7 +14,7 @@
     "phone": "الهاتف",
     "extraNote": "أي إضافة (اختياري)",
     "send": "أرسل عبر واتساب",
-    "fromPrice": "ابتداءً من {price} ₺",
+    "fromPrice": "ابتداءً من {price}",
     "cancel": "إلغاء",
     "requiredHint": "الاسم والهاتف والعنوان مطلوبة."
   }

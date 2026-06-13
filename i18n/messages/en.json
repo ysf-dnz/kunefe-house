@@ -14,7 +14,7 @@
     "phone": "Phone",
     "extraNote": "Anything to add (optional)",
     "send": "Send via WhatsApp",
-    "fromPrice": "from {price} ₺",
+    "fromPrice": "from {price}",
     "cancel": "Cancel",
     "requiredHint": "Name, phone and address are required."
   }

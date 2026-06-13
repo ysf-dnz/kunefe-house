@@ -28,6 +28,8 @@ export async function createOrder(formData: FormData): Promise<OrderState> {
     const addressNote = clamp(formData.get("addressNote"), 1000) || null;
     const note = clamp(formData.get("note"), 1000) || null;
 
+    // Zorunlu alanlar sunucu tarafında da doğrulanır (istemci atlatılabilir): eksikse sessizce yut.
+    if (!customerName || !addressNote) return { ok: true };
     if (!customerPhone || (customerPhone.match(/\d/g)?.length ?? 0) < 10) return { ok: true };
 
     let persons = num(formData.get("persons"));

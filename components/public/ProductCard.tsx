@@ -24,8 +24,12 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
   const t = useTranslations("order");
   const portionList = portions ?? [];
   const fromPrice = portionList.length > 0 ? minPortionPrice(portionList) : null;
-  const priceVisible = showPrice && (price != null || fromPrice != null);
-  const discount = priceVisible ? discountPercent(price ?? null, oldPrice ?? null) : null;
+  // En düşük fiyatlı porsiyonu (kartta gösterilen) baz al; yoksa tekil fiyata düş.
+  const fromPortion = fromPrice != null ? portionList.find((p) => p.price === fromPrice) ?? null : null;
+  const cardPrice = fromPrice != null ? fromPrice : price ?? null;
+  const cardOldPrice = fromPortion ? fromPortion.oldPrice ?? null : oldPrice ?? null;
+  const priceVisible = showPrice && cardPrice != null;
+  const discount = priceVisible ? discountPercent(cardPrice, cardOldPrice) : null;
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -57,12 +61,12 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           {priceVisible && (
             <div className="mt-3 flex items-baseline gap-2">
               {fromPrice != null ? (
-                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: fromPrice })}</span>
+                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, locale) ?? "" })}</span>
               ) : (
                 <>
-                  <span className="font-serif text-lg text-gold">{formatPrice(price ?? null, locale)}</span>
-                  {oldPrice != null && oldPrice > (price ?? 0) && (
-                    <span className="text-sm text-cream/40 line-through">{formatPrice(oldPrice, locale)}</span>
+                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, locale)}</span>
+                  {cardOldPrice != null && cardOldPrice > (cardPrice ?? 0) && (
+                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, locale)}</span>
                   )}
                 </>
               )}
