@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -19,7 +20,7 @@ export async function createCourier(formData: FormData) {
   const vehicle = clamp(formData.get("vehicle"), 60) || null;
   const note = clamp(formData.get("note"), 500) || null;
   if (!name || !phone) throw new Error("Ad ve telefon zorunlu");
-  await prisma.courier.create({ data: { name, phone, vehicle, note } });
+  await prisma.courier.create({ data: { name, phone, vehicle, note, token: randomUUID() } });
   revalidatePath("/admin/kuryeler");
 }
 
@@ -47,4 +48,14 @@ export async function deleteCourier(formData: FormData) {
   await prisma.courier.delete({ where: { id } });
   revalidatePath("/admin/kuryeler");
   revalidatePath("/admin/siparisler");
+}
+
+export async function ensureCourierToken(formData: FormData) {
+  await guard();
+  const id = formData.get("id") as string;
+  const c = await prisma.courier.findUnique({ where: { id }, select: { token: true } });
+  if (c && !c.token) {
+    await prisma.courier.update({ where: { id }, data: { token: randomUUID() } });
+  }
+  revalidatePath("/admin/kuryeler");
 }
