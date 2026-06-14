@@ -65,6 +65,10 @@ model Product {
   featured          Boolean          @default(false)
   price             Decimal?         @db.Decimal(10, 2)
   oldPrice          Decimal?         @db.Decimal(10, 2)
+  priceUsd          Decimal?         @db.Decimal(10, 2)
+  oldPriceUsd       Decimal?         @db.Decimal(10, 2)
+  priceQar          Decimal?         @db.Decimal(10, 2)
+  oldPriceQar       Decimal?         @db.Decimal(10, 2)
   showPrice         Boolean          @default(false)
   portions          Json?            // [{ persons: number, price: number, oldPrice?: number }]
   order             Int              @default(0)
@@ -159,6 +163,7 @@ model Order {
   productTitle  String
   persons       Int?
   price         Decimal? @db.Decimal(10, 2)
+  currency      String   @default("TRY")
   customerName  String?
   customerPhone String?
   addressNote   String?
