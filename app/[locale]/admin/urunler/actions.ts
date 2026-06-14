@@ -52,6 +52,10 @@ export async function createProduct(formData: FormData) {
       oldPrice: parsePrice(formData, "oldPrice"),
       showPrice: formData.get("showPrice") === "on",
       portions: parsePortions(formData.get("portions") as string),
+      priceUsd: parsePrice(formData, "priceUsd"),
+      oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
+      priceQar: parsePrice(formData, "priceQar"),
+      oldPriceQar: parsePrice(formData, "oldPriceQar"),
     },
   });
   revalidatePath("/admin/urunler");
@@ -76,6 +80,10 @@ export async function updateProduct(formData: FormData) {
       oldPrice: parsePrice(formData, "oldPrice"),
       showPrice: formData.get("showPrice") === "on",
       portions: parsePortions(formData.get("portions") as string),
+      priceUsd: parsePrice(formData, "priceUsd"),
+      oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
+      priceQar: parsePrice(formData, "priceQar"),
+      oldPriceQar: parsePrice(formData, "oldPriceQar"),
     },
   });
   revalidatePath("/admin/urunler");
