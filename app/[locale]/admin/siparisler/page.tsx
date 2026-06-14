@@ -5,6 +5,7 @@ import { toNumber, formatPrice } from "@/lib/price";
 import { updateOrderStatus, deleteOrder } from "./actions";
 import { getAvailableCouriers } from "@/lib/couriers";
 import { CourierAssign } from "@/components/admin/CourierAssign";
+import { minutesBetween, formatDuration } from "@/lib/duration";
 
 const STATUS: Record<string, { label: string; cls: string }> = {
   new: { label: "Yeni", cls: "text-gold" },
@@ -22,10 +23,19 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
   const orders = await getOrders();
   const availableCouriers = await getAvailableCouriers();
   const courierLite = availableCouriers.map((c) => ({ id: c.id, name: c.name, phone: c.phone }));
+  const deliveredDurations = orders
+    .map((o) => minutesBetween(o.assignedAt, o.deliveredAt))
+    .filter((m): m is number => m != null);
+  const avgDelivery = deliveredDurations.length
+    ? formatDuration(Math.round(deliveredDurations.reduce((a, b) => a + b, 0) / deliveredDurations.length))
+    : null;
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-serif text-2xl text-gold">Siparişler ({orders.length})</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h1 className="font-serif text-2xl text-gold">Siparişler ({orders.length})</h1>
+        {avgDelivery && <span className="text-sm text-cream/70">⏱ Ortalama teslimat: <span className="text-gold">{avgDelivery}</span></span>}
+      </div>
       <ul className="flex flex-col gap-3">
         {orders.map((o) => {
           const price = toNumber(o.price);
@@ -43,6 +53,15 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                 {o.courier && <p className="mt-1 text-sm text-gold/90">🛵 {o.courier.name}{o.courier.phone ? ` · ${o.courier.phone}` : ""}</p>}
                 {o.addressNote && <p className="mt-1 text-sm text-cream/50">{o.addressNote}</p>}
                 {o.note && <p className="mt-1 text-sm text-cream/50">📝 {o.note}</p>}
+                {o.deliveredAt && (() => {
+                  const dlv = formatDuration(minutesBetween(o.assignedAt, o.deliveredAt));
+                  const total = formatDuration(minutesBetween(o.createdAt, o.deliveredAt));
+                  return (
+                    <p className="mt-1 text-sm text-green-400/90">
+                      ⏱ {dlv ? `Teslimat: ${dlv}` : "Teslim edildi"}{total ? ` · Toplam: ${total}` : ""}
+                    </p>
+                  );
+                })()}
                 <p className="mt-1 text-xs text-cream/40">{new Date(o.createdAt).toLocaleString("tr-TR")}</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">

@@ -17,5 +17,16 @@
     "fromPrice": "{price}'den başlayan",
     "cancel": "Vazgeç",
     "requiredHint": "Ad, telefon ve adres zorunludur."
+  },
+  "eta": {
+    "title": "Adresinize kaç dakikada gelir?",
+    "subtitle": "Konumunu paylaş, en hızlı teslim süresini WhatsApp'tan hemen söyleyelim.",
+    "shareLocation": "Konumumu Paylaş",
+    "locationReceived": "Konum alındı ✓",
+    "locationFailed": "Konum alınamadı, dilersen konumsuz sorabilirsin",
+    "addressNote": "Adres detayı (bina / kat — opsiyonel)",
+    "ask": "WhatsApp'tan Sor",
+    "askWithoutLocation": "Konum olmadan sor",
+    "close": "Kapat"
   }
 }

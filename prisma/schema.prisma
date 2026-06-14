@@ -169,6 +169,7 @@ model Order {
   courierId     String?
   courier       Courier? @relation(fields: [courierId], references: [id], onDelete: SetNull)
   assignedAt    DateTime?
+  deliveredAt   DateTime?
   status        String   @default("new")
   createdAt     DateTime @default(now())
 }

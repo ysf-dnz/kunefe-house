@@ -17,5 +17,16 @@
     "fromPrice": "from {price}",
     "cancel": "Cancel",
     "requiredHint": "Name, phone and address are required."
+  },
+  "eta": {
+    "title": "How fast can we reach you?",
+    "subtitle": "Share your location and we'll tell you the fastest delivery time on WhatsApp.",
+    "shareLocation": "Share My Location",
+    "locationReceived": "Location received ✓",
+    "locationFailed": "Couldn't get location — you can still ask without it",
+    "addressNote": "Address detail (building / floor — optional)",
+    "ask": "Ask on WhatsApp",
+    "askWithoutLocation": "Ask without location",
+    "close": "Close"
   }
 }
