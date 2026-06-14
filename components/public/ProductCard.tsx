@@ -7,9 +7,9 @@ import { useTranslations } from "next-intl";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { formatPrice, discountPercent } from "@/lib/price";
 import type { Portion } from "@/lib/portions";
-import { minPortionPrice } from "@/lib/portions";
+import { currencyForLocale, productPriceForLocale, minPortionPriceForLocale } from "@/lib/currency";
 
-export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice, portions }: {
+export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice, portions, priceUsd, oldPriceUsd, priceQar, oldPriceQar }: {
   slug: string;
   title: Record<string, string> | null;
   shortDescription: Record<string, string> | null;
@@ -20,14 +20,16 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
   oldPrice?: number | null;
   showPrice?: boolean;
   portions?: Portion[] | null;
+  priceUsd?: number | null; oldPriceUsd?: number | null;
+  priceQar?: number | null; oldPriceQar?: number | null;
 }) {
   const t = useTranslations("order");
+  const currency = currencyForLocale(locale);
   const portionList = portions ?? [];
-  const fromPrice = portionList.length > 0 ? minPortionPrice(portionList) : null;
-  // En düşük fiyatlı porsiyonu (kartta gösterilen) baz al; yoksa tekil fiyata düş.
-  const fromPortion = fromPrice != null ? portionList.find((p) => p.price === fromPrice) ?? null : null;
-  const cardPrice = fromPrice != null ? fromPrice : price ?? null;
-  const cardOldPrice = fromPortion ? fromPortion.oldPrice ?? null : oldPrice ?? null;
+  const single = productPriceForLocale({ price, oldPrice, priceUsd, oldPriceUsd, priceQar, oldPriceQar }, locale);
+  const fromPrice = portionList.length > 0 ? minPortionPriceForLocale(portionList, locale) : null;
+  const cardPrice = fromPrice != null ? fromPrice : single.price;
+  const cardOldPrice = fromPrice != null ? null : single.oldPrice;
   const priceVisible = showPrice && cardPrice != null;
   const discount = priceVisible ? discountPercent(cardPrice, cardOldPrice) : null;
   return (
@@ -61,12 +63,12 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           {priceVisible && (
             <div className="mt-3 flex items-baseline gap-2">
               {fromPrice != null ? (
-                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, "TRY", locale) ?? "" })}</span>
+                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, currency, locale) ?? "" })}</span>
               ) : (
                 <>
-                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, "TRY", locale)}</span>
+                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, currency, locale)}</span>
                   {cardOldPrice != null && cardOldPrice > (cardPrice ?? 0) && (
-                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, "TRY", locale)}</span>
+                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, currency, locale)}</span>
                   )}
                 </>
               )}

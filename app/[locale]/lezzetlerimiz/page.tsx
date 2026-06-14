@@ -60,7 +60,9 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
               shortDescription={p.shortDescription as Record<string, string> | null}
               primaryImageUrl={p.primaryImageUrl} secondaryImageUrl={p.secondaryImageUrl}
               price={toNumber(p.price)} oldPrice={toNumber(p.oldPrice)} showPrice={p.showPrice}
-              portions={(p.portions as Portion[] | null) ?? null} />
+              portions={(p.portions as Portion[] | null) ?? null}
+              priceUsd={toNumber(p.priceUsd)} oldPriceUsd={toNumber(p.oldPriceUsd)}
+              priceQar={toNumber(p.priceQar)} oldPriceQar={toNumber(p.oldPriceQar)} />
           ))}
         </div>
       )}
