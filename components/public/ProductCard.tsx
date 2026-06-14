@@ -24,6 +24,7 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
   priceQar?: number | null; oldPriceQar?: number | null;
 }) {
   const t = useTranslations("order");
+  const tc = useTranslations("common");
   const currency = currencyForLocale(locale);
   const portionList = portions ?? [];
   const single = productPriceForLocale({ price, oldPrice, priceUsd, oldPriceUsd, priceQar, oldPriceQar }, locale);
@@ -53,7 +54,7 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-deep/80 via-transparent to-transparent" />
           {discount != null && (
             <span className="absolute start-3 top-3 rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream shadow-lg">
-              %{discount} İNDİRİM
+              {tc("discountBadge", { percent: discount })}
             </span>
           )}
         </div>
@@ -75,7 +76,7 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
             </div>
           )}
           <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-copper transition-all group-hover:gap-2 group-hover:text-gold">
-            İncele →
+            {tc("explore")} →
           </span>
         </div>
       </Link>

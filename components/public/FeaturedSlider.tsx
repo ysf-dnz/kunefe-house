@@ -3,16 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { localize, type Locale } from "@/lib/i18n-field";
 
 type Item = { id: string; slug: string; title: Record<string, string> | null; primaryImageUrl: string | null };
 
 export function FeaturedSlider({ items, locale, heading }: { items: Item[]; locale: Locale; heading: string }) {
+  const t = useTranslations("home");
   if (items.length === 0) return null;
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
       <div className="mb-2 flex justify-center">
-        <span className="text-xs uppercase tracking-[0.3em] text-copper">Öne Çıkanlar</span>
+        <span className="text-xs uppercase tracking-[0.3em] text-copper">{t("featured")}</span>
       </div>
       <h2 className="text-center font-serif text-3xl text-gold-gradient md:text-4xl">{heading}</h2>
       <div className="mx-auto mt-5 mb-12 h-px w-24 bg-gradient-to-r from-transparent via-gold to-transparent" />

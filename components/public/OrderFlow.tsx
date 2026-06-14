@@ -29,6 +29,7 @@ export function OrderFlow({
   singlePriceUsd, singleOldPriceUsd, singlePriceQar, singleOldPriceQar,
 }: Props) {
   const t = useTranslations("order");
+  const tc = useTranslations("common");
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const [lat, setLat] = useState<number | null>(null);
@@ -115,7 +116,7 @@ export function OrderFlow({
             <span className="text-lg text-cream/40 line-through">{formatPrice(oldPrice, currency)}</span>
           )}
           {discount != null && (
-            <span className="rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream">%{discount} İNDİRİM</span>
+            <span className="rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream">{tc("discountBadge", { percent: discount })}</span>
           )}
         </div>
       )}
