@@ -7,6 +7,10 @@ const intlMiddleware = createMiddleware(routing);
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+  // /kurye/* locale dışı, login'siz — next-intl'i atla
+  if (pathname.startsWith("/kurye")) {
+    return NextResponse.next();
+  }
   const isAdmin =
     /^\/(tr|en|ar)?\/?admin(?!\/login)/.test(pathname) || /^\/admin(?!\/login)/.test(pathname);
   const isLoggedIn = !!req.auth;
