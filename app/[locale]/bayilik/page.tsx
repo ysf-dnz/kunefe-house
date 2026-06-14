@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getSiteSettings } from "@/lib/settings";
 import { getFranchiseFaqs } from "@/lib/franchise";
 import { type Locale } from "@/lib/i18n-field";
@@ -12,23 +12,24 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "seo" });
   return buildMetadata({
     locale,
     path: "/bayilik",
-    title: "Bayilik & Franchise",
-    description: "Türkiye'nin tescilli künefe markası Kunefe House ailesine katılın. Franchise fırsatları ve bayilik başvurusu.",
+    title: t("franchiseTitle"),
+    description: t("franchiseDesc"),
   });
 }
-
-const STEPS = [
-  { n: "01", title: "Başvuru", desc: "Formu doldurun, ekibimiz sizi arasın." },
-  { n: "02", title: "Değerlendirme", desc: "Lokasyon ve yatırım planını birlikte netleştirelim." },
-  { n: "03", title: "Açılış", desc: "Eğitim, kurulum ve operasyon desteğiyle kapıları açın." },
-];
 
 export default async function BayilikPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations("franchise");
+  const steps = [
+    { n: "01", title: t("step1Title"), desc: t("step1Desc") },
+    { n: "02", title: t("step2Title"), desc: t("step2Desc") },
+    { n: "03", title: t("step3Title"), desc: t("step3Desc") },
+  ];
   const [settings, faqs] = await Promise.all([getSiteSettings(), getFranchiseFaqs()]);
   const loc = locale as Locale;
 
@@ -38,18 +39,18 @@ export default async function BayilikPage({ params }: { params: Promise<{ locale
       <section className="relative flex min-h-[60vh] flex-col items-center justify-center gap-6 px-6 text-center">
         <div className="pointer-events-none absolute -top-32 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-gold/10 blur-3xl" />
         <span className="relative rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-gold">
-          Franchise Fırsatı
+          {t("heroBadge")}
         </span>
         <h1 className="relative max-w-3xl font-serif text-4xl leading-tight md:text-6xl">
-          <span className="text-cream">Türkiye'nin </span>
-          <span className="text-gold-gradient">Tescilli</span>
-          <span className="text-cream"> Künefe Markası</span>
+          <span className="text-cream">{t("title1")}</span>
+          <span className="text-gold-gradient">{t("titleHighlight")}</span>
+          <span className="text-cream">{t("title2")}</span>
         </h1>
         <p className="relative max-w-xl text-cream/75">
-          Geleneğin gücünü modern bir konseptle birleştiren Kunefe House ailesine katılın.
+          {t("heroDesc")}
         </p>
         <a href="#basvuru" className="btn-gold relative rounded-full px-8 py-3.5 text-sm font-semibold">
-          Hemen Başvur
+          {t("ctaApply")}
         </a>
       </section>
 
@@ -62,23 +63,23 @@ export default async function BayilikPage({ params }: { params: Promise<{ locale
             </svg>
           </span>
           <p className="text-cream/90">
-            <strong className="text-gold">Tescilli Marka</strong>
+            <strong className="text-gold">{t("registered")}</strong>
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          <StatCounter value={1000} suffix="+" label="Hedef Şube" />
-          <StatCounter value={100} suffix="%" label="Tescilli Marka" />
-          <StatCounter value={3} label="Kıta Vizyonu" />
-          <StatCounter value={7} suffix="/24" label="Operasyon Desteği" />
+          <StatCounter value={1000} suffix="+" label={t("statTargetBranches")} />
+          <StatCounter value={100} suffix="%" label={t("statRegistered")} />
+          <StatCounter value={3} label={t("statContinents")} />
+          <StatCounter value={7} suffix="/24" label={t("statSupport")} />
         </div>
       </section>
 
       {/* Süreç adımları */}
       <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="mb-12 text-center font-serif text-3xl text-gold-gradient md:text-4xl">Nasıl Bayi Olunur?</h2>
+        <h2 className="mb-12 text-center font-serif text-3xl text-gold-gradient md:text-4xl">{t("howTitle")}</h2>
         <div className="grid gap-6 md:grid-cols-3">
-          {STEPS.map((s) => (
+          {steps.map((s) => (
             <div key={s.n} className="card-premium rounded-2xl p-7">
               <div className="font-serif text-4xl text-gold/40">{s.n}</div>
               <h3 className="mt-3 font-serif text-xl text-gold">{s.title}</h3>
@@ -91,7 +92,7 @@ export default async function BayilikPage({ params }: { params: Promise<{ locale
       {/* SSS */}
       {faqs.length > 0 && (
         <section className="mx-auto max-w-3xl px-6 py-16">
-          <h2 className="mb-10 text-center font-serif text-3xl text-gold-gradient md:text-4xl">Sıkça Sorulan Sorular</h2>
+          <h2 className="mb-10 text-center font-serif text-3xl text-gold-gradient md:text-4xl">{t("faqTitle")}</h2>
           <FaqAccordion
             locale={loc}
             faqs={faqs.map((f) => ({
