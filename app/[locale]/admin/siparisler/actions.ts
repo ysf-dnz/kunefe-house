@@ -13,7 +13,15 @@ export async function updateOrderStatus(formData: FormData) {
   await guard();
   const id = formData.get("id") as string;
   const status = (formData.get("status") as string) || "new";
-  await prisma.order.update({ where: { id }, data: { status } });
+  // Teslim edilince zaman damgala; teslimden çıkınca temizle (yanlış işaretleme düzelir)
+  const data: { status: string; deliveredAt?: Date | null } = { status };
+  if (status === "delivered") {
+    const existing = await prisma.order.findUnique({ where: { id }, select: { deliveredAt: true } });
+    if (existing && !existing.deliveredAt) data.deliveredAt = new Date();
+  } else {
+    data.deliveredAt = null;
+  }
+  await prisma.order.update({ where: { id }, data });
   revalidatePath("/admin/siparisler");
 }
 
