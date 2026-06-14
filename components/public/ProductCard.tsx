@@ -61,12 +61,12 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           {priceVisible && (
             <div className="mt-3 flex items-baseline gap-2">
               {fromPrice != null ? (
-                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, locale) ?? "" })}</span>
+                <span className="font-serif text-lg text-gold">{t("fromPrice", { price: formatPrice(fromPrice, "TRY", locale) ?? "" })}</span>
               ) : (
                 <>
-                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, locale)}</span>
+                  <span className="font-serif text-lg text-gold">{formatPrice(cardPrice, "TRY", locale)}</span>
                   {cardOldPrice != null && cardOldPrice > (cardPrice ?? 0) && (
-                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, locale)}</span>
+                    <span className="text-sm text-cream/40 line-through">{formatPrice(cardOldPrice, "TRY", locale)}</span>
                   )}
                 </>
               )}

@@ -44,7 +44,7 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
               <div>
                 <p className="font-medium text-cream">
                   {o.productTitle}{o.persons ? ` · ${o.persons} kişilik` : ""}
-                  {price != null ? ` · ${formatPrice(price, "tr")}` : ""}
+                  {price != null ? ` · ${formatPrice(price, "TRY")}` : ""}
                   <span className={`ml-2 text-xs ${STATUS[o.status]?.cls ?? "text-cream/60"}`}>● {STATUS[o.status]?.label ?? o.status}</span>
                 </p>
                 <p className="text-sm text-cream/70">

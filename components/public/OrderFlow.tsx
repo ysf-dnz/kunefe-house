@@ -41,7 +41,7 @@ export function OrderFlow({
   const oldPrice = hasPortions ? activePortion?.oldPrice ?? null : singleOldPrice;
   const persons = activePortion?.persons ?? 1;
   const discount = showPrice ? discountPercent(price, oldPrice) : null;
-  const priceText = showPrice && price != null ? formatPrice(price, locale) : null;
+  const priceText = showPrice && price != null ? formatPrice(price, "TRY", locale) : null;
 
   const valid = name.trim() && (phone.match(/\d/g)?.length ?? 0) >= 10 && addressNote.trim();
 
@@ -100,7 +100,7 @@ export function OrderFlow({
         <div className="mb-4 flex items-center gap-3">
           <span className="font-serif text-3xl text-gold">{priceText}</span>
           {oldPrice != null && oldPrice > (price ?? 0) && (
-            <span className="text-lg text-cream/40 line-through">{formatPrice(oldPrice, locale)}</span>
+            <span className="text-lg text-cream/40 line-through">{formatPrice(oldPrice, "TRY", locale)}</span>
           )}
           {discount != null && (
             <span className="rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream">%{discount} İNDİRİM</span>
