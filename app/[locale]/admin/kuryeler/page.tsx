@@ -2,7 +2,8 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getCouriers } from "@/lib/couriers";
 import { SubmitButton } from "@/components/admin/SubmitButton";
-import { createCourier, toggleAvailability, toggleActive, deleteCourier } from "./actions";
+import { SITE_URL } from "@/lib/seo";
+import { createCourier, toggleAvailability, toggleActive, deleteCourier, ensureCourierToken } from "./actions";
 
 export default async function KuryelerPage({ params }: { params: Promise<{ locale: string }> }) {
   await requireAdmin();
@@ -46,6 +47,20 @@ export default async function KuryelerPage({ params }: { params: Promise<{ local
             <div className="flex flex-wrap items-center gap-2">
               <a href={`https://wa.me/${c.phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer"
                 className="rounded bg-[#25D366]/20 px-3 py-1 text-sm text-[#25D366]">WhatsApp</a>
+              {c.token ? (
+                <>
+                  <a href={`${SITE_URL}/kurye/${c.token}`} target="_blank" rel="noopener noreferrer"
+                    className="rounded bg-gold/20 px-3 py-1 text-sm text-gold">📍 Konum Linki</a>
+                  <a href={`https://wa.me/${c.phone.replace(/\D/g, "")}?text=${encodeURIComponent(`Konum paylaşım sayfan: ${SITE_URL}/kurye/${c.token}`)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="rounded bg-[#25D366]/20 px-3 py-1 text-sm text-[#25D366]">Linki Kuryeye Gönder</a>
+                </>
+              ) : (
+                <form action={ensureCourierToken}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button className="rounded bg-gold/20 px-3 py-1 text-sm text-gold">📍 Konum Linki Üret</button>
+                </form>
+              )}
               <form action={toggleAvailability}>
                 <input type="hidden" name="id" value={c.id} />
                 <input type="hidden" name="value" value={(!c.isAvailable).toString()} />
