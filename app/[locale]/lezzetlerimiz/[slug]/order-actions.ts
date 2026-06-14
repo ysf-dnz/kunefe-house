@@ -1,7 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { parsePortions } from "@/lib/portions";
+import { checkRateLimit, clientIp } from "@/lib/ratelimit";
 
 export type OrderState = { ok?: boolean };
 
@@ -20,6 +22,8 @@ function num(v: FormDataEntryValue | null): number | null {
 export async function createOrder(formData: FormData): Promise<OrderState> {
   try {
     if (clamp(formData.get("website"), 100)) return { ok: true };
+    // Rate-limit: IP başına 5 sipariş / dk (fail-open; aşılırsa sessizce yut — best-effort)
+    if (!(await checkRateLimit("order", clientIp(await headers())))) return { ok: true };
 
     const productId = clamp(formData.get("productId"), 64) || null;
     const productTitle = clamp(formData.get("productTitle"), 200) || "—";

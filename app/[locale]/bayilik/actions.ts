@@ -1,6 +1,8 @@
 "use server";
 
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, clientIp } from "@/lib/ratelimit";
 
 export type ApplicationState = { ok?: boolean; error?: string };
 
@@ -11,6 +13,11 @@ export async function submitApplication(
   // Honeypot: bot bu gizli alanı doldurursa sessizce başarı dön (kaydetme)
   const honey = (formData.get("website") as string) || "";
   if (honey.trim()) return { ok: true };
+
+  // Rate-limit: IP başına 3 başvuru / dk (fail-open)
+  if (!(await checkRateLimit("application", clientIp(await headers())))) {
+    return { error: "Çok fazla deneme. Lütfen birazdan tekrar deneyin." };
+  }
 
   const clamp = (v: FormDataEntryValue | null, max: number) =>
     (typeof v === "string" ? v : "").trim().slice(0, max);
