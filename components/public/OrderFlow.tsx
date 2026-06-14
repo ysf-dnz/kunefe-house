@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n-field";
 import type { Portion } from "@/lib/portions";
 import { portionLabel } from "@/lib/portions";
 import { formatPrice, discountPercent } from "@/lib/price";
+import { currencyForLocale, productPriceForLocale, portionPriceForLocale } from "@/lib/currency";
 import { buildOrderMessage } from "@/lib/order-message";
 import { buildWhatsAppHref } from "@/lib/whatsapp";
 import { createOrder } from "@/app/[locale]/lezzetlerimiz/[slug]/order-actions";
@@ -19,10 +20,13 @@ type Props = {
   portions: Portion[];
   singlePrice: number | null;
   singleOldPrice: number | null;
+  singlePriceUsd: number | null; singleOldPriceUsd: number | null;
+  singlePriceQar: number | null; singleOldPriceQar: number | null;
 };
 
 export function OrderFlow({
   productId, productName, locale, whatsappNumber, showPrice, portions, singlePrice, singleOldPrice,
+  singlePriceUsd, singleOldPriceUsd, singlePriceQar, singleOldPriceQar,
 }: Props) {
   const t = useTranslations("order");
   const [selected, setSelected] = useState(0);
@@ -37,11 +41,18 @@ export function OrderFlow({
 
   const hasPortions = portions.length > 0;
   const activePortion = hasPortions ? portions[selected] : null;
-  const price = hasPortions ? activePortion!.price : singlePrice;
-  const oldPrice = hasPortions ? activePortion?.oldPrice ?? null : singleOldPrice;
+  const currency = currencyForLocale(locale);
+  const sel = hasPortions
+    ? portionPriceForLocale(activePortion!, locale)
+    : productPriceForLocale(
+        { price: singlePrice, oldPrice: singleOldPrice, priceUsd: singlePriceUsd, oldPriceUsd: singleOldPriceUsd, priceQar: singlePriceQar, oldPriceQar: singleOldPriceQar },
+        locale
+      );
+  const price = sel.price;
+  const oldPrice = sel.oldPrice;
   const persons = activePortion?.persons ?? 1;
   const discount = showPrice ? discountPercent(price, oldPrice) : null;
-  const priceText = showPrice && price != null ? formatPrice(price, "TRY", locale) : null;
+  const priceText = showPrice && price != null ? formatPrice(price, currency) : null;
 
   const valid = name.trim() && (phone.match(/\d/g)?.length ?? 0) >= 10 && addressNote.trim();
 
@@ -75,6 +86,7 @@ export function OrderFlow({
     fd.set("addressNote", addressNote);
     fd.set("note", note);
     if (lat != null && lng != null) { fd.set("lat", String(lat)); fd.set("lng", String(lng)); }
+    fd.set("locale", locale);
     try { await createOrder(fd); } catch { /* best-effort */ }
     window.open(waHref, "_blank", "noopener,noreferrer");
     setOpen(false);
@@ -100,7 +112,7 @@ export function OrderFlow({
         <div className="mb-4 flex items-center gap-3">
           <span className="font-serif text-3xl text-gold">{priceText}</span>
           {oldPrice != null && oldPrice > (price ?? 0) && (
-            <span className="text-lg text-cream/40 line-through">{formatPrice(oldPrice, "TRY", locale)}</span>
+            <span className="text-lg text-cream/40 line-through">{formatPrice(oldPrice, currency)}</span>
           )}
           {discount != null && (
             <span className="rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream">%{discount} İNDİRİM</span>
