@@ -45,5 +45,40 @@
     "close": "Kapat",
     "locationLoading": "Konum alınıyor…",
     "locationDenied": "Konum izni kapalı. Tarayıcı adres çubuğundaki kilit simgesinden konuma izin verip tekrar deneyin — ya da konumsuz sorun."
+  },
+  "common": { "explore": "İncele", "discountBadge": "%{percent} İNDİRİM", "all": "Tümü", "soon": "yakında", "apply": "başvurun" },
+  "menu": { "eyebrow": "Menümüz", "empty": "Bu kategoride ürün yok.", "ingredients": "İçindekiler", "reelsHeading": "Mutfaktan Kareler" },
+  "home": { "badge": "Tescilli Premium Künefe", "featured": "Öne Çıkanlar", "storyEyebrow": "Hikâyemiz" },
+  "franchise": {
+    "heroBadge": "Franchise Fırsatı", "ctaApply": "Hemen Başvur",
+    "title1": "Türkiye'nin ", "titleHighlight": "Tescilli", "title2": " Künefe Markası",
+    "heroDesc": "Geleneğin gücünü modern bir konseptle birleştiren Kunefe House ailesine katılın.",
+    "registered": "Tescilli Marka",
+    "statTargetBranches": "Hedef Şube", "statRegistered": "Tescilli Marka", "statContinents": "Kıta Vizyonu", "statSupport": "Operasyon Desteği",
+    "howTitle": "Nasıl Bayi Olunur?",
+    "step1Title": "Başvuru", "step1Desc": "Formu doldurun, ekibimiz sizi arasın.",
+    "step2Title": "Değerlendirme", "step2Desc": "Lokasyon ve yatırım planını birlikte netleştirelim.",
+    "step3Title": "Açılış", "step3Desc": "Eğitim, kurulum ve operasyon desteğiyle kapıları açın.",
+    "faqTitle": "Sıkça Sorulan Sorular"
+  },
+  "contact": { "eyebrow": "Bize Ulaşın", "labelWhatsapp": "WhatsApp", "labelEmail": "E-posta", "labelSocial": "Sosyal", "branchesSoon": "Şubelerimiz Yakında", "branchesSoonDescPre": "Türkiye geneline ve ötesine yayılıyoruz. Bayilik için ", "branchesSoonDescPost": "." },
+  "ingredients": { "mapSoon": "Harita yakında." },
+  "cookie": { "message": "Deneyiminizi iyileştirmek için zorunlu çerezler kullanıyoruz.", "policyLink": "Çerez Politikası", "accept": "Kabul Et" },
+  "franchiseForm": {
+    "title": "Bayilik Başvurusu", "namePh": "Ad Soyad *", "phonePh": "Telefon *", "cityPh": "Şehir *",
+    "budgetPh": "Yatırım Bütçesi", "locationPh": "Lokasyon / not (opsiyonel)",
+    "kvkkLink": "Gizlilik Politikası ve KVKK", "kvkkText": " metnini okudum; kişisel verilerimin başvurum kapsamında işlenmesini onaylıyorum.",
+    "submit": "Başvuruyu Gönder", "submitting": "Gönderiliyor…",
+    "successTitle": "Başvurunuz Alındı", "successDesc": "En kısa sürede sizinle iletişime geçeceğiz.", "waCta": "WhatsApp'tan da yazın"
+  },
+  "legal": { "contentSoon": "İçerik yakında eklenecek.", "privacyTitle": "Gizlilik Politikası ve KVKK", "cookieTitle": "Çerez Politikası" },
+  "seo": {
+    "homeTitle": "Kunefe House — Tescilli Premium Künefe", "homeDesc": "Gelenekten geleceğe uzanan lezzet. Tescilli künefe markası Kunefe House.",
+    "menuTitle": "Lezzetlerimiz", "menuDesc": "Fıstıklı, çikolatalı ve spesiyal künefe çeşitlerimizi keşfedin.", "menuItemFallback": "Ürün",
+    "ingredientsTitle": "Malzemelerimiz", "ingredientsDesc": "Antep fıstığından Hatay peynirine — malzemelerimizin köklerini interaktif haritada keşfedin.",
+    "franchiseTitle": "Bayilik & Franchise", "franchiseDesc": "Türkiye'nin tescilli künefe markası Kunefe House ailesine katılın. Franchise fırsatları ve bayilik başvurusu.",
+    "contactTitle": "İletişim", "contactDesc": "Kunefe House ile iletişime geçin — WhatsApp, e-posta ve şubelerimiz.",
+    "privacyTitle": "Gizlilik Politikası ve KVKK", "privacyDesc": "Kunefe House gizlilik politikası ve KVKK aydınlatma metni.",
+    "cookieTitle": "Çerez Politikası", "cookieDesc": "Kunefe House çerez politikası."
   }
 }
