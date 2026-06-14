@@ -9,6 +9,23 @@ type Courier = { id: string; name: string; lat: number | null; lng: number | nul
 type OrderPin = { id: string; lat: number | null; lng: number | null; customerName: string | null; productTitle: string };
 type Snapshot = { couriers: Courier[]; orders: OrderPin[] };
 
+/** HTML kaçışı — popup'lara kullanıcı girdisi (müşteri/kurye/ürün adı) basıldığı için XSS koruması. */
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** "son görülme: X dk önce" */
+function lastSeenLabel(lastSeenAt: string | null, nowMs: number): string {
+  if (!lastSeenAt) return "";
+  const diffMin = Math.max(0, Math.round((nowMs - new Date(lastSeenAt).getTime()) / 60000));
+  return diffMin <= 0 ? "son görülme: az önce" : `son görülme: ${diffMin} dk önce`;
+}
+
 function emojiIcon(emoji: string) {
   return L.divIcon({
     html: `<div style="font-size:24px;line-height:24px">${emoji}</div>`,
@@ -40,13 +57,13 @@ export function LiveMap({ initial }: { initial: Snapshot }) {
       for (const c of data.couriers) {
         if (c.lat == null || c.lng == null || !isCourierLive(c.lastSeenAt, now)) continue;
         L.marker([c.lat, c.lng], { icon: emojiIcon("🛵") })
-          .bindPopup(`<b>${c.name}</b>`).addTo(layer);
+          .bindPopup(`<b>${esc(c.name)}</b><br>${esc(lastSeenLabel(c.lastSeenAt, now))}`).addTo(layer);
         pts.push([c.lat, c.lng]);
       }
       for (const o of data.orders) {
         if (o.lat == null || o.lng == null) continue;
         L.marker([o.lat, o.lng], { icon: emojiIcon("🏠") })
-          .bindPopup(`<b>${o.customerName ?? "Müşteri"}</b><br>${o.productTitle}`).addTo(layer);
+          .bindPopup(`<b>${esc(o.customerName ?? "Müşteri")}</b><br>${esc(o.productTitle)}`).addTo(layer);
         pts.push([o.lat, o.lng]);
       }
       if (pts.length > 0) mapRef.current!.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
