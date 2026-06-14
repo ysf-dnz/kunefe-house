@@ -10,11 +10,12 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "seo" });
   return buildMetadata({
     locale,
     path: "/malzemelerimiz",
-    title: "Malzemelerimiz",
-    description: "Antep fıstığından Hatay peynirine — malzemelerimizin köklerini interaktif harita üzerinde keşfedin.",
+    title: t("ingredientsTitle"),
+    description: t("ingredientsDesc"),
   });
 }
 
@@ -22,6 +23,7 @@ export default async function MalzemelerimizPage({ params }: { params: Promise<{
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("nav");
+  const ti = await getTranslations("ingredients");
   const [settings, pins] = await Promise.all([getSiteSettings(), getMapPins()]);
   const loc = locale as Locale;
 
@@ -56,7 +58,7 @@ export default async function MalzemelerimizPage({ params }: { params: Promise<{
             }))}
           />
         ) : (
-          <p className="text-center text-cream/50">Harita yakında.</p>
+          <p className="text-center text-cream/50">{ti("mapSoon")}</p>
         )}
       </div>
     </section>

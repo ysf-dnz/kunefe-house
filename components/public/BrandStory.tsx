@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export function BrandStory({
   imageUrl,
@@ -13,6 +14,7 @@ export function BrandStory({
   title: string;
   text: string;
 }) {
+  const t = useTranslations("home");
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // Parallax: görsel scroll'a göre yavaşça kayar
@@ -37,7 +39,7 @@ export function BrandStory({
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.6 }}
       >
-        <span className="text-xs uppercase tracking-[0.3em] text-copper">Hikâyemiz</span>
+        <span className="text-xs uppercase tracking-[0.3em] text-copper">{t("storyEyebrow")}</span>
         <h2 className="mt-3 font-serif text-3xl text-gold-gradient md:text-4xl">{title}</h2>
         <div className="mt-5 h-px w-20 bg-gradient-to-r from-gold to-transparent" />
         <p className="mt-6 whitespace-pre-line leading-relaxed text-cream/80">{text}</p>

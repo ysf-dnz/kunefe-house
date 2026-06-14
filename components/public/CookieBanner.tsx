@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export function CookieBanner() {
+  const t = useTranslations("cookie");
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -30,11 +32,11 @@ export function CookieBanner() {
         >
           <div className="card-premium mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl p-5 sm:flex-row">
             <p className="flex-1 text-sm text-cream/80">
-              Deneyiminizi iyileştirmek için zorunlu çerezler kullanıyoruz.{" "}
-              <Link href="/cerez-politikasi" className="text-gold underline">Çerez Politikası</Link>
+              {t("message")}{" "}
+              <Link href="/cerez-politikasi" className="text-gold underline">{t("policyLink")}</Link>
             </p>
             <button onClick={accept} className="btn-gold shrink-0 rounded-full px-6 py-2 text-sm font-semibold">
-              Kabul Et
+              {t("accept")}
             </button>
           </div>
         </motion.div>

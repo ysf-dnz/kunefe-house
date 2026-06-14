@@ -13,6 +13,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const t = await getTranslations("hero");
   const tn = await getTranslations("nav");
+  const th = await getTranslations("home");
+  const tm = await getTranslations("menu");
   const [settings, featured, reels] = await Promise.all([getSiteSettings(), getFeaturedProducts(), getReels()]);
   const loc = locale as Locale;
   const title = localize(settings?.heroTitle as Record<Locale, string> | null, loc) || t("title");
@@ -24,7 +26,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Hero
         videoUrl={settings?.heroVideoUrl ?? null}
         overlay={settings?.heroOverlay ?? 0.5}
-        badge="Tescilli Premium Künefe"
+        badge={th("badge")}
         title={title}
         discoverLabel={t("discover")}
         franchiseLabel={t("franchise")}
@@ -43,7 +45,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <ReelsStrip
         reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
         locale={loc}
-        heading="Mutfaktan Kareler"
+        heading={tm("reelsHeading")}
       />
     </>
   );

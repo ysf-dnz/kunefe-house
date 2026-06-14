@@ -45,5 +45,99 @@
     "close": "Close",
     "locationLoading": "Getting location…",
     "locationDenied": "Location is blocked. Enable it from the lock icon in your browser bar and retry — or ask without location."
+  },
+  "common": {
+    "explore": "View",
+    "discountBadge": "{percent}% OFF",
+    "all": "All",
+    "soon": "soon",
+    "apply": "apply"
+  },
+  "menu": {
+    "eyebrow": "Our Menu",
+    "empty": "No products in this category.",
+    "ingredients": "Ingredients",
+    "reelsHeading": "From the Kitchen"
+  },
+  "home": {
+    "badge": "Registered Premium Künefe",
+    "featured": "Featured",
+    "storyEyebrow": "Our Story"
+  },
+  "franchise": {
+    "heroBadge": "Franchise Opportunity",
+    "ctaApply": "Apply Now",
+    "title1": "Turkey's ",
+    "titleHighlight": "Registered",
+    "title2": " Künefe Brand",
+    "heroDesc": "Join the Kunefe House family, blending tradition with a modern concept.",
+    "registered": "Registered Trademark",
+    "statTargetBranches": "Target Branches",
+    "statRegistered": "Registered Brand",
+    "statContinents": "Continental Vision",
+    "statSupport": "Operational Support",
+    "howTitle": "How to Become a Franchisee",
+    "step1Title": "Application",
+    "step1Desc": "Fill out the form and our team will call you.",
+    "step2Title": "Evaluation",
+    "step2Desc": "Let's clarify the location and investment plan together.",
+    "step3Title": "Opening",
+    "step3Desc": "Open your doors with training, setup and operational support.",
+    "faqTitle": "Frequently Asked Questions"
+  },
+  "contact": {
+    "eyebrow": "Get in Touch",
+    "labelWhatsapp": "WhatsApp",
+    "labelEmail": "Email",
+    "labelSocial": "Social",
+    "branchesSoon": "Branches Coming Soon",
+    "branchesSoonDescPre": "We are expanding across Turkey and beyond. To become a franchisee, ",
+    "branchesSoonDescPost": "."
+  },
+  "ingredients": {
+    "mapSoon": "Map coming soon.",
+    "mapAlt": "Ingredient map"
+  },
+  "cookie": {
+    "message": "We use essential cookies to improve your experience.",
+    "policyLink": "Cookie Policy",
+    "accept": "Accept"
+  },
+  "franchiseForm": {
+    "title": "Franchise Application",
+    "namePh": "Full Name *",
+    "phonePh": "Phone *",
+    "cityPh": "City *",
+    "budgetPh": "Investment Budget",
+    "locationPh": "Location / note (optional)",
+    "kvkkLink": "Privacy Policy & KVKK",
+    "kvkkText": " — I have read it and consent to my personal data being processed for my application.",
+    "submit": "Submit Application",
+    "submitting": "Sending…",
+    "successTitle": "Application Received",
+    "successDesc": "We will get in touch with you shortly.",
+    "waCta": "Message us on WhatsApp"
+  },
+  "legal": {
+    "contentSoon": "Content coming soon.",
+    "privacyTitle": "Privacy Policy & KVKK",
+    "cookieTitle": "Cookie Policy"
+  },
+  "seo": {
+    "homeTitle": "Kunefe House — Registered Premium Künefe",
+    "homeDesc": "Flavor from tradition to the future. The registered künefe brand, Kunefe House.",
+    "menuTitle": "Our Menu",
+    "menuDesc": "Discover our pistachio, chocolate and signature künefe varieties.",
+    "menuItemFallback": "Product",
+    "ingredientsTitle": "Our Ingredients",
+    "ingredientsDesc": "From Antep pistachio to Hatay cheese — explore the roots of our ingredients on an interactive map.",
+    "franchiseTitle": "Franchise",
+    "franchiseDesc": "Join Kunefe House, Turkey's registered künefe brand. Franchise opportunities and applications.",
+    "contactTitle": "Contact",
+    "contactDesc": "Get in touch with Kunefe House — WhatsApp, email and our branches.",
+    "privacyTitle": "Privacy Policy & KVKK",
+    "privacyDesc": "Kunefe House privacy policy and KVKK disclosure.",
+    "cookieTitle": "Cookie Policy",
+    "cookieDesc": "Kunefe House cookie policy."
   }
 }

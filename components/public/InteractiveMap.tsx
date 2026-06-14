@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { localize, type Locale } from "@/lib/i18n-field";
 
 type Pin = {
@@ -18,11 +19,12 @@ type Pin = {
 
 export function InteractiveMap({ mapImageUrl, pins, locale }: { mapImageUrl: string; pins: Pin[]; locale: Locale }) {
   const [active, setActive] = useState<Pin | null>(null);
+  const t = useTranslations("ingredients");
 
   return (
     <div className="relative mx-auto w-full max-w-4xl">
       <div className="relative aspect-[4/3] w-full">
-        <Image src={mapImageUrl} alt="Malzeme haritası" fill className="object-contain" priority />
+        <Image src={mapImageUrl} alt={t("mapAlt")} fill className="object-contain" priority />
 
         {pins.map((p) => (
           <button
