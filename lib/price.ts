@@ -1,6 +1,8 @@
 import type { Locale } from "./i18n-field";
+import type { CurrencyCode } from "./currency";
 
 const LOCALE_MAP: Record<Locale, string> = { tr: "tr-TR", en: "en-US", ar: "ar-SA" };
+const CURRENCY_LOCALE: Record<CurrencyCode, string> = { TRY: "tr-TR", USD: "en-US", QAR: "ar-QA" };
 
 /** Prisma Decimal | number | string -> number | null (güvenli) */
 export function toNumber(value: unknown): number | null {
@@ -9,12 +11,13 @@ export function toNumber(value: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** 149.9 -> "149,90 ₺" (locale'e göre) */
-export function formatPrice(value: number | null, locale: Locale = "tr"): string | null {
+/** 149.9, "USD" -> "$149.90" (para birimi koduna göre sembol). */
+export function formatPrice(value: number | null, currency: CurrencyCode = "TRY", locale?: Locale): string | null {
   if (value === null) return null;
-  return new Intl.NumberFormat(LOCALE_MAP[locale] ?? "tr-TR", {
+  const displayLocale = locale ? (LOCALE_MAP[locale] ?? "tr-TR") : CURRENCY_LOCALE[currency];
+  return new Intl.NumberFormat(displayLocale, {
     style: "currency",
-    currency: "TRY",
+    currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(value);

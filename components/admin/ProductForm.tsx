@@ -16,6 +16,8 @@ type ProductData = {
   featured?: boolean;
   price?: number | null;
   oldPrice?: number | null;
+  priceUsd?: number | null; oldPriceUsd?: number | null;
+  priceQar?: number | null; oldPriceQar?: number | null;
   showPrice?: boolean;
   portions?: Portion[] | null;
 };
@@ -38,7 +40,7 @@ export function ProductForm({ action, categories, product }: { action: (formData
         <label className="text-sm text-cream/80">Kategori</label>
         <select name="categoryId" defaultValue={product?.categoryId ?? ""}
           className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream">
-          <option value="">— Yok —</option>
+          <option value="">&mdash; Yok &mdash;</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>{(c.name as Record<string, string>)?.tr ?? c.id}</option>
           ))}
@@ -57,7 +59,7 @@ export function ProductForm({ action, categories, product }: { action: (formData
       </label>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <label className="text-sm text-cream/80">Fiyat (₺)</label>
+          <label className="text-sm text-cream/80">Fiyat (&#8378;)</label>
           <input name="price" type="number" step="0.01" min="0" inputMode="decimal"
             defaultValue={product?.price ?? ""} placeholder="149.90"
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
@@ -69,7 +71,30 @@ export function ProductForm({ action, categories, product }: { action: (formData
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
         </div>
       </div>
-      <p className="text-xs text-cream/50">Eski fiyat doluysa üstü çizili gösterilir ve indirim rozeti çıkar. Fiyatı gizlemek için “Fiyatı sitede göster” işaretini kaldırın.</p>
+      <p className="text-xs text-cream/50">Eski fiyat doluysa üstü çizili gösterilir ve indirim rozeti çıkar. Fiyatı gizlemek için &quot;Fiyatı sitede göster&quot; işaretini kaldırın.</p>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-cream/80">Fiyat ($)</label>
+          <input name="priceUsd" type="number" step="0.01" min="0" defaultValue={product?.priceUsd ?? ""} placeholder="10.00"
+            className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-cream/80">Eski Fiyat ($)</label>
+          <input name="oldPriceUsd" type="number" step="0.01" min="0" defaultValue={product?.oldPriceUsd ?? ""} placeholder="12.00"
+            className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-cream/80">Fiyat (QAR)</label>
+          <input name="priceQar" type="number" step="0.01" min="0" defaultValue={product?.priceQar ?? ""} placeholder="36.00"
+            className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-cream/80">Eski Fiyat (QAR)</label>
+          <input name="oldPriceQar" type="number" step="0.01" min="0" defaultValue={product?.oldPriceQar ?? ""} placeholder="40.00"
+            className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+      </div>
+      <p className="text-xs text-cream/50">$ ve QAR boş bırakılırsa o dilde fiyat gösterilmez (&#8378; Türkçe içindir).</p>
 
         <div className="gold-divider my-1" />
         <h2 className="font-serif text-gold">Porsiyonlar (kişi sayısına göre fiyat)</h2>

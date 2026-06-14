@@ -70,6 +70,10 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
           portions={portions}
           singlePrice={price}
           singleOldPrice={oldPrice}
+          singlePriceUsd={toNumber(product.priceUsd)}
+          singleOldPriceUsd={toNumber(product.oldPriceUsd)}
+          singlePriceQar={toNumber(product.priceQar)}
+          singleOldPriceQar={toNumber(product.oldPriceQar)}
         />
         {ingredients.length > 0 && (
           <div className="mt-8">

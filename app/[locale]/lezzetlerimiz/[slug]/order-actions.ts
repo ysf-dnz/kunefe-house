@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { parsePortions } from "@/lib/portions";
 import { checkRateLimit, clientIp } from "@/lib/ratelimit";
+import { currencyForLocale, productPriceForLocale, portionPriceForLocale } from "@/lib/currency";
+import type { Locale } from "@/lib/i18n-field";
 
 export type OrderState = { ok?: boolean };
 
@@ -48,17 +50,30 @@ export async function createOrder(formData: FormData): Promise<OrderState> {
     }
     const locationUrl = lat !== null && lng !== null ? `https://maps.google.com/?q=${lat},${lng}` : null;
 
+    const locale = (clamp(formData.get("locale"), 5) || "tr") as Locale;
+    const currency = currencyForLocale(locale);
     let price: number | null = null;
-    if (productId && persons !== null) {
+    if (productId) {
       const product = await prisma.product.findUnique({
         where: { id: productId },
-        select: { portions: true, price: true },
+        select: { portions: true, price: true, priceUsd: true, priceQar: true },
       });
       if (product) {
-        const portions = parsePortions(JSON.stringify(product.portions ?? []));
-        const match = portions.find((p) => p.persons === persons);
-        if (match) price = match.price;
-        else if (product.price != null) price = Number(product.price);
+        if (persons !== null) {
+          const portions = parsePortions(JSON.stringify(product.portions ?? []));
+          const match = portions.find((p) => p.persons === persons);
+          if (match) price = portionPriceForLocale(match, locale).price;
+        }
+        if (price == null) {
+          price = productPriceForLocale(
+            {
+              price: product.price != null ? Number(product.price) : null,
+              priceUsd: product.priceUsd != null ? Number(product.priceUsd) : null,
+              priceQar: product.priceQar != null ? Number(product.priceQar) : null,
+            },
+            locale
+          ).price;
+        }
       }
     }
 
@@ -68,6 +83,7 @@ export async function createOrder(formData: FormData): Promise<OrderState> {
         productTitle,
         persons,
         price,
+        currency,
         customerName,
         customerPhone,
         addressNote,

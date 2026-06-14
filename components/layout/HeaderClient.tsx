@@ -13,8 +13,11 @@ export function HeaderClient({ logoUrl, logoHeight = 60 }: { logoUrl: string | n
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    // Histerezis: tek eşik olursa header küçülüp içerik kayınca scrollY eşik
+    // civarında salınır ve header titrer. Açılma 48px / kapanma 8px ile geniş
+    // ölü bölge bırakıp titreşimi önlüyoruz.
+    const onScroll = () => setScrolled((prev) => (prev ? window.scrollY > 8 : window.scrollY > 48));
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 

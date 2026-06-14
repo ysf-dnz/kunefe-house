@@ -1,6 +1,12 @@
 import type { Locale } from "./i18n-field";
 
-export type Portion = { persons: number; price: number; oldPrice?: number };
+export type Portion = {
+  persons: number;
+  price: number;
+  oldPrice?: number;
+  usd?: number; oldUsd?: number;
+  qar?: number; oldQar?: number;
+};
 
 /** Admin formundan gelen JSON stringi güvenle Portion[]'a çevirir, doğrular, sıralar. */
 export function parsePortions(raw: string | null | undefined): Portion[] {
@@ -33,6 +39,16 @@ export function parsePortions(raw: string | null | undefined): Portion[] {
     if (Number.isFinite(oldPrice) && oldPrice > price) {
       portion.oldPrice = Math.round(oldPrice * 100) / 100;
     }
+    const addCur = (key: "usd" | "qar", oldKey: "oldUsd" | "oldQar", rawKey: string, rawOldKey: string) => {
+      const v = Number(r[rawKey]);
+      if (Number.isFinite(v) && v >= 0) {
+        portion[key] = Math.round(v * 100) / 100;
+        const ov = Number(r[rawOldKey]);
+        if (Number.isFinite(ov) && ov > v) portion[oldKey] = Math.round(ov * 100) / 100;
+      }
+    };
+    addCur("usd", "oldUsd", "usd", "oldUsd");
+    addCur("qar", "oldQar", "qar", "oldQar");
     out.push(portion);
   }
   return out.sort((a, b) => a.persons - b.persons);
