@@ -46,39 +46,98 @@
     "locationLoading": "جارٍ تحديد الموقع…",
     "locationDenied": "الموقع محظور. فعّله من أيقونة القفل في شريط المتصفح وأعد المحاولة — أو اسأل بدون موقع."
   },
-  "common": { "explore": "عرض", "discountBadge": "خصم {percent}%", "all": "الكل", "soon": "قريباً", "apply": "قدّم الآن" },
-  "menu": { "eyebrow": "قائمتنا", "empty": "لا توجد منتجات في هذه الفئة.", "ingredients": "المكونات", "reelsHeading": "من المطبخ" },
-  "home": { "badge": "كنافة فاخرة مسجّلة", "featured": "المميزة", "storyEyebrow": "قصتنا" },
+  "common": {
+    "explore": "عرض",
+    "discountBadge": "خصم {percent}%",
+    "all": "الكل",
+    "soon": "قريباً",
+    "apply": "قدّم الآن"
+  },
+  "menu": {
+    "eyebrow": "قائمتنا",
+    "empty": "لا توجد منتجات في هذه الفئة.",
+    "ingredients": "المكونات",
+    "reelsHeading": "من المطبخ"
+  },
+  "home": {
+    "badge": "كنافة فاخرة مسجّلة",
+    "featured": "المميزة",
+    "storyEyebrow": "قصتنا"
+  },
   "franchise": {
-    "heroBadge": "فرصة امتياز", "ctaApply": "قدّم الآن",
-    "title1": "علامة الكنافة ", "titleHighlight": "المسجّلة", "title2": " في تركيا",
+    "heroBadge": "فرصة امتياز",
+    "ctaApply": "قدّم الآن",
+    "title1": "علامة الكنافة ",
+    "titleHighlight": "المسجّلة",
+    "title2": " في تركيا",
     "heroDesc": "انضم إلى عائلة Kunefe House التي تمزج عراقة التقليد بمفهوم عصري.",
     "registered": "علامة تجارية مسجّلة",
-    "statTargetBranches": "الفروع المستهدفة", "statRegistered": "علامة مسجّلة", "statContinents": "رؤية القارات", "statSupport": "دعم التشغيل",
+    "statTargetBranches": "الفروع المستهدفة",
+    "statRegistered": "علامة مسجّلة",
+    "statContinents": "رؤية القارات",
+    "statSupport": "دعم التشغيل",
     "howTitle": "كيف تصبح صاحب امتياز؟",
-    "step1Title": "التقديم", "step1Desc": "املأ النموذج وسيتصل بك فريقنا.",
-    "step2Title": "التقييم", "step2Desc": "لنحدّد الموقع وخطة الاستثمار معاً.",
-    "step3Title": "الافتتاح", "step3Desc": "افتح أبوابك بدعم التدريب والتجهيز والتشغيل.",
+    "step1Title": "التقديم",
+    "step1Desc": "املأ النموذج وسيتصل بك فريقنا.",
+    "step2Title": "التقييم",
+    "step2Desc": "لنحدّد الموقع وخطة الاستثمار معاً.",
+    "step3Title": "الافتتاح",
+    "step3Desc": "افتح أبوابك بدعم التدريب والتجهيز والتشغيل.",
     "faqTitle": "الأسئلة الشائعة"
   },
-  "contact": { "eyebrow": "تواصل معنا", "labelWhatsapp": "واتساب", "labelEmail": "البريد الإلكتروني", "labelSocial": "التواصل الاجتماعي", "branchesSoon": "فروعنا قريباً", "branchesSoonDescPre": "نتوسّع في تركيا وخارجها. لطلب الامتياز ", "branchesSoonDescPost": "." },
-  "ingredients": { "mapSoon": "الخريطة قريباً." },
-  "cookie": { "message": "نستخدم ملفات تعريف ارتباط ضرورية لتحسين تجربتك.", "policyLink": "سياسة ملفات الارتباط", "accept": "موافق" },
-  "franchiseForm": {
-    "title": "طلب امتياز", "namePh": "الاسم الكامل *", "phonePh": "الهاتف *", "cityPh": "المدينة *",
-    "budgetPh": "ميزانية الاستثمار", "locationPh": "الموقع / ملاحظة (اختياري)",
-    "kvkkLink": "سياسة الخصوصية وKVKK", "kvkkText": " — لقد قرأتها وأوافق على معالجة بياناتي الشخصية ضمن طلبي.",
-    "submit": "إرسال الطلب", "submitting": "جارٍ الإرسال…",
-    "successTitle": "تم استلام طلبك", "successDesc": "سنتواصل معك في أقرب وقت.", "waCta": "راسلنا عبر واتساب"
+  "contact": {
+    "eyebrow": "تواصل معنا",
+    "labelWhatsapp": "واتساب",
+    "labelEmail": "البريد الإلكتروني",
+    "labelSocial": "التواصل الاجتماعي",
+    "branchesSoon": "فروعنا قريباً",
+    "branchesSoonDescPre": "نتوسّع في تركيا وخارجها. لطلب الامتياز ",
+    "branchesSoonDescPost": "."
   },
-  "legal": { "contentSoon": "المحتوى قريباً.", "privacyTitle": "سياسة الخصوصية وKVKK", "cookieTitle": "سياسة ملفات الارتباط" },
+  "ingredients": {
+    "mapSoon": "الخريطة قريباً.",
+    "mapAlt": "خريطة المكونات"
+  },
+  "cookie": {
+    "message": "نستخدم ملفات تعريف ارتباط ضرورية لتحسين تجربتك.",
+    "policyLink": "سياسة ملفات الارتباط",
+    "accept": "موافق"
+  },
+  "franchiseForm": {
+    "title": "طلب امتياز",
+    "namePh": "الاسم الكامل *",
+    "phonePh": "الهاتف *",
+    "cityPh": "المدينة *",
+    "budgetPh": "ميزانية الاستثمار",
+    "locationPh": "الموقع / ملاحظة (اختياري)",
+    "kvkkLink": "سياسة الخصوصية وKVKK",
+    "kvkkText": " — لقد قرأتها وأوافق على معالجة بياناتي الشخصية ضمن طلبي.",
+    "submit": "إرسال الطلب",
+    "submitting": "جارٍ الإرسال…",
+    "successTitle": "تم استلام طلبك",
+    "successDesc": "سنتواصل معك في أقرب وقت.",
+    "waCta": "راسلنا عبر واتساب"
+  },
+  "legal": {
+    "contentSoon": "المحتوى قريباً.",
+    "privacyTitle": "سياسة الخصوصية وKVKK",
+    "cookieTitle": "سياسة ملفات الارتباط"
+  },
   "seo": {
-    "homeTitle": "Kunefe House — كنافة فاخرة مسجّلة", "homeDesc": "نكهة من التقليد إلى المستقبل. علامة الكنافة المسجّلة Kunefe House.",
-    "menuTitle": "قائمتنا", "menuDesc": "اكتشف أصناف الكنافة بالفستق والشوكولاتة وأطباقنا المميزة.", "menuItemFallback": "منتج",
-    "ingredientsTitle": "مكوناتنا", "ingredientsDesc": "من فستق عنتاب إلى جبن هاتاي — اكتشف جذور مكوناتنا على خريطة تفاعلية.",
-    "franchiseTitle": "الامتياز", "franchiseDesc": "انضم إلى Kunefe House، علامة الكنافة المسجّلة في تركيا. فرص الامتياز والتقديم.",
-    "contactTitle": "اتصل بنا", "contactDesc": "تواصل مع Kunefe House — واتساب والبريد الإلكتروني وفروعنا.",
-    "privacyTitle": "سياسة الخصوصية وKVKK", "privacyDesc": "سياسة خصوصية Kunefe House وإفصاح KVKK.",
-    "cookieTitle": "سياسة ملفات الارتباط", "cookieDesc": "سياسة ملفات الارتباط في Kunefe House."
+    "homeTitle": "Kunefe House — كنافة فاخرة مسجّلة",
+    "homeDesc": "نكهة من التقليد إلى المستقبل. علامة الكنافة المسجّلة Kunefe House.",
+    "menuTitle": "قائمتنا",
+    "menuDesc": "اكتشف أصناف الكنافة بالفستق والشوكولاتة وأطباقنا المميزة.",
+    "menuItemFallback": "منتج",
+    "ingredientsTitle": "مكوناتنا",
+    "ingredientsDesc": "من فستق عنتاب إلى جبن هاتاي — اكتشف جذور مكوناتنا على خريطة تفاعلية.",
+    "franchiseTitle": "الامتياز",
+    "franchiseDesc": "انضم إلى Kunefe House، علامة الكنافة المسجّلة في تركيا. فرص الامتياز والتقديم.",
+    "contactTitle": "اتصل بنا",
+    "contactDesc": "تواصل مع Kunefe House — واتساب والبريد الإلكتروني وفروعنا.",
+    "privacyTitle": "سياسة الخصوصية وKVKK",
+    "privacyDesc": "سياسة خصوصية Kunefe House وإفصاح KVKK.",
+    "cookieTitle": "سياسة ملفات الارتباط",
+    "cookieDesc": "سياسة ملفات الارتباط في Kunefe House."
   }
 }
