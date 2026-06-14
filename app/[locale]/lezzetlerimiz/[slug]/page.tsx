@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/products";
@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const product = await getProductBySlug(slug);
   const loc = locale as Locale;
-  if (!product) return buildMetadata({ locale, path: `/lezzetlerimiz/${slug}`, title: "Ürün" });
+  const tseo = await getTranslations({ locale, namespace: "seo" });
+  if (!product) return buildMetadata({ locale, path: `/lezzetlerimiz/${slug}`, title: tseo("menuItemFallback") });
   const name = localize(product.title as Record<string, string>, loc);
   return buildMetadata({
     locale,
@@ -33,6 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function UrunDetayPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+  const tm = await getTranslations("menu");
   const product = await getProductBySlug(slug);
   if (!product) notFound();
   const loc = locale as Locale;
@@ -77,7 +79,7 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
         />
         {ingredients.length > 0 && (
           <div className="mt-8">
-            <h2 className="font-serif text-lg text-copper">İçindekiler</h2>
+            <h2 className="font-serif text-lg text-copper">{tm("ingredients")}</h2>
             <ul className="mt-2 flex flex-wrap gap-2">
               {ingredients.map((ing, i) => (
                 <li key={i} className="rounded-full border border-copper/40 px-3 py-1 text-sm text-cream/80">{ing}</li>
