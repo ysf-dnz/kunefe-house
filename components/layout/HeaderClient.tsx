@@ -59,7 +59,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60 }: { logoUrl: string | n
         <div className="flex items-center gap-4">
           <LanguageSwitcher />
           {/* Hamburger (mobil) */}
-          <button onClick={() => setOpen((v) => !v)} aria-label="Menü"
+          <button onClick={() => setOpen((v) => !v)} aria-label="Menu"
             className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden">
             <span className={`h-0.5 w-6 bg-gold transition-all ${open ? "translate-y-2 rotate-45" : ""}`} />
             <span className={`h-0.5 w-6 bg-gold transition-all ${open ? "opacity-0" : ""}`} />
