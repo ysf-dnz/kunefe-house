@@ -78,7 +78,7 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
                 className={`mb-3 w-full rounded-lg border px-4 py-2.5 text-sm ${locState === "ok" ? "border-green-400/60 text-green-400" : "border-gold/50 text-gold hover:bg-gold/10"}`}>
                 {locState === "ok" ? t("locationReceived") : `📍 ${t("shareLocation")}`}
               </button>
-              {locState === "fail" && <p className="mb-3 text-xs text-amber-400">{t("locationFailed")}</p>}
+              {locState === "fail" && <p className="mb-3 text-xs text-cream/50">{t("locationFailed")}</p>}
 
               <input value={addressNote} onChange={(e) => setAddressNote(e.target.value)} maxLength={200}
                 placeholder={t("addressNote")}
@@ -89,7 +89,7 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
                 {t("ask")}
               </button>
               <button type="button" onClick={() => ask(false)}
-                className="mt-2 w-full text-center text-xs text-cream/50 underline-offset-2 hover:underline">
+                className="mt-2 w-full rounded-full border border-cream/30 px-4 py-2.5 text-sm text-cream/80 hover:bg-cream/5">
                 {t("askWithoutLocation")}
               </button>
             </motion.div>

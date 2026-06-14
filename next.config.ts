@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           // Tarayıcıyı her zaman HTTPS'e zorla (1 yıl)
           { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
-          // Kullanılmayan tarayıcı API'lerini kapat
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // Kamera/mikrofon kapalı; geolocation yalnız kendi sitemize açık (ETA + sipariş konumu için ŞART)
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
         ],
       },
     ];
