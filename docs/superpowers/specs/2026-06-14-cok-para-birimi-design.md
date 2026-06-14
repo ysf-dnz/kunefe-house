@@ -11,7 +11,7 @@
 - **Doğruluk önce:** Sembol değiştirip aynı sayıyı göstermek yanlış olur. Bu yüzden her para birimi için **ayrı gerçek fiyat** girilir (kur çevirisi yok).
 - **Eksikse gizle:** Bir ürünün aktif dildeki para birimi fiyatı yoksa, o dilde fiyat ve (varsa) indirim rozeti gösterilmez; ürün yine listelenir, sipariş/ETA akışı yine çalışır (fiyatsız).
 - **Additive & geriye uyumlu:** Mevcut `price`/`oldPrice` = ₺ (TRY) kabul edilir; yeni para birimleri opsiyonel eklenir. Eski ürünler bozulmaz.
-- **Para birimleri:** TR → TRY (₺), EN → USD ($), AR → QAR (ر.ق).
+- **Para birimleri (sabit):** TR → TRY (₺), EN → USD ($), AR → QAR (ر.ق).
 
 ---
 
@@ -26,37 +26,37 @@
   priceQar      Decimal? @db.Decimal(10, 2)
   oldPriceQar   Decimal? @db.Decimal(10, 2)
 ```
-`price`/`oldPrice` (mevcut) artık **₺/TRY** anlamındadır.
+`price`/`oldPrice` (mevcut) = **TR fiyatı (₺/TRY)**.
 
-`Order`'a eklenecek: `currency String @default("TRY")` — müşterinin gördüğü para birimi (admin'de doğru sembol için).
+`Order`'a eklenecek: `currency String @default("TRY")` — müşterinin gördüğü para birimi kodu (admin'de doğru sembol için).
 
 Porsiyon JSON tipi (`lib/portions.ts` `Portion`) genişler:
 ```ts
 type Portion = {
   persons: number;
   price: number;        // TRY (mevcut)
-  oldPrice?: number;    // TRY
+  oldPrice?: number;
   usd?: number; oldUsd?: number;
   qar?: number; oldQar?: number;
 };
 ```
-`parsePortions` yeni alanları da doğrular (pozitif sayı; oldX > X değilse atılır). Eski porsiyon kayıtları (yalnız `price`) sorunsuz okunur — usd/qar undefined kalır.
+`parsePortions` yeni alanları doğrular (pozitif; oldX > X değilse atılır). Eski kayıtlar (yalnız `price`) sorunsuz okunur — usd/qar undefined kalır.
 
 ### 2.2 Para birimi çözümü (`lib/currency.ts` — yeni, saf, TDD)
 
 ```ts
 type CurrencyCode = "TRY" | "USD" | "QAR";
 currencyForLocale(locale): CurrencyCode          // tr→TRY, en→USD, ar→QAR
-// Bir ürün/porsiyon için aktif dilin (fiyat, eskiFiyat) değerini seçer; yoksa null.
+// Bir ürün/porsiyonun aktif dildeki (fiyat, eskiFiyat) değerini seçer; yoksa null.
 ```
 Seçim haritası:
-- TRY → `price`/`oldPrice` (veya porsiyon `price`/`oldPrice`)
-- USD → `priceUsd`/`oldPriceUsd` (porsiyon `usd`/`oldUsd`)
-- QAR → `priceQar`/`oldPriceQar` (porsiyon `qar`/`oldQar`)
+- tr → `price`/`oldPrice` (porsiyon `price`/`oldPrice`)
+- en → `priceUsd`/`oldPriceUsd` (porsiyon `usd`/`oldUsd`)
+- ar → `priceQar`/`oldPriceQar` (porsiyon `qar`/`oldQar`)
 
 ### 2.3 `formatPrice` güncellemesi (`lib/price.ts`)
 
-İmza değişir: `formatPrice(value, currency: CurrencyCode, locale?)`. `Intl.NumberFormat` `style:"currency"` + `currency` koduyla; sembol koddan gelir (₺/$/ر.ق). Tüm çağıranlar güncellenir (ProductCard, OrderFlow, siparisler sayfası, admin). `discountPercent` aynı kalır.
+İmza değişir: `formatPrice(value, currency: CurrencyCode, locale?)` — `Intl.NumberFormat` `style:"currency"` + kod; sembol koddan gelir (₺/$/ر.ق). Tüm çağıranlar güncellenir (ProductCard, OrderFlow, siparisler sayfası, admin). `discountPercent` aynı kalır.
 
 ### 2.4 Admin — ProductForm
 
