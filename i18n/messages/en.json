@@ -1,8 +1,23 @@
 {
-  "nav": { "home": "Home", "ingredients": "Our Ingredients", "menu": "Our Flavors", "franchise": "Franchise", "contact": "Contact" },
-  "hero": { "title": "A Taste Bridging Tradition and Future", "discover": "Discover Flavors", "franchise": "Become a Franchisee" },
-  "whatsapp": { "label": "WhatsApp", "message": "Hello, I would like to get information." },
-  "footer": { "rights": "All rights reserved." },
+  "nav": {
+    "home": "Home",
+    "ingredients": "Our Ingredients",
+    "menu": "Our Flavors",
+    "franchise": "Franchise",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "A Taste Bridging Tradition and Future",
+    "discover": "Discover Flavors",
+    "franchise": "Become a Franchisee"
+  },
+  "whatsapp": {
+    "label": "WhatsApp",
+    "message": "Hello, I would like to get information."
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
   "order": {
     "selectPortion": "For how many?",
     "orderButton": "Order Now",
@@ -27,6 +42,8 @@
     "addressNote": "Address detail (building / floor — optional)",
     "ask": "Ask on WhatsApp",
     "askWithoutLocation": "Ask without location",
-    "close": "Close"
+    "close": "Close",
+    "locationLoading": "Getting location…",
+    "locationDenied": "Location is blocked. Enable it from the lock icon in your browser bar and retry — or ask without location."
   }
 }

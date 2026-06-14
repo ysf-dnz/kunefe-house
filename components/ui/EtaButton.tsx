@@ -12,7 +12,7 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
   const [open, setOpen] = useState(false);
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
-  const [locState, setLocState] = useState<"idle" | "ok" | "fail">("idle");
+  const [locState, setLocState] = useState<"idle" | "loading" | "ok" | "denied" | "unavailable" | "unsupported">("idle");
   const [addressNote, setAddressNote] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -26,11 +26,12 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
   }, [open]);
 
   function shareLocation() {
-    if (!navigator.geolocation) { setLocState("fail"); return; }
+    if (!navigator.geolocation) { setLocState("unsupported"); return; }
+    setLocState("loading");
     navigator.geolocation.getCurrentPosition(
       (pos) => { setLat(pos.coords.latitude); setLng(pos.coords.longitude); setLocState("ok"); },
-      () => setLocState("fail"),
-      { enableHighAccuracy: true, timeout: 10000 }
+      (err) => setLocState(err.code === err.PERMISSION_DENIED ? "denied" : "unavailable"),
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
 
@@ -75,10 +76,17 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
               <p className="mb-4 text-sm text-cream/70">{t("subtitle")}</p>
 
               <button type="button" onClick={shareLocation}
-                className={`mb-3 w-full rounded-lg border px-4 py-2.5 text-sm ${locState === "ok" ? "border-green-400/60 text-green-400" : "border-gold/50 text-gold hover:bg-gold/10"}`}>
-                {locState === "ok" ? t("locationReceived") : `📍 ${t("shareLocation")}`}
+                disabled={locState === "loading"}
+                className={`mb-3 w-full rounded-lg border px-4 py-2.5 text-sm ${locState === "ok" ? "border-green-400/60 text-green-400" : "border-gold/50 text-gold hover:bg-gold/10"} disabled:opacity-60`}>
+                {locState === "ok" ? t("locationReceived")
+                  : locState === "loading" ? t("locationLoading")
+                  : `📍 ${t("shareLocation")}`}
               </button>
-              {locState === "fail" && <p className="mb-3 text-xs text-cream/50">{t("locationFailed")}</p>}
+              {(locState === "denied" || locState === "unavailable" || locState === "unsupported") && (
+                <p className="mb-3 text-xs text-cream/50">
+                  {locState === "denied" ? t("locationDenied") : t("locationFailed")}
+                </p>
+              )}
 
               <input value={addressNote} onChange={(e) => setAddressNote(e.target.value)} maxLength={200}
                 placeholder={t("addressNote")}

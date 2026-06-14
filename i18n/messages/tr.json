@@ -1,8 +1,23 @@
 {
-  "nav": { "home": "Ana Sayfa", "ingredients": "Malzemelerimiz", "menu": "Lezzetlerimiz", "franchise": "Bayilik", "contact": "İletişim" },
-  "hero": { "title": "Gelenekten Geleceğe Uzanan Lezzet", "discover": "Lezzetleri Keşfet", "franchise": "Bayi Ol" },
-  "whatsapp": { "label": "WhatsApp", "message": "Merhaba Kunefe House ve ürünleriniz hakkında bilgi alabilirmiyim?" },
-  "footer": { "rights": "Tüm hakları saklıdır." },
+  "nav": {
+    "home": "Ana Sayfa",
+    "ingredients": "Malzemelerimiz",
+    "menu": "Lezzetlerimiz",
+    "franchise": "Bayilik",
+    "contact": "İletişim"
+  },
+  "hero": {
+    "title": "Gelenekten Geleceğe Uzanan Lezzet",
+    "discover": "Lezzetleri Keşfet",
+    "franchise": "Bayi Ol"
+  },
+  "whatsapp": {
+    "label": "WhatsApp",
+    "message": "Merhaba Kunefe House ve ürünleriniz hakkında bilgi alabilirmiyim?"
+  },
+  "footer": {
+    "rights": "Tüm hakları saklıdır."
+  },
   "order": {
     "selectPortion": "Kaç kişilik?",
     "orderButton": "Sipariş Ver",
@@ -27,6 +42,8 @@
     "addressNote": "Adres detayı (bina / kat — opsiyonel)",
     "ask": "WhatsApp'tan Sor",
     "askWithoutLocation": "Konum olmadan sor",
-    "close": "Kapat"
+    "close": "Kapat",
+    "locationLoading": "Konum alınıyor…",
+    "locationDenied": "Konum izni kapalı. Tarayıcı adres çubuğundaki kilit simgesinden konuma izin verip tekrar deneyin — ya da konumsuz sorun."
   }
 }
