@@ -182,6 +182,10 @@ model Courier {
   isActive    Boolean  @default(true)
   note        String?
   order       Int      @default(0)
+  token       String?   @unique
+  lat         Float?
+  lng         Float?
+  lastSeenAt  DateTime?
   createdAt   DateTime @default(now())
   orders      Order[]
 }
