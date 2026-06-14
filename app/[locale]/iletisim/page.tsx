@@ -10,11 +10,12 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "seo" });
   return buildMetadata({
     locale,
     path: "/iletisim",
-    title: "İletişim",
-    description: "Kunefe House ile iletişime geçin — WhatsApp, e-posta ve şubelerimiz.",
+    title: t("contactTitle"),
+    description: t("contactDesc"),
   });
 }
 
@@ -22,6 +23,8 @@ export default async function IletisimPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("nav");
+  const tc = await getTranslations("contact");
+  const tcom = await getTranslations("common");
   const [settings, socials, branches] = await Promise.all([
     getSiteSettings(),
     getSocialLinks(),
@@ -35,7 +38,7 @@ export default async function IletisimPage({ params }: { params: Promise<{ local
   return (
     <section className="mx-auto max-w-5xl px-6 py-20">
       <div className="mb-2 flex justify-center">
-        <span className="text-xs uppercase tracking-[0.3em] text-copper">Bize Ulaşın</span>
+        <span className="text-xs uppercase tracking-[0.3em] text-copper">{tc("eyebrow")}</span>
       </div>
       <h1 className="text-center font-serif text-4xl text-gold-gradient md:text-5xl">{t("contact")}</h1>
       <div className="mx-auto mt-5 mb-14 h-px w-24 bg-gradient-to-r from-transparent via-gold to-transparent" />
@@ -44,19 +47,19 @@ export default async function IletisimPage({ params }: { params: Promise<{ local
       <div className="mx-auto mb-16 grid max-w-3xl gap-4 sm:grid-cols-3">
         {wa && (
           <a href={wa} target="_blank" rel="noopener noreferrer" className="card-premium rounded-2xl p-6 text-center">
-            <p className="text-sm uppercase tracking-wider text-copper">WhatsApp</p>
+            <p className="text-sm uppercase tracking-wider text-copper">{tc("labelWhatsapp")}</p>
             <p className="mt-2 font-serif text-lg text-gold">{settings?.whatsappNumber}</p>
           </a>
         )}
         {settings?.contactEmail && (
           <a href={`mailto:${settings.contactEmail}`} className="card-premium rounded-2xl p-6 text-center">
-            <p className="text-sm uppercase tracking-wider text-copper">E-posta</p>
+            <p className="text-sm uppercase tracking-wider text-copper">{tc("labelEmail")}</p>
             <p className="mt-2 break-all font-serif text-lg text-gold">{settings.contactEmail}</p>
           </a>
         )}
         {socials.length > 0 && (
           <div className="card-premium rounded-2xl p-6 text-center">
-            <p className="text-sm uppercase tracking-wider text-copper">Sosyal</p>
+            <p className="text-sm uppercase tracking-wider text-copper">{tc("labelSocial")}</p>
             <div className="mt-2 flex flex-wrap justify-center gap-3">
               {socials.map((s) => (
                 <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer"
@@ -72,10 +75,11 @@ export default async function IletisimPage({ params }: { params: Promise<{ local
       {/* Şubeler */}
       {branches.length === 0 ? (
         <div className="card-premium rounded-2xl p-10 text-center">
-          <p className="font-serif text-2xl text-gold-gradient">Şubelerimiz Yakında</p>
+          <p className="font-serif text-2xl text-gold-gradient">{tc("branchesSoon")}</p>
           <p className="mt-3 text-cream/70">
-            Türkiye geneline ve ötesine yayılıyoruz. Bayilik için{" "}
-            <a href="/bayilik" className="text-gold underline">başvurun</a>.
+            {tc("branchesSoonDescPre")}
+            <a href="/bayilik" className="text-gold underline">{tcom("apply")}</a>
+            {tc("branchesSoonDescPost")}
           </p>
         </div>
       ) : (
