@@ -38,6 +38,18 @@ describe("parsePortions", () => {
     expect(parsePortions("değil-json")).toEqual([]);
     expect(parsePortions(JSON.stringify({}))).toEqual([]);
   });
+  it("usd/qar ve eski değerlerini ayrıştırır", () => {
+    const raw = JSON.stringify([
+      { persons: 4, price: 320, oldPrice: 380, usd: 10, oldUsd: 12, qar: 36, oldQar: 40 },
+    ]);
+    expect(parsePortions(raw)).toEqual([
+      { persons: 4, price: 320, oldPrice: 380, usd: 10, oldUsd: 12, qar: 36, oldQar: 40 },
+    ]);
+  });
+  it("eksik usd/qar alanlarını yok sayar (geriye uyum)", () => {
+    const raw = JSON.stringify([{ persons: 2, price: 180 }]);
+    expect(parsePortions(raw)).toEqual([{ persons: 2, price: 180 }]);
+  });
 });
 
 describe("portionLabel", () => {
