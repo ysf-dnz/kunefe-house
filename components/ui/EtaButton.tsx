@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/lib/i18n-field";
@@ -14,6 +14,16 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
   const [lng, setLng] = useState<number | null>(null);
   const [locState, setLocState] = useState<"idle" | "ok" | "fail">("idle");
   const [addressNote, setAddressNote] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Esc ile kapat + açılınca odağı modale taşı (erişilebilirlik)
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   function shareLocation() {
     if (!navigator.geolocation) { setLocState("fail"); return; }
@@ -50,7 +60,8 @@ export function EtaButton({ number, locale, label }: { number: string; locale: L
               initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="card-premium w-full max-w-md rounded-t-2xl p-6 sm:rounded-2xl">
+              ref={dialogRef} tabIndex={-1}
+              className="card-premium w-full max-w-md rounded-t-2xl p-6 outline-none sm:rounded-2xl">
               <div className="mb-4 flex items-center gap-3">
                 <motion.span
                   className="text-3xl"
