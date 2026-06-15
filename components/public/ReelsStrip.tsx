@@ -127,10 +127,10 @@ export function ReelsStrip({
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
                 className="absolute left-0 w-full border-0"
-                style={{ top: "-110px", height: "calc(100% + 380px)" }}
+                style={{ top: "-54px", height: "calc(100% + 320px)" }}
               />
               {/* Alt çubuk sızarsa maskele */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-9 bg-black" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-black" />
               {/* Vinyet — profesyonel dokunuş */}
               <div className="pointer-events-none absolute inset-0 rounded-2xl"
                 style={{ boxShadow: "inset 0 0 90px 30px rgba(0,0,0,0.6)" }} />
