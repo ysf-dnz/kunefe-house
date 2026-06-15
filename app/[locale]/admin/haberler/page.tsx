@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getAllNews } from "@/lib/news";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
 import { SubmitButton } from "@/components/admin/SubmitButton";
@@ -8,7 +8,7 @@ import { ImageUpload } from "@/components/admin/ImageUpload";
 import { createNews, deleteNews } from "./actions";
 
 export default async function HaberlerPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const news = await getAllNews();

@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getApplications } from "@/lib/franchise";
 import { updateApplicationStatus, deleteApplication } from "./actions";
 
@@ -11,7 +11,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 };
 
 export default async function BasvurularPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const apps = await getApplications();

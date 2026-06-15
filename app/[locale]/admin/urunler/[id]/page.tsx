@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
 import { getReels } from "@/lib/reels";
 import { prisma } from "@/lib/prisma";
@@ -10,7 +10,7 @@ import type { Portion } from "@/lib/portions";
 import { updateProduct } from "../actions";
 
 export default async function UrunDuzenlePage({ params }: { params: Promise<{ locale: string; id: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale, id } = await params;
   setRequestLocale(locale);
   const [product, categories, reels] = await Promise.all([

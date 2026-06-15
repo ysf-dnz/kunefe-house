@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getSiteSettings } from "@/lib/settings";
 import { getMapPins } from "@/lib/mappins";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
@@ -8,7 +8,7 @@ import { MapEditor } from "@/components/admin/MapEditor";
 import { updateMapImage, deletePin } from "./actions";
 
 export default async function HaritaPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const [settings, pins] = await Promise.all([getSiteSettings(), getMapPins()]);
