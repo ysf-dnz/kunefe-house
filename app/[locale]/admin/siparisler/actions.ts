@@ -2,11 +2,19 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin, requireHQ } from "@/lib/require-admin";
+import type { SessionUser } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 
+async function assertOrderAccess(id: string, me: SessionUser) {
+  if (me.role === "HQ_ADMIN") return;
+  const o = await prisma.order.findUnique({ where: { id }, select: { branchId: true } });
+  if (!o || o.branchId !== me.branchId) throw new Error("Bu siparişe erişim yetkiniz yok");
+}
+
 export async function updateOrderStatus(formData: FormData) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const id = formData.get("id") as string;
+  await assertOrderAccess(id, me);
   const status = (formData.get("status") as string) || "new";
   // Teslim edilince zaman damgala; teslimden çıkınca temizle (yanlış işaretleme düzelir)
   const data: { status: string; deliveredAt?: Date | null } = { status };
@@ -21,16 +29,23 @@ export async function updateOrderStatus(formData: FormData) {
 }
 
 export async function deleteOrder(formData: FormData) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const id = formData.get("id") as string;
+  await assertOrderAccess(id, me);
   await prisma.order.delete({ where: { id } });
   revalidatePath("/admin/siparisler");
 }
 
 export async function assignCourier(formData: FormData) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const id = formData.get("id") as string;
+  await assertOrderAccess(id, me);
   const courierId = (formData.get("courierId") as string) || null;
+
+  if (courierId && me.role !== "HQ_ADMIN") {
+    const cc = await prisma.courier.findUnique({ where: { id: courierId }, select: { branchId: true } });
+    if (!cc || cc.branchId !== me.branchId) throw new Error("Bu kurye sizin şubenize ait değil");
+  }
 
   const order = await prisma.order.findUnique({ where: { id }, select: { status: true } });
   // Atama yapılıyorsa ve durum erken aşamadaysa otomatik "Hazırlanıyor"
