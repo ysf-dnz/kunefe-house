@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getProducts, getCategories } from "@/lib/products";
-import { getReels } from "@/lib/reels";
+import { getGeneralReels } from "@/lib/reels";
 import { ReelsStrip } from "@/components/public/ReelsStrip";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { toNumber } from "@/lib/price";
@@ -33,7 +33,7 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
   const t = await getTranslations("nav");
   const tm = await getTranslations("menu");
   const tc = await getTranslations("common");
-  const [products, categories, reels] = await Promise.all([getProducts(), getCategories(), getReels()]);
+  const [products, categories, reels] = await Promise.all([getProducts(), getCategories(), getGeneralReels()]);
   const filtered = kategori ? products.filter((p) => p.categoryId === kategori) : products;
 
   return (

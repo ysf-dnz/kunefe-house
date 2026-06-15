@@ -62,6 +62,7 @@ model Product {
   categoryId        String?
   category          ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   orders            Order[]
+  reels             Reel[]
   featured          Boolean          @default(false)
   price             Decimal?         @db.Decimal(10, 2)
   oldPrice          Decimal?         @db.Decimal(10, 2)
@@ -88,12 +89,13 @@ model MapPin {
 }
 
 model Reel {
-  id           String @id @default(cuid())
+  id           String    @id @default(cuid())
   title        Json?
   coverUrl     String
   videoUrl     String?
   instagramUrl String?
-  order        Int    @default(0)
+  order        Int       @default(0)
+  products     Product[]
 }
 
 model Branch {

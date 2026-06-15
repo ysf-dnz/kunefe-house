@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getSiteSettings } from "@/lib/settings";
 import { getFeaturedProducts } from "@/lib/products";
-import { getReels } from "@/lib/reels";
+import { getGeneralReels } from "@/lib/reels";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { Hero } from "@/components/public/Hero";
 import { BrandStory } from "@/components/public/BrandStory";
@@ -15,7 +15,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const tn = await getTranslations("nav");
   const th = await getTranslations("home");
   const tm = await getTranslations("menu");
-  const [settings, featured, reels] = await Promise.all([getSiteSettings(), getFeaturedProducts(), getReels()]);
+  const [settings, featured, reels] = await Promise.all([getSiteSettings(), getFeaturedProducts(), getGeneralReels()]);
   const loc = locale as Locale;
   const title = localize(settings?.heroTitle as Record<Locale, string> | null, loc) || t("title");
   const storyTitle = localize(settings?.storyTitle as Record<Locale, string> | null, loc);

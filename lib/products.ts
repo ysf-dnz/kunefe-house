@@ -8,7 +8,7 @@ export const getFeaturedProducts = cache(async () => {
   return prisma.product.findMany({ where: { featured: true }, orderBy: { order: "asc" }, take: 5 });
 });
 export const getProductBySlug = cache(async (slug: string) => {
-  return prisma.product.findUnique({ where: { slug }, include: { category: true } });
+  return prisma.product.findUnique({ where: { slug }, include: { category: true, reels: { orderBy: { order: "asc" } } } });
 });
 export const getCategories = cache(async () => {
   return prisma.productCategory.findMany({ orderBy: { order: "asc" } });

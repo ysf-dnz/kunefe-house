@@ -46,3 +46,15 @@ export async function deleteReel(formData: FormData) {
   await prisma.reel.delete({ where: { id } });
   revalidatePath("/admin/reels");
 }
+
+export async function setReelProducts(formData: FormData) {
+  await guard();
+  const id = formData.get("id") as string;
+  const productIds = (formData.getAll("productIds") as string[]).filter(Boolean);
+  await prisma.reel.update({
+    where: { id },
+    data: { products: { set: productIds.map((pid) => ({ id: pid })) } },
+  });
+  revalidatePath("/admin/reels");
+  revalidatePath("/admin/urunler");
+}
