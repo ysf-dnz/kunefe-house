@@ -4,10 +4,11 @@ import { getTrackingSnapshot } from "@/lib/couriers";
 import { LiveMapClient } from "@/components/admin/LiveMapClient";
 
 export default async function CanliTakipPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
-  const snapshot = await getTrackingSnapshot();
+  const scope = me.role === "HQ_ADMIN" ? undefined : (me.branchId ?? "__none__");
+  const snapshot = await getTrackingSnapshot(scope);
   const initial = {
     couriers: snapshot.couriers.map((c) => ({ ...c, lastSeenAt: c.lastSeenAt ? c.lastSeenAt.toISOString() : null })),
     orders: snapshot.orders,

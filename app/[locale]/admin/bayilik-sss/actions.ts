@@ -1,13 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
-
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
 
 function readLocalized(form: FormData, name: string) {
   return {
@@ -18,7 +13,7 @@ function readLocalized(form: FormData, name: string) {
 }
 
 export async function createFaq(formData: FormData) {
-  await guard();
+  await requireHQ();
   const question = readLocalized(formData, "question");
   if (!question.tr.trim()) throw new Error("Soru (TR) zorunlu");
   const count = await prisma.franchiseFaq.count();
@@ -29,7 +24,7 @@ export async function createFaq(formData: FormData) {
 }
 
 export async function deleteFaq(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   await prisma.franchiseFaq.delete({ where: { id } });
   revalidatePath("/admin/bayilik-sss");

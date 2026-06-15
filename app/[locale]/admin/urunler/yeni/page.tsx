@@ -1,12 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
 import { getReels } from "@/lib/reels";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { createProduct } from "../actions";
 
 export default async function YeniUrunPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const categories = await getCategories();

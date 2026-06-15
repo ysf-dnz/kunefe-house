@@ -1,12 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createCategory, deleteCategory } from "./actions";
 
 export default async function KategorilerPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const categories = await getCategories();

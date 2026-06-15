@@ -2,7 +2,8 @@ import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getOrders } from "@/lib/orders";
 import { toNumber, formatPrice } from "@/lib/price";
-import { updateOrderStatus, deleteOrder } from "./actions";
+import { getBranches } from "@/lib/branches";
+import { updateOrderStatus, deleteOrder, assignOrderBranch } from "./actions";
 import { getAvailableCouriers } from "@/lib/couriers";
 import { CourierAssign } from "@/components/admin/CourierAssign";
 import { minutesBetween, formatDuration } from "@/lib/duration";
@@ -17,11 +18,13 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 };
 
 export default async function SiparislerPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
-  const orders = await getOrders();
-  const availableCouriers = await getAvailableCouriers();
+  const scope = me.role === "HQ_ADMIN" ? undefined : (me.branchId ?? "__none__");
+  const orders = await getOrders(scope);
+  const availableCouriers = await getAvailableCouriers(scope);
+  const branches = me.role === "HQ_ADMIN" ? await getBranches() : [];
   const courierLite = availableCouriers.map((c) => ({ id: c.id, name: c.name, phone: c.phone }));
   const deliveredDurations = orders
     .map((o) => minutesBetween(o.assignedAt, o.deliveredAt))
@@ -46,6 +49,7 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                   {o.productTitle}{o.persons ? ` · ${o.persons} kişilik` : ""}
                   {price != null ? ` · ${formatPrice(price, (o.currency as "TRY" | "USD" | "QAR") ?? "TRY")}` : ""}
                   <span className={`ml-2 text-xs ${STATUS[o.status]?.cls ?? "text-cream/60"}`}>● {STATUS[o.status]?.label ?? o.status}</span>
+                  {me.role === "HQ_ADMIN" && <span className="ml-2 text-xs text-copper">🏪 {o.branch?.name ?? "Atanmamış"}</span>}
                 </p>
                 <p className="text-sm text-cream/70">
                   {o.customerName ?? "—"}{o.customerPhone ? ` · ${o.customerPhone}` : ""}
@@ -90,6 +94,16 @@ export default async function SiparislerPage({ params }: { params: Promise<{ loc
                   <input type="hidden" name="id" value={o.id} />
                   <button className="text-sm text-red-400">Sil</button>
                 </form>
+                {me.role === "HQ_ADMIN" && (
+                  <form action={assignOrderBranch} className="flex items-center gap-1">
+                    <input type="hidden" name="id" value={o.id} />
+                    <select name="branchId" defaultValue={o.branchId ?? ""} className="rounded border border-copper/40 bg-forest px-2 py-1 text-sm text-cream">
+                      <option value="">— Şube —</option>
+                      {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </select>
+                    <button className="rounded bg-gold/20 px-2 py-1 text-sm text-gold">Şube Ata</button>
+                  </form>
+                )}
                 <CourierAssign
                   order={{
                     id: o.id,

@@ -99,13 +99,21 @@ model Reel {
 }
 
 model Branch {
-  id           String  @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String
   address      Json?
   phone        String?
   mapsEmbedUrl String?
   workingHours Json?
-  order        Int     @default(0)
+  order        Int       @default(0)
+  slug         String    @unique @default(cuid())
+  isActive     Boolean   @default(true)
+  lat          Float?
+  lng          Float?
+  email        String?
+  users        User[]
+  orders       Order[]
+  couriers     Courier[]
 }
 
 model News {
@@ -175,10 +183,29 @@ model Order {
   lng           Float?
   courierId     String?
   courier       Courier? @relation(fields: [courierId], references: [id], onDelete: SetNull)
+  branchId      String?
+  branch        Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
   assignedAt    DateTime?
   deliveredAt   DateTime?
   status        String   @default("new")
   createdAt     DateTime @default(now())
+}
+
+enum Role {
+  HQ_ADMIN
+  BRANCH_ADMIN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(BRANCH_ADMIN)
+  branchId     String?
+  branch       Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
 }
 
 model Courier {
@@ -196,4 +223,6 @@ model Courier {
   lastSeenAt  DateTime?
   createdAt   DateTime @default(now())
   orders      Order[]
+  branchId    String?
+  branch      Branch?   @relation(fields: [branchId], references: [id], onDelete: SetNull)
 }

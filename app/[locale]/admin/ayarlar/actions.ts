@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 
 export type SaveState = { ok?: boolean; error?: string };
@@ -15,8 +15,7 @@ function readLocalized(form: FormData, name: string) {
 }
 
 export async function updateSettings(_prev: SaveState, formData: FormData): Promise<SaveState> {
-  const session = await auth();
-  if (!session) return { error: "Yetkisiz" };
+  try { await requireHQ(); } catch { return { error: "Yetkisiz" }; }
   const whatsappNumber = (formData.get("whatsappNumber") as string) ?? "";
   const heroTitle = readLocalized(formData, "heroTitle");
   const heroSubtitle = readLocalized(formData, "heroSubtitle");

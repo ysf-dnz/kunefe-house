@@ -1,12 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getBranches } from "@/lib/branches";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createBranch, deleteBranch } from "./actions";
 
 export default async function SubelerPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const branches = await getBranches();
@@ -21,6 +21,7 @@ export default async function SubelerPage({ params }: { params: Promise<{ locale
             <span>
               <strong>{b.name}</strong>
               {b.phone && <span className="ml-2 text-sm text-cream/60">{b.phone}</span>}
+              {!b.isActive && <span className="ml-2 text-xs text-cream/40">(Pasif)</span>}
             </span>
             <form action={deleteBranch}>
               <input type="hidden" name="id" value={b.id} />
@@ -45,6 +46,17 @@ export default async function SubelerPage({ params }: { params: Promise<{ locale
         </div>
         <LocalizedInput name="address" label="Adres" multiline />
         <LocalizedInput name="workingHours" label="Çalışma Saatleri" />
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-cream/80">E-posta</label>
+          <input name="email" type="email" placeholder="sube@kunefehouse.com" className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <input name="lat" type="number" step="any" placeholder="Enlem (lat)" className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+          <input name="lng" type="number" step="any" placeholder="Boylam (lng)" className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <label className="flex items-center gap-2 text-sm text-cream/80">
+          <input type="checkbox" name="isActive" defaultChecked /> Aktif
+        </label>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-cream/80">Google Maps Embed URL</label>
           <input name="mapsEmbedUrl" placeholder="https://www.google.com/maps/embed?..."

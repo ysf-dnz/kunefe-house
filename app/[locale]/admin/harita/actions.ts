@@ -1,14 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 import { deleteImageByUrl } from "@/lib/storage";
-
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
 
 function readLocalized(form: FormData, name: string) {
   return {
@@ -19,7 +14,7 @@ function readLocalized(form: FormData, name: string) {
 }
 
 export async function updateMapImage(formData: FormData) {
-  await guard();
+  await requireHQ();
   const mapImageUrl = (formData.get("mapImageUrl") as string) || null;
   const mapTitle = readLocalized(formData, "mapTitle");
   const mapDescription = readLocalized(formData, "mapDescription");
@@ -32,7 +27,7 @@ export async function updateMapImage(formData: FormData) {
 }
 
 export async function createPin(formData: FormData) {
-  await guard();
+  await requireHQ();
   const cityName = (formData.get("cityName") as string) || "";
   const x = parseFloat((formData.get("x") as string) || "0");
   const y = parseFloat((formData.get("y") as string) || "0");
@@ -54,7 +49,7 @@ export async function createPin(formData: FormData) {
 }
 
 export async function deletePin(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const pin = await prisma.mapPin.findUnique({ where: { id } });
   if (pin?.popupMediaUrl) await deleteImageByUrl(pin.popupMediaUrl);

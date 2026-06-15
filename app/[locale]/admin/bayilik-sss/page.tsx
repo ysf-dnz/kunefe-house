@@ -1,12 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@/lib/require-admin";
+import { requireHQ } from "@/lib/require-admin";
 import { getFranchiseFaqs } from "@/lib/franchise";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { createFaq, deleteFaq } from "./actions";
 
 export default async function BayilikSssPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  await requireHQ();
   const { locale } = await params;
   setRequestLocale(locale);
   const faqs = await getFranchiseFaqs();

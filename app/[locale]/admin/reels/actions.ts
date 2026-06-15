@@ -1,14 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 import { deleteImageByUrl } from "@/lib/storage";
-
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
 
 function readLocalized(form: FormData, name: string) {
   return {
@@ -19,7 +14,7 @@ function readLocalized(form: FormData, name: string) {
 }
 
 export async function createReel(formData: FormData) {
-  await guard();
+  await requireHQ();
   const coverUrl = (formData.get("coverUrl") as string) || null;
   const videoUrl = (formData.get("videoUrl") as string) || null;
   const instagramUrl = (formData.get("instagramUrl") as string) || null;
@@ -41,7 +36,7 @@ export async function createReel(formData: FormData) {
 }
 
 export async function deleteReel(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const reel = await prisma.reel.findUnique({ where: { id } });
   if (reel?.coverUrl) await deleteImageByUrl(reel.coverUrl);
@@ -51,7 +46,7 @@ export async function deleteReel(formData: FormData) {
 }
 
 export async function setReelProducts(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const productIds = (formData.getAll("productIds") as string[]).filter(Boolean);
   await prisma.reel.update({
