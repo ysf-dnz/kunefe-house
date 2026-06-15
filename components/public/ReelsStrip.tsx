@@ -9,13 +9,13 @@ import { instagramEmbedUrl } from "@/lib/instagram";
 type Reel = {
   id: string;
   title: Record<string, string> | null;
-  coverUrl: string;
+  coverUrl: string | null;
   videoUrl: string | null;
   instagramUrl: string | null;
 };
 
 /** Görünür olunca sessiz otomatik oynayan dikey video */
-function AutoVideo({ src, poster }: { src: string; poster: string }) {
+function AutoVideo({ src, poster }: { src: string; poster?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -84,10 +84,12 @@ export function ReelsStrip({ reels, locale, heading }: { reels: Reel[]; locale: 
             <div className="rounded-2xl bg-gradient-to-br from-gold via-copper to-gold p-[2px] transition-transform duration-500 group-hover:scale-[1.03]">
               <div className="relative aspect-[9/16] overflow-hidden rounded-2xl bg-forest-deep">
                 {r.videoUrl ? (
-                  <AutoVideo src={r.videoUrl} poster={r.coverUrl} />
-                ) : (
+                  <AutoVideo src={r.videoUrl} poster={r.coverUrl ?? undefined} />
+                ) : r.coverUrl ? (
                   <Image src={r.coverUrl} alt={localize(r.title, locale)} fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-forest-light via-forest to-forest-deep" />
                 )}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-deep/85 via-transparent to-transparent" />
                 {/* Video yoksa oynat ikonu göster */}

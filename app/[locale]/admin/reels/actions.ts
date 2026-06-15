@@ -20,15 +20,18 @@ function readLocalized(form: FormData, name: string) {
 
 export async function createReel(formData: FormData) {
   await guard();
-  const coverUrl = (formData.get("coverUrl") as string) || "";
+  const coverUrl = (formData.get("coverUrl") as string) || null;
   const videoUrl = (formData.get("videoUrl") as string) || null;
   const instagramUrl = (formData.get("instagramUrl") as string) || null;
-  if (!coverUrl && !videoUrl) throw new Error("En az kapak görseli veya video gerekli");
+  // En az biri gerekli: video, kapak görseli veya Instagram linki
+  if (!coverUrl && !videoUrl && !instagramUrl) {
+    throw new Error("Video, kapak görseli veya Instagram linkinden en az biri gerekli");
+  }
   const count = await prisma.reel.count();
   await prisma.reel.create({
     data: {
       title: readLocalized(formData, "title"),
-      coverUrl: coverUrl || videoUrl!, // video varsa kapak zorunlu değil
+      coverUrl, // opsiyonel; yoksa ReelsStrip markalı placeholder gösterir
       videoUrl,
       instagramUrl,
       order: count,
