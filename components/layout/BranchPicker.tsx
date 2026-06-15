@@ -8,6 +8,7 @@ type B = { id: string; name: string };
 
 export function BranchPicker({ branches, selectedId }: { branches: B[]; selectedId: string | null }) {
   const [open, setOpen] = useState(false);
+  const [err, setErr] = useState("");
   const [pending, start] = useTransition();
   const router = useRouter();
   if (branches.length === 0) return null;
@@ -15,13 +16,23 @@ export function BranchPicker({ branches, selectedId }: { branches: B[]; selected
   const selected = branches.find((b) => b.id === selectedId);
 
   function choose(id: string | null) {
+    setErr("");
     start(async () => { await setBranch(id); setOpen(false); router.refresh(); });
   }
   function nearest() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      start(async () => { await setNearestBranch(pos.coords.latitude, pos.coords.longitude); setOpen(false); router.refresh(); });
-    });
+    setErr("");
+    if (!navigator.geolocation) { setErr("Cihaz konum desteklemiyor"); return; }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        start(async () => {
+          const name = await setNearestBranch(pos.coords.latitude, pos.coords.longitude);
+          if (name) { setOpen(false); router.refresh(); }
+          else setErr("Yakında şube bulunamadı");
+        });
+      },
+      () => setErr("Konum alınamadı — listeden seçebilirsin"),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
   }
 
   return (
@@ -34,6 +45,7 @@ export function BranchPicker({ branches, selectedId }: { branches: B[]; selected
         <div className="absolute end-0 z-50 mt-2 w-56 rounded-xl border border-copper/30 bg-forest-light p-2 shadow-xl">
           <button type="button" onClick={nearest}
             className="mb-1 w-full rounded px-3 py-2 text-left text-sm text-gold hover:bg-gold/10">📍 Bana en yakını</button>
+          {err && <p className="px-3 pb-1 text-xs text-amber-400">{err}</p>}
           <button type="button" onClick={() => choose(null)}
             className={`w-full rounded px-3 py-2 text-left text-sm hover:bg-gold/10 ${!selectedId ? "text-gold" : "text-cream/80"}`}>Genel (merkez)</button>
           {branches.map((b) => (
