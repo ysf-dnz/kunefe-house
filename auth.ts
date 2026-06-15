@@ -2,6 +2,10 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { checkRateLimit, clientIp } from "@/lib/ratelimit";
+import { prisma } from "@/lib/prisma";
+
+// Kullanıcı bulunamazsa da sabit-zamanlı davranış için geçerli bir sahte bcrypt hash
+const DUMMY_HASH = "$2b$10$Dziqf8owZ4IfS7x.6NzBBOhqWS5sefaRpa6eqIZAoPKw048t9p2yK";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
@@ -13,21 +17,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Şifre", type: "password" },
       },
       async authorize(credentials, request) {
-        // Kaba-kuvvet koruması: IP başına 5 deneme / 5 dk (fail-open)
         const ip = clientIp(request instanceof Request ? request.headers : new Headers());
         if (!(await checkRateLimit("login", ip))) return null;
-        const email = credentials?.email as string | undefined;
+        const email = (credentials?.email as string | undefined)?.trim().toLowerCase();
         const password = credentials?.password as string | undefined;
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminHash = process.env.ADMIN_PASSWORD_HASH;
-        if (!email || !password || !adminEmail || !adminHash) return null;
-        // Sabit-zamanlı: e-posta yanlış olsa da bcrypt compare çalıştırılır
-        // (erken dönüşle kullanıcı-enumerasyon timing sızıntısını önler).
-        const passwordValid = await bcrypt.compare(password, adminHash);
-        const emailValid = email === adminEmail;
-        if (!emailValid || !passwordValid) return null;
-        return { id: "admin", email: adminEmail, name: "Admin" };
+        if (!email || !password) return null;
+        const user = await prisma.user.findUnique({ where: { email } });
+        const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
+        if (!user || !user.isActive || !ok) return null;
+        return { id: user.id, email: user.email, name: user.name, role: user.role, branchId: user.branchId };
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.uid = user.id;
+        token.role = (user as { role: "HQ_ADMIN" | "BRANCH_ADMIN" }).role;
+        token.branchId = (user as { branchId: string | null }).branchId;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = (token.uid as string) ?? "";
+        session.user.role = (token.role as "HQ_ADMIN" | "BRANCH_ADMIN") ?? "BRANCH_ADMIN";
+        session.user.branchId = (token.branchId as string | null) ?? null;
+      }
+      return session;
+    },
+  },
 });
