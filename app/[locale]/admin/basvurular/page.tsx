@@ -2,12 +2,14 @@ import { setRequestLocale } from "next-intl/server";
 import { requireHQ } from "@/lib/require-admin";
 import { getApplications } from "@/lib/franchise";
 import { updateApplicationStatus, deleteApplication } from "./actions";
+import { OnboardForm } from "@/components/admin/OnboardForm";
 
 const STATUS: Record<string, { label: string; cls: string }> = {
   new: { label: "Yeni", cls: "text-gold" },
   contacted: { label: "Arandı", cls: "text-pistachio" },
   approved: { label: "Onaylandı", cls: "text-green-400" },
   rejected: { label: "Reddedildi", cls: "text-red-400" },
+  onboarded: { label: "Şube açıldı", cls: "text-green-400" },
 };
 
 export default async function BasvurularPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -52,6 +54,15 @@ export default async function BasvurularPage({ params }: { params: Promise<{ loc
                 <button className="text-sm text-red-400">Sil</button>
               </form>
             </div>
+            {a.branchId ? (
+              <span className="rounded bg-green-400/15 px-3 py-1 text-sm text-green-400">🏪 {a.branch?.name ?? "Şube"}</span>
+            ) : (
+              <OnboardForm
+                applicationId={a.id}
+                defaultBranchName={`Kunefe House ${a.city}`}
+                defaultAdminName={a.name}
+              />
+            )}
           </li>
         ))}
         {apps.length === 0 && <p className="text-cream/60">Henüz başvuru yok.</p>}
