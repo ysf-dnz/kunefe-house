@@ -64,6 +64,14 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
         </div>
         <div>
           <h1 className="font-serif text-4xl text-gold">{localize(product.title as Record<string, string>, loc)}</h1>
+          {product.reels && product.reels.length > 0 && (
+            <ReelsStrip
+              compact
+              reels={product.reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
+              locale={loc}
+              heading={tm("reelsHeading")}
+            />
+          )}
           <p className="mt-4 text-cream/80">{localize(product.shortDescription as Record<string, string> | null, loc)}</p>
           <OrderFlow
             productId={product.id}
@@ -91,13 +99,6 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
           )}
         </div>
       </section>
-      {product.reels && product.reels.length > 0 && (
-        <ReelsStrip
-          reels={product.reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
-          locale={loc}
-          heading={tm("reelsHeading")}
-        />
-      )}
     </>
   );
 }
