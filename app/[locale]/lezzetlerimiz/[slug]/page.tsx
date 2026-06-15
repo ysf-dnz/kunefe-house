@@ -8,6 +8,7 @@ import { toNumber } from "@/lib/price";
 import { getSiteSettings } from "@/lib/settings";
 import { parsePortions } from "@/lib/portions";
 import { OrderFlow } from "@/components/public/OrderFlow";
+import { ReelsStrip } from "@/components/public/ReelsStrip";
 import { buildMetadata, localizedPath, SITE_URL } from "@/lib/seo";
 import { productSchema, breadcrumbSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -47,47 +48,56 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
   const portions = parsePortions(JSON.stringify(product.portions ?? []));
 
   return (
-    <section className="mx-auto grid max-w-5xl gap-10 px-6 py-16 md:grid-cols-2">
-      <JsonLd data={productSchema({ name, description: localize(product.shortDescription as Record<string, string> | null, loc), image: product.primaryImageUrl, url: productUrl })} />
-      <JsonLd data={breadcrumbSchema([
-        { name: "Ana Sayfa", path: localizedPath(locale, "/") },
-        { name: "Lezzetlerimiz", path: localizedPath(locale, "/lezzetlerimiz") },
-        { name, path: localizedPath(locale, `/lezzetlerimiz/${slug}`) },
-      ])} />
-      <div className="relative aspect-square overflow-hidden rounded-lg bg-forest-light">
-        {product.primaryImageUrl && (
-          <Image src={product.primaryImageUrl} alt={localize(product.title as Record<string, string>, loc)}
-            fill className="object-cover" priority />
-        )}
-      </div>
-      <div>
-        <h1 className="font-serif text-4xl text-gold">{localize(product.title as Record<string, string>, loc)}</h1>
-        <p className="mt-4 text-cream/80">{localize(product.shortDescription as Record<string, string> | null, loc)}</p>
-        <OrderFlow
-          productId={product.id}
-          productName={name}
+    <>
+      <section className="mx-auto grid max-w-5xl gap-10 px-6 py-16 md:grid-cols-2">
+        <JsonLd data={productSchema({ name, description: localize(product.shortDescription as Record<string, string> | null, loc), image: product.primaryImageUrl, url: productUrl })} />
+        <JsonLd data={breadcrumbSchema([
+          { name: "Ana Sayfa", path: localizedPath(locale, "/") },
+          { name: "Lezzetlerimiz", path: localizedPath(locale, "/lezzetlerimiz") },
+          { name, path: localizedPath(locale, `/lezzetlerimiz/${slug}`) },
+        ])} />
+        <div className="relative aspect-square overflow-hidden rounded-lg bg-forest-light">
+          {product.primaryImageUrl && (
+            <Image src={product.primaryImageUrl} alt={localize(product.title as Record<string, string>, loc)}
+              fill className="object-cover" priority />
+          )}
+        </div>
+        <div>
+          <h1 className="font-serif text-4xl text-gold">{localize(product.title as Record<string, string>, loc)}</h1>
+          <p className="mt-4 text-cream/80">{localize(product.shortDescription as Record<string, string> | null, loc)}</p>
+          <OrderFlow
+            productId={product.id}
+            productName={name}
+            locale={loc}
+            whatsappNumber={settings?.whatsappNumber ?? null}
+            showPrice={product.showPrice}
+            portions={portions}
+            singlePrice={price}
+            singleOldPrice={oldPrice}
+            singlePriceUsd={toNumber(product.priceUsd)}
+            singleOldPriceUsd={toNumber(product.oldPriceUsd)}
+            singlePriceQar={toNumber(product.priceQar)}
+            singleOldPriceQar={toNumber(product.oldPriceQar)}
+          />
+          {ingredients.length > 0 && (
+            <div className="mt-8">
+              <h2 className="font-serif text-lg text-copper">{tm("ingredients")}</h2>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {ingredients.map((ing, i) => (
+                  <li key={i} className="rounded-full border border-copper/40 px-3 py-1 text-sm text-cream/80">{ing}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+      {product.reels && product.reels.length > 0 && (
+        <ReelsStrip
+          reels={product.reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
           locale={loc}
-          whatsappNumber={settings?.whatsappNumber ?? null}
-          showPrice={product.showPrice}
-          portions={portions}
-          singlePrice={price}
-          singleOldPrice={oldPrice}
-          singlePriceUsd={toNumber(product.priceUsd)}
-          singleOldPriceUsd={toNumber(product.oldPriceUsd)}
-          singlePriceQar={toNumber(product.priceQar)}
-          singleOldPriceQar={toNumber(product.oldPriceQar)}
+          heading={tm("reelsHeading")}
         />
-        {ingredients.length > 0 && (
-          <div className="mt-8">
-            <h2 className="font-serif text-lg text-copper">{tm("ingredients")}</h2>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {ingredients.map((ing, i) => (
-                <li key={i} className="rounded-full border border-copper/40 px-3 py-1 text-sm text-cream/80">{ing}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </>
   );
 }
