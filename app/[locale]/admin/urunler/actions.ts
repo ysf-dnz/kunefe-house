@@ -56,6 +56,7 @@ export async function createProduct(formData: FormData) {
       oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
       priceQar: parsePrice(formData, "priceQar"),
       oldPriceQar: parsePrice(formData, "oldPriceQar"),
+      reels: { connect: (formData.getAll("reelIds") as string[]).filter(Boolean).map((id) => ({ id })) },
     },
   });
   revalidatePath("/admin/urunler");
@@ -84,6 +85,7 @@ export async function updateProduct(formData: FormData) {
       oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
       priceQar: parsePrice(formData, "priceQar"),
       oldPriceQar: parsePrice(formData, "oldPriceQar"),
+      reels: { set: (formData.getAll("reelIds") as string[]).filter(Boolean).map((id) => ({ id })) },
     },
   });
   revalidatePath("/admin/urunler");

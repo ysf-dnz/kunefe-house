@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/require-admin";
 import { getCategories } from "@/lib/products";
+import { getReels } from "@/lib/reels";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { toNumber } from "@/lib/price";
@@ -12,9 +13,10 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
   await requireAdmin();
   const { locale, id } = await params;
   setRequestLocale(locale);
-  const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
+  const [product, categories, reels] = await Promise.all([
+    prisma.product.findUnique({ where: { id }, include: { reels: { select: { id: true } } } }),
     getCategories(),
+    getReels(),
   ]);
   if (!product) notFound();
   return (
@@ -38,7 +40,9 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
           oldPriceUsd: toNumber(product.oldPriceUsd),
           priceQar: toNumber(product.priceQar),
           oldPriceQar: toNumber(product.oldPriceQar),
-        }} />
+        }}
+        allReels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl }))}
+        selectedReelIds={(product.reels ?? []).map((r) => r.id)} />
     </div>
   );
 }

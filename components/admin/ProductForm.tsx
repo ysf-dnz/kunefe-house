@@ -5,6 +5,7 @@ import { PortionEditor } from "./PortionEditor";
 import type { Portion } from "@/lib/portions";
 
 type Category = { id: string; name: Record<string, string> | unknown };
+type ReelLite = { id: string; title: Record<string, string> | null; coverUrl: string };
 type ProductData = {
   id?: string;
   title?: Record<string, string> | null;
@@ -22,7 +23,7 @@ type ProductData = {
   portions?: Portion[] | null;
 };
 
-export function ProductForm({ action, categories, product }: { action: (formData: FormData) => void; categories: Category[]; product?: ProductData; }) {
+export function ProductForm({ action, categories, product, allReels = [], selectedReelIds = [] }: { action: (formData: FormData) => void; categories: Category[]; product?: ProductData; allReels?: ReelLite[]; selectedReelIds?: string[]; }) {
   const ingredientsText = (product?.ingredients ?? []).join("\n");
   return (
     <form action={action} className="flex max-w-xl flex-col gap-6">
@@ -100,6 +101,26 @@ export function ProductForm({ action, categories, product }: { action: (formData
         <h2 className="font-serif text-gold">Porsiyonlar (kişi sayısına göre fiyat)</h2>
         <PortionEditor name="portions" defaultValue={product?.portions} />
 
+      {allReels.length > 0 && (
+        <>
+          <div className="gold-divider my-1" />
+          <h2 className="font-serif text-gold">Bu ürüne ait Reels</h2>
+          <div className="flex flex-wrap gap-3">
+            {allReels.map((r) => (
+              <label key={r.id} className="flex w-32 cursor-pointer flex-col gap-1 text-xs text-cream/80">
+                <span className="relative block aspect-[9/16] overflow-hidden rounded-lg border border-copper/30 bg-forest">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {r.coverUrl && <img src={r.coverUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+                </span>
+                <span className="flex items-center gap-1">
+                  <input type="checkbox" name="reelIds" value={r.id} defaultChecked={selectedReelIds.includes(r.id)} />
+                  <span className="truncate">{r.title?.tr || "—"}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </>
+      )}
       <SubmitButton />
       <p className="text-xs text-cream/50">Kaydedince ürün listesine yönlendirilirsiniz.</p>
     </form>
