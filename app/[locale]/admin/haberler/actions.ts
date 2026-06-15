@@ -1,14 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 import { deleteImageByUrl } from "@/lib/storage";
-
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
 
 function readLocalized(form: FormData, name: string) {
   return {
@@ -19,7 +14,7 @@ function readLocalized(form: FormData, name: string) {
 }
 
 export async function createNews(formData: FormData) {
-  await guard();
+  await requireHQ();
   const title = readLocalized(formData, "title");
   if (!title.tr.trim()) throw new Error("Başlık (TR) zorunlu");
   // Aynı anda tek popup: yeni popup işaretlenmişse diğerlerini kapat
@@ -38,7 +33,7 @@ export async function createNews(formData: FormData) {
 }
 
 export async function deleteNews(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const news = await prisma.news.findUnique({ where: { id } });
   if (news?.imageUrl) await deleteImageByUrl(news.imageUrl);

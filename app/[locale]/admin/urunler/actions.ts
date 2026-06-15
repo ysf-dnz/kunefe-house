@@ -2,16 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { deleteImageByUrl } from "@/lib/storage";
 import { parsePortions } from "@/lib/portions";
 
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
 function readLocalized(form: FormData, name: string) {
   return {
     tr: (form.get(`${name}.tr`) as string) ?? "",
@@ -31,7 +27,7 @@ function parsePrice(form: FormData, name: string): number | null {
 }
 
 export async function createProduct(formData: FormData) {
-  await guard();
+  await requireHQ();
   const title = readLocalized(formData, "title");
   if (!title.tr.trim()) throw new Error("Türkçe başlık zorunlu");
   // Boş slug (örn. yalnız özel karakter) ve aynı isimli ürün çakışmasına karşı koruma
@@ -64,7 +60,7 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const title = readLocalized(formData, "title");
   await prisma.product.update({
@@ -93,7 +89,7 @@ export async function updateProduct(formData: FormData) {
 }
 
 export async function deleteProduct(formData: FormData) {
-  await guard();
+  await requireHQ();
   const id = formData.get("id") as string;
   const product = await prisma.product.findUnique({ where: { id } });
   if (product?.primaryImageUrl) await deleteImageByUrl(product.primaryImageUrl);
