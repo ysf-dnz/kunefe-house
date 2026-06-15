@@ -7,6 +7,9 @@ import { localize, type Locale } from "@/lib/i18n-field";
 import { toNumber } from "@/lib/price";
 import { getSiteSettings } from "@/lib/settings";
 import { parsePortions } from "@/lib/portions";
+import { prisma } from "@/lib/prisma";
+import { getSelectedBranch } from "@/lib/branch-select";
+import { effectiveProduct } from "@/lib/branch-catalog";
 import { OrderFlow } from "@/components/public/OrderFlow";
 import { ReelsStrip } from "@/components/public/ReelsStrip";
 import { buildMetadata, localizedPath, SITE_URL } from "@/lib/seo";
@@ -46,6 +49,20 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
   const oldPrice = toNumber(product.oldPrice);
   const settings = await getSiteSettings().catch(() => null);
   const portions = parsePortions(JSON.stringify(product.portions ?? []));
+  const branch = await getSelectedBranch();
+  let branchSoldOut = false;
+  let effPrice = price;
+  if (branch) {
+    const ov = await prisma.branchProduct.findUnique({
+      where: { branchId_productId: { branchId: branch.id, productId: product.id } },
+    });
+    const eff = effectiveProduct(
+      { price },
+      ov ? { available: ov.available, stock: ov.stock, localPrice: toNumber(ov.localPrice) } : null
+    );
+    branchSoldOut = !eff.available;
+    effPrice = eff.price;
+  }
 
   return (
     <>
@@ -73,20 +90,24 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
             />
           )}
           <p className="mt-4 text-cream/80">{localize(product.shortDescription as Record<string, string> | null, loc)}</p>
-          <OrderFlow
-            productId={product.id}
-            productName={name}
-            locale={loc}
-            whatsappNumber={settings?.whatsappNumber ?? null}
-            showPrice={product.showPrice}
-            portions={portions}
-            singlePrice={price}
-            singleOldPrice={oldPrice}
-            singlePriceUsd={toNumber(product.priceUsd)}
-            singleOldPriceUsd={toNumber(product.oldPriceUsd)}
-            singlePriceQar={toNumber(product.priceQar)}
-            singleOldPriceQar={toNumber(product.oldPriceQar)}
-          />
+          {branchSoldOut ? (
+            <p className="mt-6 rounded-lg border border-copper/40 px-4 py-3 text-cream/70">Bu şubede şu an tükendi.</p>
+          ) : (
+            <OrderFlow
+              productId={product.id}
+              productName={name}
+              locale={loc}
+              whatsappNumber={settings?.whatsappNumber ?? null}
+              showPrice={product.showPrice}
+              portions={portions}
+              singlePrice={effPrice}
+              singleOldPrice={oldPrice}
+              singlePriceUsd={toNumber(product.priceUsd)}
+              singleOldPriceUsd={toNumber(product.oldPriceUsd)}
+              singlePriceQar={toNumber(product.priceQar)}
+              singleOldPriceQar={toNumber(product.oldPriceQar)}
+            />
+          )}
           {ingredients.length > 0 && (
             <div className="mt-8">
               <h2 className="font-serif text-lg text-copper">{tm("ingredients")}</h2>
