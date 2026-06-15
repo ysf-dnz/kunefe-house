@@ -14,6 +14,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <Link href="/admin" className="font-serif text-gold">Panel</Link>
         <Link href="/admin/siparisler">Siparişler</Link>
         <Link href="/admin/kuryeler">Kuryeler</Link>
+        {!isHQ && <Link href="/admin/menu">Menü / Stok</Link>}
         <Link href="/admin/canli-takip">Canlı Takip</Link>
         {isHQ && (
           <>
