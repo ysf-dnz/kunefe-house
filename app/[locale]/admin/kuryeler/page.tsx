@@ -1,15 +1,18 @@
 import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getCouriers } from "@/lib/couriers";
+import { getBranches } from "@/lib/branches";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { SITE_URL } from "@/lib/seo";
 import { createCourier, toggleAvailability, toggleActive, deleteCourier, ensureCourierToken } from "./actions";
 
 export default async function KuryelerPage({ params }: { params: Promise<{ locale: string }> }) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
-  const couriers = await getCouriers();
+  const branchId = me.role === "HQ_ADMIN" ? undefined : (me.branchId ?? "__none__");
+  const couriers = await getCouriers(branchId);
+  const branches = me.role === "HQ_ADMIN" ? await getBranches() : [];
 
   return (
     <div className="flex flex-col gap-8">
@@ -26,6 +29,12 @@ export default async function KuryelerPage({ params }: { params: Promise<{ local
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
           <input name="note" placeholder="Not (ops.)"
             className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+          {me.role === "HQ_ADMIN" && (
+            <select name="branchId" className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream">
+              <option value="">— Şube —</option>
+              {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+            </select>
+          )}
         </div>
         <SubmitButton>Kurye Ekle</SubmitButton>
       </form>

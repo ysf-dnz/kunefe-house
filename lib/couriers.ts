@@ -1,14 +1,17 @@
 import { cache } from "react";
 import { prisma } from "./prisma";
 
-export const getCouriers = cache(async () => {
-  return prisma.courier.findMany({ orderBy: [{ isActive: "desc" }, { order: "asc" }, { createdAt: "asc" }] });
+export const getCouriers = cache(async (branchId?: string) => {
+  return prisma.courier.findMany({
+    where: branchId ? { branchId } : undefined,
+    orderBy: [{ isActive: "desc" }, { order: "asc" }, { createdAt: "asc" }],
+  });
 });
 
 /** Atama listesi: yalnız aktif + müsait kuryeler. */
-export const getAvailableCouriers = cache(async () => {
+export const getAvailableCouriers = cache(async (branchId?: string) => {
   return prisma.courier.findMany({
-    where: { isActive: true, isAvailable: true },
+    where: { isActive: true, isAvailable: true, ...(branchId ? { branchId } : {}) },
     orderBy: [{ order: "asc" }, { createdAt: "asc" }],
   });
 });
