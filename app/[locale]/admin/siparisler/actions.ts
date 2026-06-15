@@ -1,16 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireAdmin, requireHQ } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
 
-async function guard() {
-  const session = await auth();
-  if (!session) throw new Error("Yetkisiz");
-}
-
 export async function updateOrderStatus(formData: FormData) {
-  await guard();
+  await requireAdmin();
   const id = formData.get("id") as string;
   const status = (formData.get("status") as string) || "new";
   // Teslim edilince zaman damgala; teslimden çıkınca temizle (yanlış işaretleme düzelir)
@@ -26,14 +21,14 @@ export async function updateOrderStatus(formData: FormData) {
 }
 
 export async function deleteOrder(formData: FormData) {
-  await guard();
+  await requireAdmin();
   const id = formData.get("id") as string;
   await prisma.order.delete({ where: { id } });
   revalidatePath("/admin/siparisler");
 }
 
 export async function assignCourier(formData: FormData) {
-  await guard();
+  await requireAdmin();
   const id = formData.get("id") as string;
   const courierId = (formData.get("courierId") as string) || null;
 
@@ -49,5 +44,13 @@ export async function assignCourier(formData: FormData) {
       ...(bump ? { status: "preparing" } : {}),
     },
   });
+  revalidatePath("/admin/siparisler");
+}
+
+export async function assignOrderBranch(formData: FormData) {
+  await requireHQ();
+  const id = formData.get("id") as string;
+  const branchId = (formData.get("branchId") as string) || null;
+  await prisma.order.update({ where: { id }, data: { branchId } });
   revalidatePath("/admin/siparisler");
 }
