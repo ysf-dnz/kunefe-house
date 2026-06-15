@@ -9,7 +9,7 @@ import { formatPrice, discountPercent } from "@/lib/price";
 import type { Portion } from "@/lib/portions";
 import { currencyForLocale, productPriceForLocale, minPortionPriceForLocale } from "@/lib/currency";
 
-export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice, portions, priceUsd, oldPriceUsd, priceQar, oldPriceQar }: {
+export function ProductCard({ slug, title, shortDescription, primaryImageUrl, secondaryImageUrl, locale, price, oldPrice, showPrice, portions, priceUsd, oldPriceUsd, priceQar, oldPriceQar, soldOut, branchPrice }: {
   slug: string;
   title: Record<string, string> | null;
   shortDescription: Record<string, string> | null;
@@ -22,14 +22,16 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
   portions?: Portion[] | null;
   priceUsd?: number | null; oldPriceUsd?: number | null;
   priceQar?: number | null; oldPriceQar?: number | null;
+  soldOut?: boolean; branchPrice?: number | null;
 }) {
   const t = useTranslations("order");
   const tc = useTranslations("common");
   const currency = currencyForLocale(locale);
   const portionList = portions ?? [];
   const single = productPriceForLocale({ price, oldPrice, priceUsd, oldPriceUsd, priceQar, oldPriceQar }, locale);
+  const effSinglePrice = currency === "TRY" && branchPrice != null ? branchPrice : single.price;
   const fromPrice = portionList.length > 0 ? minPortionPriceForLocale(portionList, locale) : null;
-  const cardPrice = fromPrice != null ? fromPrice : single.price;
+  const cardPrice = fromPrice != null ? fromPrice : effSinglePrice;
   const cardOldPrice = fromPrice != null ? null : single.oldPrice;
   const priceVisible = showPrice && cardPrice != null;
   const discount = priceVisible ? discountPercent(cardPrice, cardOldPrice) : null;
@@ -52,6 +54,9 @@ export function ProductCard({ slug, title, shortDescription, primaryImageUrl, se
           )}
           {/* Alt gradyan — metin okunurluğu + premium his */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-deep/80 via-transparent to-transparent" />
+          {soldOut && (
+            <span className="absolute end-3 top-3 rounded-full bg-forest-deep/80 px-2.5 py-1 text-xs font-bold text-cream ring-1 ring-cream/30">Tükendi</span>
+          )}
           {discount != null && (
             <span className="absolute start-3 top-3 rounded-full bg-copper px-2.5 py-1 text-xs font-bold text-cream shadow-lg">
               {tc("discountBadge", { percent: discount })}
