@@ -6,5 +6,8 @@ export const getFranchiseFaqs = cache(async () => {
 });
 
 export const getApplications = cache(async () => {
-  return prisma.franchiseApplication.findMany({ orderBy: { createdAt: "desc" } });
+  return prisma.franchiseApplication.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { branch: { select: { name: true } } },
+  });
 });
