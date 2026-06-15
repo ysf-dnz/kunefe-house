@@ -18,6 +18,13 @@ function readLocalized(form: FormData, name: string) {
 function parseIngredients(raw: string) {
   return raw.split("\n").map((s) => s.trim()).filter(Boolean);
 }
+function readLocalizedIngredients(form: FormData) {
+  return {
+    tr: parseIngredients((form.get("ingredients.tr") as string) ?? ""),
+    en: parseIngredients((form.get("ingredients.en") as string) ?? ""),
+    ar: parseIngredients((form.get("ingredients.ar") as string) ?? ""),
+  };
+}
 function parsePrice(form: FormData, name: string): number | null {
   const raw = ((form.get(name) as string) ?? "").trim().replace(",", ".");
   if (!raw) return null;
@@ -39,7 +46,7 @@ export async function createProduct(formData: FormData) {
       title,
       slug,
       shortDescription: readLocalized(formData, "shortDescription"),
-      ingredients: parseIngredients((formData.get("ingredients") as string) ?? ""),
+      ingredients: readLocalizedIngredients(formData),
       primaryImageUrl: (formData.get("primaryImageUrl") as string) || null,
       secondaryImageUrl: (formData.get("secondaryImageUrl") as string) || null,
       categoryId: (formData.get("categoryId") as string) || null,
@@ -68,7 +75,7 @@ export async function updateProduct(formData: FormData) {
     data: {
       title,
       shortDescription: readLocalized(formData, "shortDescription"),
-      ingredients: parseIngredients((formData.get("ingredients") as string) ?? ""),
+      ingredients: readLocalizedIngredients(formData),
       primaryImageUrl: (formData.get("primaryImageUrl") as string) || null,
       secondaryImageUrl: (formData.get("secondaryImageUrl") as string) || null,
       categoryId: (formData.get("categoryId") as string) || null,

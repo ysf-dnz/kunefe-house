@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/products";
 import { localize, type Locale } from "@/lib/i18n-field";
+import { ingredientsForLocale } from "@/lib/ingredients";
 import { toNumber } from "@/lib/price";
 import { getSiteSettings } from "@/lib/settings";
 import { parsePortions } from "@/lib/portions";
@@ -41,7 +42,7 @@ export default async function UrunDetayPage({ params }: { params: Promise<{ loca
   const product = await getProductBySlug(slug);
   if (!product) notFound();
   const loc = locale as Locale;
-  const ingredients = (product.ingredients as string[] | null) ?? [];
+  const ingredients = ingredientsForLocale(product.ingredients, loc);
   const name = localize(product.title as Record<string, string>, loc);
   const productUrl = `${SITE_URL}${localizedPath(locale, `/lezzetlerimiz/${slug}`)}`;
   const price = toNumber(product.price);

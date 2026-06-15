@@ -27,7 +27,7 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
           id: product.id,
           title: product.title as Record<string, string> | null,
           shortDescription: product.shortDescription as Record<string, string> | null,
-          ingredients: (product.ingredients as string[] | null) ?? [],
+          ingredients: product.ingredients,
           primaryImageUrl: product.primaryImageUrl,
           secondaryImageUrl: product.secondaryImageUrl,
           categoryId: product.categoryId,

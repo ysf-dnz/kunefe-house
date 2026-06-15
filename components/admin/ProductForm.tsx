@@ -3,6 +3,7 @@ import { ImageUpload } from "./ImageUpload";
 import { SubmitButton } from "./SubmitButton";
 import { PortionEditor } from "./PortionEditor";
 import type { Portion } from "@/lib/portions";
+import { ingredientsToText } from "@/lib/ingredients";
 
 type Category = { id: string; name: Record<string, string> | unknown };
 type ReelLite = { id: string; title: Record<string, string> | null; coverUrl: string | null };
@@ -10,7 +11,7 @@ type ProductData = {
   id?: string;
   title?: Record<string, string> | null;
   shortDescription?: Record<string, string> | null;
-  ingredients?: string[] | null;
+  ingredients?: unknown;
   primaryImageUrl?: string | null;
   secondaryImageUrl?: string | null;
   categoryId?: string | null;
@@ -24,17 +25,14 @@ type ProductData = {
 };
 
 export function ProductForm({ action, categories, product, allReels = [], selectedReelIds = [] }: { action: (formData: FormData) => void; categories: Category[]; product?: ProductData; allReels?: ReelLite[]; selectedReelIds?: string[]; }) {
-  const ingredientsText = (product?.ingredients ?? []).join("\n");
+  const ingredientsText = ingredientsToText(product?.ingredients);
   return (
     <form action={action} className="flex max-w-xl flex-col gap-6">
       {product?.id && <input type="hidden" name="id" value={product.id} />}
       <LocalizedInput name="title" label="Başlık" defaultValue={product?.title} />
       <LocalizedInput name="shortDescription" label="Kısa Açıklama" defaultValue={product?.shortDescription} multiline />
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-cream/80">Malzemeler (her satıra bir tane)</label>
-        <textarea name="ingredients" defaultValue={ingredientsText} rows={4}
-          className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
-      </div>
+      <LocalizedInput name="ingredients" label="Malzemeler (her satıra bir tane)" defaultValue={ingredientsText} multiline />
+      <p className="-mt-4 text-xs text-cream/50">Her dil için ayrı malzeme listesi. EN/AR boş bırakılırsa o dilde Türkçe liste gösterilir.</p>
       <ImageUpload name="primaryImageUrl" label="Ana Görsel" folder="products" defaultUrl={product?.primaryImageUrl} />
       <ImageUpload name="secondaryImageUrl" label="Hover Görseli" folder="products" defaultUrl={product?.secondaryImageUrl} />
       <div className="flex flex-col gap-2">

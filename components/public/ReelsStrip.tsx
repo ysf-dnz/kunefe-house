@@ -49,7 +49,7 @@ export function ReelsStrip({
 
   function onCardClick(r: Reel) {
     const embed = r.instagramUrl ? instagramEmbedUrl(r.instagramUrl) : null;
-    if (embed) setActive(r);
+    if (embed || r.videoUrl) setActive(r);
     else if (r.instagramUrl) window.open(r.instagramUrl, "_blank", "noopener,noreferrer");
   }
 
@@ -101,7 +101,7 @@ export function ReelsStrip({
   // Site-içi embed lightbox — Instagram beyaz çubukları (üst/alt) kırpılır + vinyet
   const lightbox = (
     <AnimatePresence>
-      {active && activeEmbed && (
+      {active && (activeEmbed || active.videoUrl) && (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[70] flex items-center justify-center bg-forest-deep/85 p-4 backdrop-blur-sm"
@@ -117,24 +117,39 @@ export function ReelsStrip({
               className="absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-cream/15 text-cream hover:bg-gold hover:text-forest-deep">
               ✕
             </button>
-            {/* Yalnız video görünsün: üst başlık ve alt (beğeni/yorum) çubuğu kırpılır.
-                Çerçeve oranı IG reel medya alanına (~4:5) oturur; iframe yukarı taşınıp
-                üst başlık kesilir, fazla yükseklik alt çubuğu pencere dışına atar. */}
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-black ring-1 ring-gold/30">
-              <iframe
-                src={activeEmbed}
-                title={localize(active.title, locale) || "Instagram Reel"}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-                className="absolute left-0 w-full border-0"
-                style={{ top: "-54px", height: "calc(100% + 320px)" }}
-              />
-              {/* Alt çubuk sızarsa maskele */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-black" />
-              {/* Vinyet — profesyonel dokunuş */}
-              <div className="pointer-events-none absolute inset-0 rounded-2xl"
-                style={{ boxShadow: "inset 0 0 90px 30px rgba(0,0,0,0.6)" }} />
-            </div>
+            {activeEmbed ? (
+              <>
+                {/* Yalnız video görünsün: üst başlık ve alt (beğeni/yorum) çubuğu kırpılır.
+                    Çerçeve oranı IG reel medya alanına (~4:5) oturur; iframe yukarı taşınıp
+                    üst başlık kesilir, fazla yükseklik alt çubuğu pencere dışına atar. */}
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-black ring-1 ring-gold/30">
+                  <iframe
+                    src={activeEmbed}
+                    title={localize(active.title, locale) || "Instagram Reel"}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    className="absolute left-0 w-full border-0"
+                    style={{ top: "-54px", height: "calc(100% + 320px)" }}
+                  />
+                  {/* Alt çubuk sızarsa maskele */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-black" />
+                  {/* Vinyet — profesyonel dokunuş */}
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl"
+                    style={{ boxShadow: "inset 0 0 90px 30px rgba(0,0,0,0.6)" }} />
+                </div>
+              </>
+            ) : (
+              <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl bg-black ring-1 ring-gold/30">
+                <video
+                  src={active.videoUrl!}
+                  poster={active.coverUrl ?? undefined}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
