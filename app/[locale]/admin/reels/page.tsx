@@ -57,7 +57,7 @@ export default async function ReelsPage({ params }: { params: Promise<{ locale: 
         <ImageUpload name="coverUrl" label="Kapak Görseli (video yüklenince poster olur, opsiyonel)" folder="reels" />
         <p className="text-xs text-cream/40">
           📹 <strong>Video yükle</strong> → kart sitede <strong>kendiliğinden sessiz oynar</strong> (önerilen).
-          Sadece kapak + link verirsen tıklayınca açılır.
+          Kapak + link, ya da <strong>yalnız Instagram linki</strong> de yeterli (tıklayınca açılır).
         </p>
         <div className="flex flex-col gap-2">
           <label className="text-sm text-cream/80">Instagram Linki (opsiyonel)</label>
