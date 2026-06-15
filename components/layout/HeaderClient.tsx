@@ -6,8 +6,9 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { BranchPicker } from "./BranchPicker";
 
-export function HeaderClient({ logoUrl, logoHeight = 60 }: { logoUrl: string | null; logoHeight?: number }) {
+export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null }) {
   const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -57,6 +58,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60 }: { logoUrl: string | n
         </nav>
 
         <div className="flex items-center gap-4">
+          <BranchPicker branches={branches} selectedId={selectedBranchId} />
           <LanguageSwitcher />
           {/* Hamburger (mobil) */}
           <button onClick={() => setOpen((v) => !v)} aria-label="Menu"

@@ -5,12 +5,13 @@ import { getGeneralReels } from "@/lib/reels";
 import { ReelsStrip } from "@/components/public/ReelsStrip";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { toNumber } from "@/lib/price";
+import { getSelectedBranch } from "@/lib/branch-select";
+import { getBranchMenu, effectiveProduct } from "@/lib/branch-catalog";
 import { ProductCard } from "@/components/public/ProductCard";
 import type { Portion } from "@/lib/portions";
 import { buildMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -34,6 +35,18 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
   const tm = await getTranslations("menu");
   const tc = await getTranslations("common");
   const [products, categories, reels] = await Promise.all([getProducts(), getCategories(), getGeneralReels()]);
+  const branch = await getSelectedBranch();
+  const effMap = new Map<string, { soldOut: boolean; branchPrice: number | null }>();
+  if (branch) {
+    const menu = await getBranchMenu(branch.id);
+    for (const { product, override } of menu) {
+      const eff = effectiveProduct(
+        { price: toNumber(product.price) },
+        override ? { available: override.available, stock: override.stock, localPrice: toNumber(override.localPrice) } : null
+      );
+      effMap.set(product.id, { soldOut: !eff.available, branchPrice: eff.price });
+    }
+  }
   const filtered = kategori ? products.filter((p) => p.categoryId === kategori) : products;
 
   return (
@@ -68,7 +81,9 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
                 price={toNumber(p.price)} oldPrice={toNumber(p.oldPrice)} showPrice={p.showPrice}
                 portions={(p.portions as Portion[] | null) ?? null}
                 priceUsd={toNumber(p.priceUsd)} oldPriceUsd={toNumber(p.oldPriceUsd)}
-                priceQar={toNumber(p.priceQar)} oldPriceQar={toNumber(p.oldPriceQar)} />
+                priceQar={toNumber(p.priceQar)} oldPriceQar={toNumber(p.oldPriceQar)}
+                soldOut={effMap.get(p.id)?.soldOut ?? false}
+                branchPrice={effMap.get(p.id)?.branchPrice ?? null} />
             ))}
           </div>
         )}

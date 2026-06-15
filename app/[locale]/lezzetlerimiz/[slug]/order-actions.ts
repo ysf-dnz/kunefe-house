@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { getSelectedBranch } from "@/lib/branch-select";
 import { parsePortions } from "@/lib/portions";
 import { checkRateLimit, clientIp } from "@/lib/ratelimit";
 import { currencyForLocale, productPriceForLocale, portionPriceForLocale } from "@/lib/currency";
@@ -77,6 +78,7 @@ export async function createOrder(formData: FormData): Promise<OrderState> {
       }
     }
 
+    const branch = await getSelectedBranch();
     await prisma.order.create({
       data: {
         productId,
@@ -84,6 +86,7 @@ export async function createOrder(formData: FormData): Promise<OrderState> {
         persons,
         price,
         currency,
+        branchId: branch?.id ?? null,
         customerName,
         customerPhone,
         addressNote,
