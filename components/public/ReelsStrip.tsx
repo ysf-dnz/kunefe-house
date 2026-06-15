@@ -117,16 +117,20 @@ export function ReelsStrip({
               className="absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-cream/15 text-cream hover:bg-gold hover:text-forest-deep">
               ✕
             </button>
-            {/* Yalnız video görünsün: üst/alt Instagram çubukları taşırılıp kırpılır */}
-            <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl bg-black ring-1 ring-gold/30">
+            {/* Yalnız video görünsün: üst başlık ve alt (beğeni/yorum) çubuğu kırpılır.
+                Çerçeve oranı IG reel medya alanına (~4:5) oturur; iframe yukarı taşınıp
+                üst başlık kesilir, fazla yükseklik alt çubuğu pencere dışına atar. */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-black ring-1 ring-gold/30">
               <iframe
                 src={activeEmbed}
                 title={localize(active.title, locale) || "Instagram Reel"}
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
                 className="absolute left-0 w-full border-0"
-                style={{ top: "-56px", height: "calc(100% + 240px)" }}
+                style={{ top: "-54px", height: "calc(100% + 320px)" }}
               />
+              {/* Alt çubuk sızarsa maskele */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-black" />
               {/* Vinyet — profesyonel dokunuş */}
               <div className="pointer-events-none absolute inset-0 rounded-2xl"
                 style={{ boxShadow: "inset 0 0 90px 30px rgba(0,0,0,0.6)" }} />
