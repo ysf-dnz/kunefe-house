@@ -2,16 +2,18 @@ import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { requireAdmin } from "@/lib/require-admin";
 import { getReels } from "@/lib/reels";
+import { getProducts } from "@/lib/products";
 import { LocalizedInput } from "@/components/admin/LocalizedInput";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 import { ImageUpload } from "@/components/admin/ImageUpload";
-import { createReel, deleteReel } from "./actions";
+import { createReel, deleteReel, setReelProducts } from "./actions";
 
 export default async function ReelsPage({ params }: { params: Promise<{ locale: string }> }) {
   await requireAdmin();
   const { locale } = await params;
   setRequestLocale(locale);
   const reels = await getReels();
+  const products = await getProducts();
 
   return (
     <div className="flex flex-col gap-8">
@@ -19,13 +21,27 @@ export default async function ReelsPage({ params }: { params: Promise<{ locale: 
 
       <ul className="flex flex-wrap gap-4">
         {reels.map((r) => (
-          <li key={r.id} className="card-premium flex w-44 flex-col gap-2 rounded-xl p-3">
+          <li key={r.id} className="card-premium flex w-56 flex-col gap-2 rounded-xl p-3">
             <div className="relative aspect-[9/16] overflow-hidden rounded-lg bg-forest">
               {r.coverUrl && <Image src={r.coverUrl} alt="" fill className="object-cover" />}
             </div>
             <span className="truncate text-sm text-cream/80">
               {(r.title as Record<string, string>)?.tr || "—"}
             </span>
+            <form action={setReelProducts} className="flex flex-col gap-1">
+              <input type="hidden" name="id" value={r.id} />
+              <span className="text-xs text-cream/60">Görüneceği ürünler:</span>
+              <div className="max-h-28 overflow-y-auto rounded border border-copper/20 p-1">
+                {products.map((p) => (
+                  <label key={p.id} className="flex items-center gap-1 text-xs text-cream/80">
+                    <input type="checkbox" name="productIds" value={p.id}
+                      defaultChecked={(r.products ?? []).some((rp) => rp.id === p.id)} />
+                    <span className="truncate">{(p.title as Record<string, string>)?.tr || "—"}</span>
+                  </label>
+                ))}
+              </div>
+              <button className="rounded bg-gold/20 px-2 py-1 text-xs text-gold">Ürünleri Kaydet</button>
+            </form>
             <form action={deleteReel}>
               <input type="hidden" name="id" value={r.id} />
               <button className="text-xs text-red-400">Sil</button>
