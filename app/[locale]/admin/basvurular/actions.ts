@@ -41,11 +41,14 @@ export async function onboardBranch(_prev: OnboardState, formData: FormData): Pr
   const tempPassword = generateTempPassword();
   const passwordHash = await bcrypt.hash(tempPassword, 10);
   try {
-    const branch = await prisma.branch.create({ data: { name: branchName, isActive: true } });
-    await prisma.user.create({
-      data: { email: adminEmail, name: adminName, role: "BRANCH_ADMIN", branchId: branch.id, passwordHash },
+    // Atomik: hata olursa hiçbiri kalmaz (öksüz şube önlenir)
+    await prisma.$transaction(async (tx) => {
+      const branch = await tx.branch.create({ data: { name: branchName, isActive: true } });
+      await tx.user.create({
+        data: { email: adminEmail, name: adminName, role: "BRANCH_ADMIN", branchId: branch.id, passwordHash },
+      });
+      await tx.franchiseApplication.update({ where: { id: applicationId }, data: { status: "onboarded", branchId: branch.id } });
     });
-    await prisma.franchiseApplication.update({ where: { id: applicationId }, data: { status: "onboarded", branchId: branch.id } });
     revalidatePath("/admin/basvurular");
     return { ok: true, email: adminEmail, tempPassword };
   } catch {
