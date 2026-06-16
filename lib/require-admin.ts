@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 
-export type SessionUser = { id: string; role: "HQ_ADMIN" | "BRANCH_ADMIN"; branchId: string | null };
+export type SessionUser = { id: string; email: string; role: "HQ_ADMIN" | "BRANCH_ADMIN"; branchId: string | null };
 
 export async function getSessionUser(): Promise<SessionUser | null> {
   const s = await auth();
   if (!s?.user) return null;
-  return { id: s.user.id, role: s.user.role, branchId: s.user.branchId };
+  return { id: s.user.id, email: s.user.email ?? "", role: s.user.role, branchId: s.user.branchId };
 }
 
 /** Herhangi giriş yapmış admin (yoksa login'e). */

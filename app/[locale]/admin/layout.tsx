@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { getSessionUser } from "@/lib/require-admin";
+import { signOut } from "@/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,16 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <Link href="/admin/medya">Medya</Link>
           </>
         )}
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/admin/login" });
+          }}
+          className="ml-auto"
+        >
+          <span className="mr-3 text-xs text-cream/50">{me.email}</span>
+          <button className="text-sm text-red-400 hover:text-red-300">Çıkış</button>
+        </form>
       </aside>
       <main className="p-6">{children}</main>
     </div>
