@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "SiteSettings" ADD COLUMN     "showEta" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "showFranchise" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "showIngredients" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "showNews" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "showReels" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "showStory" BOOLEAN NOT NULL DEFAULT true;

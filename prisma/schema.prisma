@@ -32,6 +32,12 @@ model SiteSettings {
   privacyPolicy   Json?
   cookiePolicy    Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
+  showEta         Boolean  @default(true)
+  showFranchise   Boolean  @default(true)
+  showReels       Boolean  @default(true)
+  showNews        Boolean  @default(true)
+  showStory       Boolean  @default(true)
+  showIngredients Boolean  @default(true)
   cargoEnabled          Boolean  @default(false)
   shippingFee           Decimal? @db.Decimal(10, 2)
   freeShippingThreshold Decimal? @db.Decimal(10, 2)

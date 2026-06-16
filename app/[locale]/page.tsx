@@ -30,9 +30,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         title={title}
         discoverLabel={t("discover")}
         franchiseLabel={t("franchise")}
+        showFranchise={settings?.showFranchise !== false}
       />
 
-      {(storyTitle || settings?.storyImageUrl) && (
+      {settings?.showStory !== false && (storyTitle || settings?.storyImageUrl) && (
         <BrandStory imageUrl={settings?.storyImageUrl ?? null} title={storyTitle} text={storyText} />
       )}
 
@@ -42,11 +43,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         heading={tn("menu")}
       />
 
-      <ReelsStrip
-        reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
-        locale={loc}
-        heading={tm("reelsHeading")}
-      />
+      {settings?.showReels !== false && (
+        <ReelsStrip
+          reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
+          locale={loc}
+          heading={tm("reelsHeading")}
+        />
+      )}
     </>
   );
 }

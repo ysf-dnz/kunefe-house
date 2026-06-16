@@ -2,6 +2,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { getProducts, getCategories } from "@/lib/products";
 import { getGeneralReels } from "@/lib/reels";
+import { getSiteSettings } from "@/lib/settings";
 import { ReelsStrip } from "@/components/public/ReelsStrip";
 import { localize, type Locale } from "@/lib/i18n-field";
 import { toNumber } from "@/lib/price";
@@ -34,7 +35,7 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
   const t = await getTranslations("nav");
   const tm = await getTranslations("menu");
   const tc = await getTranslations("common");
-  const [products, categories, reels] = await Promise.all([getProducts(), getCategories(), getGeneralReels()]);
+  const [products, categories, reels, settings] = await Promise.all([getProducts(), getCategories(), getGeneralReels(), getSiteSettings().catch(() => null)]);
   const branch = await getSelectedBranch();
   const effMap = new Map<string, { soldOut: boolean; branchPrice: number | null }>();
   if (branch) {
@@ -88,7 +89,7 @@ export default async function LezzetlerimizPage({ params, searchParams }: {
           </div>
         )}
       </section>
-      {reels.length > 0 && (
+      {settings?.showReels !== false && reels.length > 0 && (
         <ReelsStrip
           reels={reels.map((r) => ({ id: r.id, title: r.title as Record<string, string> | null, coverUrl: r.coverUrl, videoUrl: r.videoUrl, instagramUrl: r.instagramUrl }))}
           locale={locale as Locale}

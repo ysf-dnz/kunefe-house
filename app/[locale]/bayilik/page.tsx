@@ -1,4 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 import { getSiteSettings } from "@/lib/settings";
 import { getFranchiseFaqs } from "@/lib/franchise";
 import { type Locale } from "@/lib/i18n-field";
@@ -31,6 +32,7 @@ export default async function BayilikPage({ params }: { params: Promise<{ locale
     { n: "03", title: t("step3Title"), desc: t("step3Desc") },
   ];
   const [settings, faqs] = await Promise.all([getSiteSettings(), getFranchiseFaqs()]);
+  if (settings?.showFranchise === false) notFound();
   const loc = locale as Locale;
 
   return (

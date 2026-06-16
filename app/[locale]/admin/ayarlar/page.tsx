@@ -29,6 +29,13 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         cargoEnabled: settings.cargoEnabled,
         shippingFee: settings.shippingFee != null ? Number(settings.shippingFee) : null,
         freeShippingThreshold: settings.freeShippingThreshold != null ? Number(settings.freeShippingThreshold) : null,
+        showEta: settings.showEta,
+        showFranchise: settings.showFranchise,
+        showReels: settings.showReels,
+        showNews: settings.showNews,
+        showStory: settings.showStory,
+        showIngredients: settings.showIngredients,
+        enabledLocales: settings.enabledLocales,
       } : null} />
     </div>
   );

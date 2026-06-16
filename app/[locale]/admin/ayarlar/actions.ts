@@ -30,6 +30,17 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
   const storyText = readLocalized(formData, "storyText");
   const privacyPolicy = readLocalized(formData, "privacyPolicy");
   const cookiePolicy = readLocalized(formData, "cookiePolicy");
+  const showEta = formData.get("showEta") === "on";
+  const showFranchise = formData.get("showFranchise") === "on";
+  const showReels = formData.get("showReels") === "on";
+  const showNews = formData.get("showNews") === "on";
+  const showStory = formData.get("showStory") === "on";
+  const showIngredients = formData.get("showIngredients") === "on";
+  // TR her zaman açık; EN/AR opsiyonel
+  const enabledLocales = ["tr",
+    ...(formData.get("locale_en") === "on" ? ["en"] : []),
+    ...(formData.get("locale_ar") === "on" ? ["ar"] : []),
+  ];
   const cargoEnabled = formData.get("cargoEnabled") === "on";
   const parseMoney = (name: string): number | null => {
     const raw = ((formData.get(name) as string) ?? "").trim().replace(",", ".");
@@ -42,6 +53,7 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
     whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoHeight, contactEmail,
     heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText, privacyPolicy, cookiePolicy,
     cargoEnabled, shippingFee, freeShippingThreshold,
+    showEta, showFranchise, showReels, showNews, showStory, showIngredients, enabledLocales,
   };
   try {
     await prisma.siteSettings.upsert({
