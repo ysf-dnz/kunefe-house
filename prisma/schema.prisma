@@ -32,6 +32,7 @@ model SiteSettings {
   privacyPolicy   Json?
   cookiePolicy    Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
+  defaultLocale   String   @default("tr")
   showEta         Boolean  @default(true)
   showFranchise   Boolean  @default(true)
   showReels       Boolean  @default(true)

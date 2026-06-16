@@ -2,19 +2,25 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, localizedPath } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/settings";
 
 const STATIC_PATHS = ["/", "/lezzetlerimiz", "/malzemelerimiz", "/bayilik", "/iletisim"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
+  const settings = await getSiteSettings().catch(() => null);
+  const enabled = settings?.enabledLocales?.length ? settings.enabledLocales : [...routing.locales];
+  const defaultLocale = settings?.defaultLocale && enabled.includes(settings.defaultLocale)
+    ? settings.defaultLocale
+    : (enabled.includes("tr") ? "tr" : enabled[0]);
 
   function addPath(path: string, priority: number) {
     const languages: Record<string, string> = {};
     for (const loc of routing.locales) {
-      languages[loc] = `${SITE_URL}${localizedPath(loc, path)}`;
+      if (enabled.includes(loc)) languages[loc] = `${SITE_URL}${localizedPath(loc, path)}`;
     }
     entries.push({
-      url: `${SITE_URL}${localizedPath(routing.defaultLocale, path)}`,
+      url: `${SITE_URL}${localizedPath(defaultLocale, path)}`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority,

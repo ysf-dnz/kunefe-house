@@ -31,6 +31,7 @@ type Settings = {
   showStory: boolean;
   showIngredients: boolean;
   enabledLocales: string[];
+  defaultLocale: string;
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
@@ -122,6 +123,16 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <label className="flex items-center gap-2 text-sm text-cream/80">
         <input type="checkbox" name="locale_ar" defaultChecked={settings?.enabledLocales?.includes("ar") ?? true} /> العربية (AR)
       </label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-cream/80">Varsayılan dil (ana sayfa “/” bu dili gösterir)</label>
+        <select name="defaultLocale" defaultValue={settings?.defaultLocale ?? "tr"}
+          className="w-48 rounded border border-copper/40 bg-forest px-3 py-2 text-cream">
+          <option value="tr">Türkçe</option>
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+        <p className="text-xs text-cream/50">TR’yi kapatmak için varsayılanı EN/AR yap; eski TR adresleri otomatik varsayılana yönlenir.</p>
+      </div>
 
       <div className="gold-divider my-2" />
       <h2 className="font-serif text-gold">Kargo Mağazası</h2>

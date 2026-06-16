@@ -14,7 +14,7 @@ export function LanguageSwitcher({ enabled = ["tr", "en", "ar"] }: { enabled?: s
     router.replace(pathname, { locale: target });
   }
 
-  const shown = LOCALES.filter((l) => l === "tr" || enabled.includes(l));
+  const shown = LOCALES.filter((l) => enabled.includes(l));
 
   return (
     <div className="flex gap-2 text-sm">

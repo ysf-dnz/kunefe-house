@@ -8,6 +8,13 @@ export async function Header() {
     getActiveBranches(),
     getSelectedBranch(),
   ]);
+  // Etkin sunulan diller: varsayılan her zaman; EN/AR açıksa; TR yalnız varsayılan TR ise
+  const enabled = settings?.enabledLocales ?? ["tr", "en", "ar"];
+  const defaultLocale = settings?.defaultLocale ?? "tr";
+  const servedLocales = ["tr", "en", "ar"].filter(
+    (l) => l === defaultLocale || (l !== "tr" && enabled.includes(l))
+  );
+
   return (
     <HeaderClient
       logoUrl={settings?.logoHeaderUrl ?? null}
@@ -17,7 +24,7 @@ export async function Header() {
       cargoEnabled={!!settings?.cargoEnabled}
       showFranchise={settings?.showFranchise !== false}
       showIngredients={settings?.showIngredients !== false}
-      enabledLocales={settings?.enabledLocales ?? ["tr", "en", "ar"]}
+      enabledLocales={servedLocales}
     />
   );
 }
