@@ -60,9 +60,12 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           {cargoEnabled && <CartIcon href="/sepet" />}
-          <BranchPicker branches={branches} selectedId={selectedBranchId} />
+          {/* Şube seç (müşteri tarafı) masaüstünde üstte; mobilde hamburger menüsünde */}
+          <div className="hidden md:block">
+            <BranchPicker branches={branches} selectedId={selectedBranchId} />
+          </div>
           <LanguageSwitcher />
           {/* Hamburger (mobil) */}
           <button onClick={() => setOpen((v) => !v)} aria-label="Menu"
@@ -91,6 +94,9 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
                   {item.label}
                 </Link>
               ))}
+              <div className="pt-3">
+                <BranchPicker branches={branches} selectedId={selectedBranchId} />
+              </div>
             </div>
           </motion.nav>
         )}
