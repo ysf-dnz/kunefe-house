@@ -9,7 +9,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BranchPicker } from "./BranchPicker";
 import { CartIcon } from "@/components/shop/CartIcon";
 
-export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null, cargoEnabled = false }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null; cargoEnabled?: boolean }) {
+export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null, cargoEnabled = false, showFranchise = true, showIngredients = true, enabledLocales = ["tr", "en", "ar"] }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null; cargoEnabled?: boolean; showFranchise?: boolean; showIngredients?: boolean; enabledLocales?: string[] }) {
   const t = useTranslations("nav");
   const ts = useTranslations("shop");
   const [scrolled, setScrolled] = useState(false);
@@ -26,10 +26,10 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
 
   const links = [
     { href: "/", label: t("home") },
-    { href: "/malzemelerimiz", label: t("ingredients") },
+    ...(showIngredients ? [{ href: "/malzemelerimiz", label: t("ingredients") }] : []),
     { href: "/lezzetlerimiz", label: t("menu") },
     ...(cargoEnabled ? [{ href: "/magaza", label: ts("title") }] : []),
-    { href: "/bayilik", label: t("franchise") },
+    ...(showFranchise ? [{ href: "/bayilik", label: t("franchise") }] : []),
     { href: "/iletisim", label: t("contact") },
   ];
 
@@ -66,7 +66,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
           <div className="hidden md:block">
             <BranchPicker branches={branches} selectedId={selectedBranchId} />
           </div>
-          <LanguageSwitcher />
+          <LanguageSwitcher enabled={enabledLocales} />
           {/* Hamburger (mobil) */}
           <button onClick={() => setOpen((v) => !v)} aria-label="Menu"
             className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden">

@@ -15,6 +15,9 @@ export async function Header() {
       branches={branches.map((b) => ({ id: b.id, name: b.name }))}
       selectedBranchId={selected?.id ?? null}
       cargoEnabled={!!settings?.cargoEnabled}
+      showFranchise={settings?.showFranchise !== false}
+      showIngredients={settings?.showIngredients !== false}
+      enabledLocales={settings?.enabledLocales ?? ["tr", "en", "ar"]}
     />
   );
 }

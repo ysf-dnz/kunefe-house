@@ -70,6 +70,9 @@ export default async function LocaleLayout({
     getSocialLinks().catch(() => []),
     getPopupNews().catch(() => null),
   ]);
+  // Dil aç/kapa: TR her zaman açık; kapalı EN/AR'a doğrudan erişim engellenir
+  const enabledLocales = settings?.enabledLocales ?? ["tr", "en", "ar"];
+  if (locale !== "tr" && !enabledLocales.includes(locale)) notFound();
   const loc = locale as Locale;
 
   return (
@@ -91,7 +94,7 @@ export default async function LocaleLayout({
             <Footer />
             <WhatsAppButton />
             <CookieBanner />
-            {popupNews && (
+            {popupNews && settings?.showNews !== false && (
               <NewsPopup
                 id={popupNews.id}
                 title={localize(popupNews.title as Record<string, string>, loc)}

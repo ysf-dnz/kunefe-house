@@ -10,6 +10,7 @@ export function Hero({
   title,
   discoverLabel,
   franchiseLabel,
+  showFranchise = true,
 }: {
   videoUrl: string | null;
   overlay: number;
@@ -17,6 +18,7 @@ export function Hero({
   title: string;
   discoverLabel: string;
   franchiseLabel: string;
+  showFranchise?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -64,9 +66,11 @@ export function Hero({
         <Link href="/lezzetlerimiz" className="btn-gold rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide">
           {discoverLabel}
         </Link>
-        <Link href="/bayilik" className="btn-outline-gold rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide backdrop-blur-sm">
-          {franchiseLabel}
-        </Link>
+        {showFranchise && (
+          <Link href="/bayilik" className="btn-outline-gold rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide backdrop-blur-sm">
+            {franchiseLabel}
+          </Link>
+        )}
       </div>
     </section>
   );

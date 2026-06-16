@@ -24,6 +24,13 @@ type Settings = {
   cargoEnabled: boolean;
   shippingFee: number | null;
   freeShippingThreshold: number | null;
+  showEta: boolean;
+  showFranchise: boolean;
+  showReels: boolean;
+  showNews: boolean;
+  showStory: boolean;
+  showIngredients: boolean;
+  enabledLocales: string[];
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
@@ -86,6 +93,35 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <h2 className="font-serif text-gold">Yasal Metinler (KVKK)</h2>
       <LocalizedInput name="privacyPolicy" label="Gizlilik Politikası ve KVKK" defaultValue={settings?.privacyPolicy} multiline />
       <LocalizedInput name="cookiePolicy" label="Çerez Politikası" defaultValue={settings?.cookiePolicy} multiline />
+
+      <div className="gold-divider my-2" />
+      <h2 className="font-serif text-gold">Özellikler (Aç / Kapa)</h2>
+      <p className="-mt-3 text-xs text-cream/50">İşareti kaldırılan özellik sitede tamamen gizlenir.</p>
+      {([
+        ["showEta", "🥜 Fıstık / “Kaç dakikada gelir?” popup"],
+        ["showFranchise", "🏪 Bayi Ol / Franchise (menü + sayfa)"],
+        ["showReels", "🎬 Reels şeridi"],
+        ["showNews", "📰 Haber popup"],
+        ["showStory", "📖 Marka Hikâyesi (ana sayfa)"],
+        ["showIngredients", "🗺️ Malzemelerimiz (menü + sayfa)"],
+      ] as const).map(([key, label]) => (
+        <label key={key} className="flex items-center gap-2 text-sm text-cream/80">
+          <input type="checkbox" name={key} defaultChecked={settings?.[key] ?? true} />
+          {label}
+        </label>
+      ))}
+
+      <div className="gold-divider my-2" />
+      <h2 className="font-serif text-gold">Diller</h2>
+      <label className="flex items-center gap-2 text-sm text-cream/50">
+        <input type="checkbox" checked disabled /> Türkçe (varsayılan — kapatılamaz)
+      </label>
+      <label className="flex items-center gap-2 text-sm text-cream/80">
+        <input type="checkbox" name="locale_en" defaultChecked={settings?.enabledLocales?.includes("en") ?? true} /> English (EN)
+      </label>
+      <label className="flex items-center gap-2 text-sm text-cream/80">
+        <input type="checkbox" name="locale_ar" defaultChecked={settings?.enabledLocales?.includes("ar") ?? true} /> العربية (AR)
+      </label>
 
       <div className="gold-divider my-2" />
       <h2 className="font-serif text-gold">Kargo Mağazası</h2>

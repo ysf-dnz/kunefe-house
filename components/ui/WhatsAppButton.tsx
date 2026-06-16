@@ -9,5 +9,6 @@ export async function WhatsAppButton() {
   const settings = await getSiteSettings().catch(() => null);
   const number = settings?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
   if (!number) return null;
+  if (settings?.showEta === false) return null;
   return <EtaButton number={number} locale={locale} label={t("label")} />;
 }

@@ -1,4 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 import { getSiteSettings } from "@/lib/settings";
 import { getMapPins } from "@/lib/mappins";
 import { localize, type Locale } from "@/lib/i18n-field";
@@ -25,6 +26,7 @@ export default async function MalzemelerimizPage({ params }: { params: Promise<{
   const t = await getTranslations("nav");
   const ti = await getTranslations("ingredients");
   const [settings, pins] = await Promise.all([getSiteSettings(), getMapPins()]);
+  if (settings?.showIngredients === false) notFound();
   const loc = locale as Locale;
 
   const title = localize(settings?.mapTitle as Record<string, string> | null, loc) || t("ingredients");
