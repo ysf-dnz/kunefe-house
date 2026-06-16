@@ -12,6 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { NewsPopup } from "@/components/public/NewsPopup";
 import { CookieBanner } from "@/components/public/CookieBanner";
 import { CartProvider } from "@/components/shop/CartProvider";
+import { BranchGate } from "@/components/layout/BranchGate";
 import { getPopupNews } from "@/lib/news";
 import { getSiteSettings, getSocialLinks } from "@/lib/settings";
 import { organizationSchema, restaurantSchema } from "@/lib/schema";
@@ -84,6 +85,7 @@ export default async function LocaleLayout({
         />
         <NextIntlClientProvider>
           <CartProvider>
+            <BranchGate />
             <Header />
             <main>{children}</main>
             <Footer />
