@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { NewsPopup } from "@/components/public/NewsPopup";
 import { CookieBanner } from "@/components/public/CookieBanner";
+import { CartProvider } from "@/components/shop/CartProvider";
 import { getPopupNews } from "@/lib/news";
 import { getSiteSettings, getSocialLinks } from "@/lib/settings";
 import { organizationSchema, restaurantSchema } from "@/lib/schema";
@@ -82,19 +83,21 @@ export default async function LocaleLayout({
           })}
         />
         <NextIntlClientProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <WhatsAppButton />
-          <CookieBanner />
-          {popupNews && (
-            <NewsPopup
-              id={popupNews.id}
-              title={localize(popupNews.title as Record<string, string>, loc)}
-              body={localize(popupNews.body as Record<string, string> | null, loc)}
-              imageUrl={popupNews.imageUrl}
-            />
-          )}
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <WhatsAppButton />
+            <CookieBanner />
+            {popupNews && (
+              <NewsPopup
+                id={popupNews.id}
+                title={localize(popupNews.title as Record<string, string>, loc)}
+                body={localize(popupNews.body as Record<string, string> | null, loc)}
+                imageUrl={popupNews.imageUrl}
+              />
+            )}
+          </CartProvider>
         </NextIntlClientProvider>
         <Analytics />
       </body>

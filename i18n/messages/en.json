@@ -139,5 +139,52 @@
     "privacyDesc": "Kunefe House privacy policy and KVKK disclosure.",
     "cookieTitle": "Cookie Policy",
     "cookieDesc": "Kunefe House cookie policy."
+  },
+  "shop": {
+    "title": "Cargo Store",
+    "subtitle": "Delivered to your door, anywhere in Türkiye.",
+    "addToCart": "Add to Cart",
+    "added": "Added ✓",
+    "soldOut": "Sold out",
+    "empty": "The store is currently closed.",
+    "viewCart": "View Cart"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty.",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "checkout": "Proceed to Payment",
+    "qty": "Qty"
+  },
+  "checkout": {
+    "title": "Delivery & Payment",
+    "name": "Full Name",
+    "phone": "Phone",
+    "email": "Email",
+    "city": "City",
+    "district": "District",
+    "address": "Full Address",
+    "postal": "Postal Code (optional)",
+    "pay": "Proceed to Payment",
+    "required": "Name, phone, email and address are required.",
+    "processing": "Preparing payment...",
+    "successTitle": "Order received! 🎉",
+    "successBody": "Your payment is confirmed. The tracking number will be sent via WhatsApp once shipped.",
+    "failTitle": "Payment could not be completed",
+    "failBody": "Something went wrong. Your cart is saved, you can try again.",
+    "outOfStock": "Sorry, one of your items is sold out. Please update your cart."
+  },
+  "cargoAdmin": {
+    "title": "Cargo Orders",
+    "trackingNo": "Tracking No",
+    "carrier": "Carrier",
+    "save": "Save & Shipped",
+    "sendWhatsapp": "Send WhatsApp to Customer",
+    "markDelivered": "Delivered",
+    "status": "Status"
   }
 }

@@ -139,5 +139,52 @@
     "privacyDesc": "Kunefe House gizlilik politikası ve KVKK aydınlatma metni.",
     "cookieTitle": "Çerez Politikası",
     "cookieDesc": "Kunefe House çerez politikası."
+  },
+  "shop": {
+    "title": "Kargo Mağazası",
+    "subtitle": "Tüm Türkiye'ye kapınıza kadar.",
+    "addToCart": "Sepete Ekle",
+    "added": "Sepete eklendi ✓",
+    "soldOut": "Tükendi",
+    "empty": "Mağaza şu an kapalı.",
+    "viewCart": "Sepeti Gör"
+  },
+  "cart": {
+    "title": "Sepetim",
+    "empty": "Sepetiniz boş.",
+    "remove": "Kaldır",
+    "subtotal": "Ara Toplam",
+    "shipping": "Kargo",
+    "free": "Ücretsiz",
+    "total": "Toplam",
+    "checkout": "Ödemeye Geç",
+    "qty": "Adet"
+  },
+  "checkout": {
+    "title": "Teslimat & Ödeme",
+    "name": "Ad Soyad",
+    "phone": "Telefon",
+    "email": "E-posta",
+    "city": "İl",
+    "district": "İlçe",
+    "address": "Açık Adres",
+    "postal": "Posta Kodu (opsiyonel)",
+    "pay": "Ödemeye Geç",
+    "required": "Ad, telefon, e-posta ve adres zorunludur.",
+    "processing": "Ödeme hazırlanıyor...",
+    "successTitle": "Siparişiniz alındı! 🎉",
+    "successBody": "Ödemeniz onaylandı. Kargoya verilince takip numarası WhatsApp ile gönderilecek.",
+    "failTitle": "Ödeme tamamlanamadı",
+    "failBody": "Bir sorun oluştu. Sepetiniz korunuyor, tekrar deneyebilirsiniz.",
+    "outOfStock": "Üzgünüz, seçtiğiniz bir ürün tükendi. Lütfen sepeti güncelleyin."
+  },
+  "cargoAdmin": {
+    "title": "Kargo Siparişleri",
+    "trackingNo": "Takip No",
+    "carrier": "Kargo Firması",
+    "save": "Kaydet & Kargolandı",
+    "sendWhatsapp": "Müşteriye WhatsApp Gönder",
+    "markDelivered": "Teslim Edildi",
+    "status": "Durum"
   }
 }
