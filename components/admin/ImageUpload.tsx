@@ -32,7 +32,14 @@ export function ImageUpload({ name, label, folder, defaultUrl, accept = "image/*
         headers: { "content-type": file.type || "application/octet-stream" },
         body: file,
       });
-      if (!up.ok) throw new Error(`Yükleme başarısız (${up.status})`);
+      if (!up.ok) {
+        const mb = (file.size / 1048576).toFixed(1);
+        if (up.status === 413) {
+          throw new Error(`Video çok büyük (${mb} MB). Supabase yükleme limitini aşıyor — videoyu sıkıştırın ya da limiti yükseltin.`);
+        }
+        const detail = await up.text().catch(() => "");
+        throw new Error(`Yükleme başarısız (${up.status}) — ${mb} MB. ${detail.slice(0, 160)}`);
+      }
       setUrl(publicUrl);
     } catch (err) {
       setError((err as Error).message || "Yükleme başarısız");
