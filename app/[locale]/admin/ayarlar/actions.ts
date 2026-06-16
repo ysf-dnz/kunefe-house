@@ -30,9 +30,18 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
   const storyText = readLocalized(formData, "storyText");
   const privacyPolicy = readLocalized(formData, "privacyPolicy");
   const cookiePolicy = readLocalized(formData, "cookiePolicy");
+  const cargoEnabled = formData.get("cargoEnabled") === "on";
+  const parseMoney = (name: string): number | null => {
+    const raw = ((formData.get(name) as string) ?? "").trim().replace(",", ".");
+    const n = Number(raw);
+    return raw && Number.isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : null;
+  };
+  const shippingFee = parseMoney("shippingFee");
+  const freeShippingThreshold = parseMoney("freeShippingThreshold");
   const data = {
     whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoHeight, contactEmail,
     heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText, privacyPolicy, cookiePolicy,
+    cargoEnabled, shippingFee, freeShippingThreshold,
   };
   try {
     await prisma.siteSettings.upsert({

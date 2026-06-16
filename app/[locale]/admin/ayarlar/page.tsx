@@ -26,6 +26,9 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         storyText: settings.storyText as Record<string, string> | null,
         privacyPolicy: settings.privacyPolicy as Record<string, string> | null,
         cookiePolicy: settings.cookiePolicy as Record<string, string> | null,
+        cargoEnabled: settings.cargoEnabled,
+        shippingFee: settings.shippingFee != null ? Number(settings.shippingFee) : null,
+        freeShippingThreshold: settings.freeShippingThreshold != null ? Number(settings.freeShippingThreshold) : null,
       } : null} />
     </div>
   );

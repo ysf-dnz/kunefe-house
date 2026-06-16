@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BranchPicker } from "./BranchPicker";
+import { CartIcon } from "@/components/shop/CartIcon";
 
-export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null }) {
+export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null, cargoEnabled = false }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null; cargoEnabled?: boolean }) {
   const t = useTranslations("nav");
+  const ts = useTranslations("shop");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -26,6 +28,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
     { href: "/", label: t("home") },
     { href: "/malzemelerimiz", label: t("ingredients") },
     { href: "/lezzetlerimiz", label: t("menu") },
+    ...(cargoEnabled ? [{ href: "/magaza", label: ts("title") }] : []),
     { href: "/bayilik", label: t("franchise") },
     { href: "/iletisim", label: t("contact") },
   ];
@@ -58,6 +61,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
         </nav>
 
         <div className="flex items-center gap-4">
+          {cargoEnabled && <CartIcon href="/sepet" />}
           <BranchPicker branches={branches} selectedId={selectedBranchId} />
           <LanguageSwitcher />
           {/* Hamburger (mobil) */}

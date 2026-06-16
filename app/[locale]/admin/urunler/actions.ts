@@ -25,6 +25,12 @@ function readLocalizedIngredients(form: FormData) {
     ar: parseIngredients((form.get("ingredients.ar") as string) ?? ""),
   };
 }
+function parseStock(form: FormData): number | null {
+  const raw = ((form.get("cargoStock") as string) ?? "").trim();
+  if (!raw) return null;
+  const n = Math.round(Number(raw));
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
 function parsePrice(form: FormData, name: string): number | null {
   const raw = ((form.get(name) as string) ?? "").trim().replace(",", ".");
   if (!raw) return null;
@@ -59,6 +65,8 @@ export async function createProduct(formData: FormData) {
       oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
       priceQar: parsePrice(formData, "priceQar"),
       oldPriceQar: parsePrice(formData, "oldPriceQar"),
+      cargoAvailable: formData.get("cargoAvailable") === "on",
+      cargoStock: parseStock(formData),
       reels: { connect: (formData.getAll("reelIds") as string[]).filter(Boolean).map((id) => ({ id })) },
     },
   });
@@ -88,6 +96,8 @@ export async function updateProduct(formData: FormData) {
       oldPriceUsd: parsePrice(formData, "oldPriceUsd"),
       priceQar: parsePrice(formData, "priceQar"),
       oldPriceQar: parsePrice(formData, "oldPriceQar"),
+      cargoAvailable: formData.get("cargoAvailable") === "on",
+      cargoStock: parseStock(formData),
       reels: { set: (formData.getAll("reelIds") as string[]).filter(Boolean).map((id) => ({ id })) },
     },
   });

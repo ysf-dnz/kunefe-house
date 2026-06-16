@@ -31,6 +31,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <Link href="/admin/rapor">Rapor</Link>
             <Link href="/admin/haberler">Haberler</Link>
             <Link href="/admin/medya">Medya</Link>
+            <Link href="/admin/kargo-siparisler">Kargo Siparişleri</Link>
           </>
         )}
         <form

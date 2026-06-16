@@ -22,6 +22,8 @@ type ProductData = {
   priceQar?: number | null; oldPriceQar?: number | null;
   showPrice?: boolean;
   portions?: Portion[] | null;
+  cargoAvailable?: boolean;
+  cargoStock?: number | null;
 };
 
 export function ProductForm({ action, categories, product, allReels = [], selectedReelIds = [] }: { action: (formData: FormData) => void; categories: Category[]; product?: ProductData; allReels?: ReelLite[]; selectedReelIds?: string[]; }) {
@@ -94,6 +96,20 @@ export function ProductForm({ action, categories, product, allReels = [], select
         </div>
       </div>
       <p className="text-xs text-cream/50">$ ve QAR boş bırakılırsa o dilde fiyat gösterilmez (&#8378; Türkçe içindir).</p>
+
+        <div className="gold-divider my-1" />
+        <h2 className="font-serif text-gold">Kargo Mağazası</h2>
+        <label className="flex items-center gap-2 text-sm text-cream/80">
+          <input type="checkbox" name="cargoAvailable" defaultChecked={product?.cargoAvailable} />
+          Bu ürün kargoyla satılsın (/magaza)
+        </label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-cream/80">Kargo stoğu (boş = sınırsız)</label>
+          <input name="cargoStock" type="number" min="0" step="1" inputMode="numeric"
+            defaultValue={product?.cargoStock ?? ""} placeholder="örn. 50"
+            className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+        </div>
+        <p className="text-xs text-cream/50">Kargo fiyatı = yukarıdaki &#8378; fiyatıdır. Stok 0 olunca mağazada &quot;Tükendi&quot; görünür.</p>
 
         <div className="gold-divider my-1" />
         <h2 className="font-serif text-gold">Porsiyonlar (kişi sayısına göre fiyat)</h2>

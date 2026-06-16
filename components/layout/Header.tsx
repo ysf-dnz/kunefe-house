@@ -14,6 +14,7 @@ export async function Header() {
       logoHeight={settings?.logoHeight ?? 60}
       branches={branches.map((b) => ({ id: b.id, name: b.name }))}
       selectedBranchId={selected?.id ?? null}
+      cargoEnabled={!!settings?.cargoEnabled}
     />
   );
 }
