@@ -32,6 +32,9 @@ model SiteSettings {
   privacyPolicy   Json?
   cookiePolicy    Json?
   enabledLocales  String[] @default(["tr", "en", "ar"])
+  cargoEnabled          Boolean  @default(false)
+  shippingFee           Decimal? @db.Decimal(10, 2)
+  freeShippingThreshold Decimal? @db.Decimal(10, 2)
   updatedAt       DateTime @updatedAt
 }
 
@@ -73,6 +76,9 @@ model Product {
   oldPriceQar       Decimal?         @db.Decimal(10, 2)
   showPrice         Boolean          @default(false)
   portions          Json?            // [{ persons: number, price: number, oldPrice?: number }]
+  cargoAvailable    Boolean          @default(false)
+  cargoStock        Int?
+  shopItems         ShopOrderItem[]
   order             Int              @default(0)
   createdAt         DateTime         @default(now())
 }
@@ -117,6 +123,7 @@ model Branch {
   couriers       Courier[]
   branchProducts BranchProduct[]
   applications   FranchiseApplication[]
+  shopOrders     ShopOrder[]
 }
 
 model News {
@@ -244,4 +251,42 @@ model BranchProduct {
   updatedAt  DateTime @updatedAt
 
   @@unique([branchId, productId])
+}
+
+model ShopOrder {
+  id            String          @id @default(cuid())
+  merchantOid   String          @unique
+  status        String          @default("pending_payment")
+  customerName  String
+  customerPhone String
+  customerEmail String
+  addressCity   String
+  addressDistrict String
+  addressFull   String
+  addressPostal String?
+  subtotal      Decimal         @db.Decimal(10, 2)
+  shippingFee   Decimal         @db.Decimal(10, 2)
+  total         Decimal         @db.Decimal(10, 2)
+  currency      String          @default("TRY")
+  paytrStatus   String?
+  paidAt        DateTime?
+  trackingNo    String?
+  carrier       String?
+  shippedAt     DateTime?
+  branchId      String?
+  branch        Branch?         @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  items         ShopOrderItem[]
+  createdAt     DateTime        @default(now())
+}
+
+model ShopOrderItem {
+  id          String    @id @default(cuid())
+  shopOrderId String
+  shopOrder   ShopOrder @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  title       String
+  unitPrice   Decimal   @db.Decimal(10, 2)
+  qty         Int
+  lineTotal   Decimal   @db.Decimal(10, 2)
 }
