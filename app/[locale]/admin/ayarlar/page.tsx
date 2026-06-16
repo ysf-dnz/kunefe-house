@@ -36,6 +36,7 @@ export default async function AyarlarPage({ params }: { params: Promise<{ locale
         showStory: settings.showStory,
         showIngredients: settings.showIngredients,
         enabledLocales: settings.enabledLocales,
+        defaultLocale: settings.defaultLocale,
       } : null} />
     </div>
   );

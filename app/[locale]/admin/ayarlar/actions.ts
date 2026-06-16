@@ -41,6 +41,10 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
     ...(formData.get("locale_en") === "on" ? ["en"] : []),
     ...(formData.get("locale_ar") === "on" ? ["ar"] : []),
   ];
+  // Varsayılan dil açık diller arasında olmalı; değilse o dili de aç
+  let defaultLocale = (formData.get("defaultLocale") as string) || "tr";
+  if (!["tr", "en", "ar"].includes(defaultLocale)) defaultLocale = "tr";
+  if (!enabledLocales.includes(defaultLocale)) enabledLocales.push(defaultLocale);
   const cargoEnabled = formData.get("cargoEnabled") === "on";
   const parseMoney = (name: string): number | null => {
     const raw = ((formData.get(name) as string) ?? "").trim().replace(",", ".");
@@ -53,7 +57,7 @@ export async function updateSettings(_prev: SaveState, formData: FormData): Prom
     whatsappNumber, heroTitle, heroSubtitle, whatsappMessage, logoHeaderUrl, logoHeight, contactEmail,
     heroVideoUrl, heroOverlay, storyImageUrl, storyTitle, storyText, privacyPolicy, cookiePolicy,
     cargoEnabled, shippingFee, freeShippingThreshold,
-    showEta, showFranchise, showReels, showNews, showStory, showIngredients, enabledLocales,
+    showEta, showFranchise, showReels, showNews, showStory, showIngredients, enabledLocales, defaultLocale,
   };
   try {
     await prisma.siteSettings.upsert({
