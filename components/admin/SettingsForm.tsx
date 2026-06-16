@@ -21,6 +21,9 @@ type Settings = {
   storyText: Record<string, string> | null;
   privacyPolicy: Record<string, string> | null;
   cookiePolicy: Record<string, string> | null;
+  cargoEnabled: boolean;
+  shippingFee: number | null;
+  freeShippingThreshold: number | null;
 };
 
 export function SettingsForm({ settings }: { settings: Settings | null }) {
@@ -83,6 +86,23 @@ export function SettingsForm({ settings }: { settings: Settings | null }) {
       <h2 className="font-serif text-gold">Yasal Metinler (KVKK)</h2>
       <LocalizedInput name="privacyPolicy" label="Gizlilik Politikası ve KVKK" defaultValue={settings?.privacyPolicy} multiline />
       <LocalizedInput name="cookiePolicy" label="Çerez Politikası" defaultValue={settings?.cookiePolicy} multiline />
+
+      <div className="gold-divider my-2" />
+      <h2 className="font-serif text-gold">Kargo Mağazası</h2>
+      <label className="flex items-center gap-2 text-sm text-cream/80">
+        <input type="checkbox" name="cargoEnabled" defaultChecked={settings?.cargoEnabled ?? false} />
+        Kargo mağazasını aç (/magaza, sepet, ödeme)
+      </label>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-cream/80">Sabit kargo ücreti (&#8378;)</label>
+        <input name="shippingFee" type="number" step="0.01" min="0" defaultValue={settings?.shippingFee ?? ""} placeholder="99.90"
+          className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-cream/80">Ücretsiz kargo eşiği (&#8378;, boş = yok)</label>
+        <input name="freeShippingThreshold" type="number" step="0.01" min="0" defaultValue={settings?.freeShippingThreshold ?? ""} placeholder="500"
+          className="rounded border border-copper/40 bg-forest px-3 py-2 text-cream" />
+      </div>
 
       <div className="mt-2 flex items-center gap-3">
         <SubmitButton />
