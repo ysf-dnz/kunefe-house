@@ -36,6 +36,8 @@ export default async function UrunDuzenlePage({ params }: { params: Promise<{ lo
           oldPrice: toNumber(product.oldPrice),
           showPrice: product.showPrice,
           portions: (product.portions as Portion[] | null) ?? null,
+          cargoAvailable: product.cargoAvailable,
+          cargoStock: product.cargoStock,
           priceUsd: toNumber(product.priceUsd),
           oldPriceUsd: toNumber(product.oldPriceUsd),
           priceQar: toNumber(product.priceQar),
