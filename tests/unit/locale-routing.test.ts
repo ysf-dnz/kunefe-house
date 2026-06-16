@@ -42,4 +42,13 @@ describe("resolveLocaleRedirect", () => {
   it("döngü yok: hedef girdiyle aynıysa null", () => {
     expect(resolveLocaleRedirect("/en", enDefault)).toBeNull();
   });
+
+  it("açık /tr öneki: varsayılan TR ise öneksize iner (404 önlenir)", () => {
+    expect(resolveLocaleRedirect("/tr/lezzetlerimiz", allTr)).toBe("/lezzetlerimiz");
+    expect(resolveLocaleRedirect("/tr", allTr)).toBe("/");
+  });
+  it("açık /tr öneki: varsayılan EN ise /en/aynı yola gider (/en/tr DEĞİL)", () => {
+    expect(resolveLocaleRedirect("/tr/lezzetlerimiz", enDefault)).toBe("/en/lezzetlerimiz");
+    expect(resolveLocaleRedirect("/tr", enDefault)).toBe("/en");
+  });
 });
