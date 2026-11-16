@@ -5,7 +5,7 @@ import { localize, type Locale } from "@/lib/i18n-field";
 import { buildMetadata } from "@/lib/seo";
 import { LegalPage } from "@/components/public/LegalPage";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;

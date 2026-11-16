@@ -6,6 +6,10 @@ import { formatPrice } from "@/lib/price";
 import { getCargoProducts, isCargoEnabled } from "@/lib/cargo-catalog";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 
+// Bilerek dinamik: kargo stoğu admin dışında da (PayTR callback'i) düşer; tükenen
+// ürün listeden hemen kalksın. (Layout ISR olduğu için açıkça belirtmek gerekiyor.)
+export const dynamic = "force-dynamic";
+
 export default async function MagazaPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

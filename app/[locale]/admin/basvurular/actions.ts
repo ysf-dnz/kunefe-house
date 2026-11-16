@@ -50,6 +50,7 @@ export async function onboardBranch(_prev: OnboardState, formData: FormData): Pr
       await tx.franchiseApplication.update({ where: { id: applicationId }, data: { status: "onboarded", branchId: branch.id } });
     });
     revalidatePath("/admin/basvurular");
+    revalidatePath("/", "layout"); // yeni aktif şube: header/iletişim şube listesi
     return { ok: true, email: adminEmail, tempPassword };
   } catch {
     return { error: "Oluşturulamadı, tekrar deneyin" };

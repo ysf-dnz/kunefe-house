@@ -9,4 +9,5 @@ export async function removeMedia(formData: FormData) {
   const path = formData.get("path") as string;
   if (path) await deleteMedia(path);
   revalidatePath("/admin/medya");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

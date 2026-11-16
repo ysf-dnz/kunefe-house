@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
+import { BRANCH_COOKIE } from "./branch-cookie";
 
 export type GeoBranch = { id: string; name: string; lat: number | null; lng: number | null };
 
@@ -29,8 +30,10 @@ export const getActiveBranches = cache(async () => {
   return prisma.branch.findMany({ where: { isActive: true }, orderBy: { order: "asc" } });
 });
 
+/** Yalnız dinamik yerlerde kullanılır (lezzetlerimiz sayfaları, sipariş action'ı):
+ *  cookies() okuduğu için çağıran sayfayı dinamik yapar. Layout/Header'da KULLANMA. */
 export const getSelectedBranch = cache(async () => {
-  const id = (await cookies()).get("kh_branch")?.value;
+  const id = (await cookies()).get(BRANCH_COOKIE)?.value;
   if (!id) return null;
   return prisma.branch.findFirst({ where: { id, isActive: true } });
 });

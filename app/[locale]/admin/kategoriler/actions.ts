@@ -13,6 +13,7 @@ export async function createCategory(formData: FormData) {
   if (!tr.trim()) throw new Error("Türkçe ad zorunlu");
   await prisma.productCategory.create({ data: { name: { tr, en, ar }, slug: slugify(tr) } });
   revalidatePath("/admin/kategoriler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deleteCategory(formData: FormData) {
@@ -20,4 +21,5 @@ export async function deleteCategory(formData: FormData) {
   const id = formData.get("id") as string;
   await prisma.productCategory.delete({ where: { id } });
   revalidatePath("/admin/kategoriler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

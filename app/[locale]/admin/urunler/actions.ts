@@ -71,6 +71,7 @@ export async function createProduct(formData: FormData) {
     },
   });
   revalidatePath("/admin/urunler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
   redirect("/admin/urunler");
 }
 
@@ -102,6 +103,7 @@ export async function updateProduct(formData: FormData) {
     },
   });
   revalidatePath("/admin/urunler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
   redirect("/admin/urunler");
 }
 
@@ -113,4 +115,5 @@ export async function deleteProduct(formData: FormData) {
   if (product?.secondaryImageUrl) await deleteImageByUrl(product.secondaryImageUrl);
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/urunler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

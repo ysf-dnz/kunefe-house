@@ -37,4 +37,5 @@ export async function saveBranchProduct(formData: FormData) {
     });
   }
   revalidatePath("/admin/menu");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

@@ -21,6 +21,7 @@ export async function createFaq(formData: FormData) {
     data: { question, answer: readLocalized(formData, "answer"), order: count },
   });
   revalidatePath("/admin/bayilik-sss");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deleteFaq(formData: FormData) {
@@ -28,4 +29,5 @@ export async function deleteFaq(formData: FormData) {
   const id = formData.get("id") as string;
   await prisma.franchiseFaq.delete({ where: { id } });
   revalidatePath("/admin/bayilik-sss");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

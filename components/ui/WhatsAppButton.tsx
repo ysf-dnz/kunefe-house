@@ -6,7 +6,8 @@ import { EtaButton } from "./EtaButton";
 export async function WhatsAppButton() {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("whatsapp");
-  const settings = await getSiteSettings().catch(() => null);
+  // Hata yutulmaz: layout ile aynı (React cache'li) sorgu; bkz. [locale]/layout.tsx
+  const settings = await getSiteSettings();
   const number = settings?.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
   if (!number) return null;
   if (settings?.showEta === false) return null;

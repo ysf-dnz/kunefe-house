@@ -9,7 +9,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BranchPicker } from "./BranchPicker";
 import { CartIcon } from "@/components/shop/CartIcon";
 
-export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selectedBranchId = null, cargoEnabled = false, showFranchise = true, showIngredients = true, enabledLocales = ["tr", "en", "ar"] }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; selectedBranchId?: string | null; cargoEnabled?: boolean; showFranchise?: boolean; showIngredients?: boolean; enabledLocales?: string[] }) {
+export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], cargoEnabled = false, showFranchise = true, showIngredients = true, enabledLocales = ["tr", "en", "ar"] }: { logoUrl: string | null; logoHeight?: number; branches?: { id: string; name: string }[]; cargoEnabled?: boolean; showFranchise?: boolean; showIngredients?: boolean; enabledLocales?: string[] }) {
   const t = useTranslations("nav");
   const ts = useTranslations("shop");
   const [scrolled, setScrolled] = useState(false);
@@ -64,7 +64,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
           {cargoEnabled && <CartIcon href="/sepet" />}
           {/* Şube seç (müşteri tarafı) masaüstünde üstte; mobilde hamburger menüsünde */}
           <div className="hidden md:block">
-            <BranchPicker branches={branches} selectedId={selectedBranchId} />
+            <BranchPicker branches={branches} />
           </div>
           <LanguageSwitcher enabled={enabledLocales} />
           {/* Hamburger (mobil) */}
@@ -95,7 +95,7 @@ export function HeaderClient({ logoUrl, logoHeight = 60, branches = [], selected
                 </Link>
               ))}
               <div className="pt-3">
-                <BranchPicker branches={branches} selectedId={selectedBranchId} />
+                <BranchPicker branches={branches} />
               </div>
             </div>
           </motion.nav>

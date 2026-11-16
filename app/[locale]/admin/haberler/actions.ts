@@ -30,6 +30,7 @@ export async function createNews(formData: FormData) {
     },
   });
   revalidatePath("/admin/haberler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deleteNews(formData: FormData) {
@@ -39,4 +40,5 @@ export async function deleteNews(formData: FormData) {
   if (news?.imageUrl) await deleteImageByUrl(news.imageUrl);
   await prisma.news.delete({ where: { id } });
   revalidatePath("/admin/haberler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

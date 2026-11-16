@@ -33,6 +33,7 @@ export async function createBranch(formData: FormData) {
     },
   });
   revalidatePath("/admin/subeler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deleteBranch(formData: FormData) {
@@ -40,4 +41,5 @@ export async function deleteBranch(formData: FormData) {
   const id = formData.get("id") as string;
   await prisma.branch.delete({ where: { id } });
   revalidatePath("/admin/subeler");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }

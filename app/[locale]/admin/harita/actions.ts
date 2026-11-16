@@ -24,6 +24,7 @@ export async function updateMapImage(formData: FormData) {
     create: { id: 1, mapImageUrl, mapTitle, mapDescription },
   });
   revalidatePath("/admin/harita");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function createPin(formData: FormData) {
@@ -46,6 +47,7 @@ export async function createPin(formData: FormData) {
     },
   });
   revalidatePath("/admin/harita");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deletePin(formData: FormData) {
@@ -55,4 +57,5 @@ export async function deletePin(formData: FormData) {
   if (pin?.popupMediaUrl) await deleteImageByUrl(pin.popupMediaUrl);
   await prisma.mapPin.delete({ where: { id } });
   revalidatePath("/admin/harita");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
