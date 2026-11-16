@@ -9,11 +9,14 @@ import { resolveLocaleRedirect, type LocaleConfig } from "./lib/locale-routing";
 const { auth } = NextAuth(authConfig);
 const intlMiddleware = createMiddleware(routing);
 
-// Dil ayarını edge'de Prisma'sız okumak için hafif uçtan cache'li getir
+// Dil ayarını edge'de Prisma'sız okumak için hafif uçtan cache'li getir.
+// Ayar nadiren değişir: isolate içinde 10 dk tutulur, uç da CDN'de 10 dk
+// cache'lenir. Admin'de dil değişikliği en geç ~10 dk içinde yansır.
+const CFG_TTL_MS = 10 * 60_000;
 let cfgCache: { at: number; cfg: LocaleConfig } | null = null;
 async function getLocaleConfig(origin: string): Promise<LocaleConfig | null> {
   const now = Date.now();
-  if (cfgCache && now - cfgCache.at < 60_000) return cfgCache.cfg;
+  if (cfgCache && now - cfgCache.at < CFG_TTL_MS) return cfgCache.cfg;
   try {
     const res = await fetch(`${origin}/api/locale-config`, { headers: { "x-mw": "1" } });
     if (!res.ok) return cfgCache?.cfg ?? null;
@@ -36,7 +39,8 @@ export default auth(async (req) => {
 
   // Dil yönlendirmesi: yalnız herkese açık içerik (admin/kurye hariç).
   // Kapalı/uygunsuz dile gelen istek varsayılan dile 308 ile kalıcı yönlenir.
-  if (!isAdmin && !pathname.startsWith("/admin")) {
+  // HEAD (uptime monitörleri) dil ayarı için ek istek tetiklemesin.
+  if (req.method !== "HEAD" && !isAdmin && !pathname.startsWith("/admin")) {
     const cfg = await getLocaleConfig(req.nextUrl.origin);
     if (cfg) {
       const target = resolveLocaleRedirect(pathname, cfg);
