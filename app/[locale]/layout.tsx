@@ -30,7 +30,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const settings = await getSiteSettings().catch(() => null);
+  // Hata yutulmaz (bkz. aşağıdaki not): varsayılan başlıklı metadata önbelleğe girmesin.
+  const settings = await getSiteSettings();
   const loc = locale as Locale;
   const title =
     localize(settings?.heroTitle as Record<string, string> | null, loc) ||
@@ -47,10 +48,12 @@ export async function generateMetadata({
   });
 }
 
-// SiteSettings (WhatsApp no/mesaj, hero) DB'den okunur ve admin'den anlık
-// değişebilir; bu yüzden subtree dynamic render edilir. SSG/CWV optimizasyonu
-// (ör. "use cache" + cacheTag) Faz 5'te ele alınacak.
-export const revalidate = 60;
+// Public sayfalar ISR: build'de üretilir, en geç 1 saatte bir arka planda yenilenir.
+// Admin'de public içeriği değiştiren her action revalidatePath("/", "layout") çağırır,
+// yani değişiklikler beklemeden yansır. Bu layout (ve Header/BranchGate) çerez/header
+// OKUMAMALI; okursa altındaki tüm sayfalar yeniden dinamik olur. Şubeye bağlı
+// lezzetlerimiz sayfaları kendi içinde cookies() okuyup dinamik kalır.
+export const revalidate = 3600;
 
 export default async function LocaleLayout({
   children,
@@ -64,11 +67,13 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  // DB anlık erişilemezse site çökmesin: boş varsayılanlarla render edilir.
+  // DB hataları bilerek yutulmaz. ISR'de boş varsayılanlarla üretilen bir sayfa
+  // 1 saat boyunca herkese sunulurdu; hata fırlarsa Next yenilemeyi başarısız sayar
+  // ve son başarılı sürümü sunmaya devam eder (bir sonraki istekte tekrar dener).
   const [settings, socials, popupNews] = await Promise.all([
-    getSiteSettings().catch(() => null),
-    getSocialLinks().catch(() => []),
-    getPopupNews().catch(() => null),
+    getSiteSettings(),
+    getSocialLinks(),
+    getPopupNews(),
   ]);
   // Dil aç/kapa: TR her zaman açık; kapalı EN/AR'a doğrudan erişim engellenir
   const enabledLocales = settings?.enabledLocales ?? ["tr", "en", "ar"];

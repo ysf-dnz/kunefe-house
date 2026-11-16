@@ -3,28 +3,40 @@
 import { useState, useEffect, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { setBranch, setNearestBranch } from "@/app/[locale]/branch-actions";
+import { readBranchCookie } from "@/lib/branch-cookie";
+import { useSelectedBranchId, notifyBranchChange } from "./useSelectedBranchId";
 
 type B = { id: string; name: string };
 const FLAG = "kh_branch_prompted";
 
-/** Tek modal: header butonları "kh:open-branch" olayıyla açar; ilk ziyarette (şube
- *  seçilmemiş + daha önce sorulmamış) otomatik açılır. Admin sayfalarında otomatik açılmaz. */
-export function BranchModal({ branches, selectedId }: { branches: B[]; selectedId: string | null }) {
+/** Tek modal: header butonları "kh:open-branch" olayıyla açar; ilk ziyarette (geçerli
+ *  şube seçilmemiş + daha önce sorulmamış) otomatik açılır. Admin sayfalarında otomatik
+ *  açılmaz. Seçili şube istemcide kh_branch çerezinden okunur (sayfa ISR'de önbellekli). */
+export function BranchModal({ branches }: { branches: B[] }) {
   const [open, setOpen] = useState(false);
   const [err, setErr] = useState("");
   const [pending, start] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
+  const selectedId = useSelectedBranchId();
+  // Effect bağımlılığı olarak dizi yerine kararlı bir anahtar (router.refresh her
+  // seferinde yeni dizi üretir)
+  const branchIds = branches.map((b) => b.id).join("|");
 
   useEffect(() => {
     const onOpen = () => setOpen(true);
     window.addEventListener("kh:open-branch", onOpen);
     try {
       const isAdmin = pathname?.includes("/admin");
-      if (!isAdmin && !selectedId && !localStorage.getItem(FLAG)) setOpen(true);
+      // Çerez doğrudan okunur: hidrasyon anında hook henüz null döndürür, ona
+      // güvenip şubesi olan ziyaretçiye modali açmayalım. Pasif/silinmiş şube
+      // id'si "seçilmemiş" sayılır (eski sunucu davranışıyla aynı).
+      const cookieId = readBranchCookie(document.cookie);
+      const hasValid = !!cookieId && branchIds.split("|").includes(cookieId);
+      if (!isAdmin && !hasValid && !localStorage.getItem(FLAG)) setOpen(true);
     } catch { /* yoksay */ }
     return () => window.removeEventListener("kh:open-branch", onOpen);
-  }, [selectedId, pathname]);
+  }, [branchIds, pathname]);
 
   if (branches.length === 0) return null;
 
@@ -33,7 +45,7 @@ export function BranchModal({ branches, selectedId }: { branches: B[]; selectedI
 
   function choose(id: string | null) {
     setErr("");
-    start(async () => { await setBranch(id); markPrompted(); setOpen(false); router.refresh(); });
+    start(async () => { await setBranch(id); notifyBranchChange(); markPrompted(); setOpen(false); router.refresh(); });
   }
   function nearest() {
     setErr("");
@@ -42,7 +54,7 @@ export function BranchModal({ branches, selectedId }: { branches: B[]; selectedI
       (pos) =>
         start(async () => {
           const name = await setNearestBranch(pos.coords.latitude, pos.coords.longitude);
-          if (name) { markPrompted(); setOpen(false); router.refresh(); }
+          if (name) { notifyBranchChange(); markPrompted(); setOpen(false); router.refresh(); }
           else setErr("Yakında şube bulunamadı");
         }),
       () => setErr("Konum alınamadı — listeden seçebilirsin"),

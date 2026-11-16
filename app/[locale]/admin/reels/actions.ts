@@ -33,6 +33,7 @@ export async function createReel(formData: FormData) {
     },
   });
   revalidatePath("/admin/reels");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function deleteReel(formData: FormData) {
@@ -43,6 +44,7 @@ export async function deleteReel(formData: FormData) {
   if (reel?.videoUrl) await deleteImageByUrl(reel.videoUrl);
   await prisma.reel.delete({ where: { id } });
   revalidatePath("/admin/reels");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
 }
 
 export async function setReelProducts(formData: FormData) {
@@ -54,5 +56,6 @@ export async function setReelProducts(formData: FormData) {
     data: { products: { set: productIds.map((pid) => ({ id: pid })) } },
   });
   revalidatePath("/admin/reels");
+  revalidatePath("/", "layout"); // public ISR sayfaları tazele
   revalidatePath("/admin/urunler");
 }

@@ -68,5 +68,6 @@ git push -u origin main
 
 ## Notlar
 - **Görseller:** Supabase Storage "media" bucket'ında, public. `next.config.ts` Supabase host'unu allowlist'liyor.
-- **Cache:** Public sayfalar ISR (60s). İçerik değişiklikleri 60 saniye içinde canlıda yansır.
+- **Cache:** Public sayfalar (ana sayfa, iletişim, bayilik, malzemelerimiz, gizlilik, çerez, sepet, ödeme) ISR — build'de üretilir, en geç 1 saatte bir arka planda yenilenir. Admin'de public içeriği değiştiren action'lar `revalidatePath("/", "layout")` çağırır, değişiklik bir sonraki istekte yansır. Şubeye bağlı `lezzetlerimiz` sayfaları ve `magaza` dinamiktir. `[locale]/layout.tsx`, Header ve BranchGate çerez/header **okumamalı** — okursa tüm public sayfalar yeniden dinamik olur; seçili şube istemcide `kh_branch` çerezinden okunur.
+- **Build DB'ye bağlanır:** ISR sayfaları build sırasında üretildiği için build anında DB erişilebilir olmalı; DB'ye ulaşılamazsa build bilerek başarısız olur (boş sayfa yayınlamak yerine).
 - **Playwright e2e** CI'da çalıştırılabilir ama deploy'u bloke etmez.
